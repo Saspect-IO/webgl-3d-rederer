@@ -50,7 +50,7 @@ export default class ShaderProgram {
 
     const loadFile = async (src:string) => {
       const response =  await fetch(src);
-      const data =  await response.json();
+      const data =  await response.text();
       return data;
     }
     const files = await Promise.all([loadFile(vsSource), loadFile(fsSource)]);
