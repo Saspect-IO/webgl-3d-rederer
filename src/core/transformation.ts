@@ -1,6 +1,7 @@
 export default class Transformation {
     
     constructor() {
+        // identity matrix
         this.matrix = [
             1, 0, 0, 0, 
             0, 1, 0, 0, 

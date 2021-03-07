@@ -12,17 +12,16 @@ export default class Mesh {
     this.normals = new Vbuffer(gl, geometry.normals(), this.vertexCount);
     this.uvs = new Vbuffer(gl, geometry.uvs(), this.vertexCount);
     this.texture = texture;
-    this.vertexCount = this.vertexCount;
     this.position = new Transformation();
     this.gl = gl;
   }
 
   vertexCount: number;
-  positions: any;
-  normals: any;
-  uvs: any;
+  positions: Vbuffer;
+  normals: Vbuffer;
+  uvs: Vbuffer;
   texture: Texture;
-  position: any;
+  position: Transformation;
   gl: WebGLRenderingContext | null = null;
 
 
@@ -33,10 +32,10 @@ export default class Mesh {
   }
 
   drawMesh(shaderProgram: ShaderProgram) {
-    this.positions.bindToAttribute(shaderProgram.position);
-    this.normals.bindToAttribute(shaderProgram.normal);
-    this.uvs.bindToAttribute(shaderProgram.uv);
-    this.position.sendToGpu(this.gl, shaderProgram.model as WebGLUniformLocation);
+    this.positions.bindToAttribute(shaderProgram.positionIndex);
+    this.normals.bindToAttribute(shaderProgram.normalIndex);
+    this.uvs.bindToAttribute(shaderProgram.uvIndex);
+    this.position.sendToGpu(this.gl as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation);
     this.texture.useTexture(shaderProgram.diffuse as WebGLUniformLocation, 0);
     this.gl?.drawArrays(this.gl.TRIANGLES, 0, this.vertexCount);
   }
@@ -44,8 +43,8 @@ export default class Mesh {
   static async loadMesh(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
     const geometry = await Geometry.loadOBJ(objSrc);
     const texture = await Texture.loadTexture(gl, textureSrc);
-    const [geometryData, geometryTexture ] = await Promise.all([geometry, texture]);
-    const mesh  = new Mesh(gl, geometryData, geometryTexture as any)
+    const [geometryData, geometryTexture] = await Promise.all([geometry, texture]);
+    const mesh = new Mesh(gl, geometryData, geometryTexture as any);
 
     return mesh;
   }
