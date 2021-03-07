@@ -53,10 +53,11 @@ export default class ShaderProgram {
       const data = await response.text();
       return data;
     }
-    const files = await Promise.all([loadFile(vsSource), loadFile(fsSource)]);
-    const shaderProgram = new ShaderProgram(gl, files[0] as string, files[1] as string);
+    
+    const [vertexShaderFile, fragmentShaderFile] = await Promise.all([loadFile(vsSource), loadFile(fsSource)]);
+    const shaderProgram = new ShaderProgram(gl, vertexShaderFile, fragmentShaderFile);
 
-    return shaderProgram
+    return shaderProgram;
   }
 
   loadShader(gl: WebGLRenderingContext, type: number, source: string) {
