@@ -1,18 +1,19 @@
-import Renderer from './renderer';
-import ShaderProgram  from './shaderProgram';
-import Camera  from './camera';
-import Light  from './light';
-import Mesh from './mesh';
+import Renderer from './core/renderer';
+import ShaderProgram  from './core/shaderProgram';
+import Camera  from './core/camera';
+import Light  from './core/light';
+import Mesh from './core/mesh';
+import Transformation  from './core/transformation';
 import {
     ProgramEntry
-} from '../modules';
+} from './modules/index';
 
 
 const renderer = new Renderer(document.getElementById(ProgramEntry.WEBGL_CANVAS_ID) as HTMLCanvasElement)
 renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
-const gl: WebGLRenderingContext = renderer.getContext();
+const gl = renderer.getContext() as WebGLRenderingContext;
 
-const meshArray: Array<Mesh> = [];
+const meshArray: Mesh[] = [];
 
 Mesh.loadMesh(gl, ProgramEntry.PATH_ASSETS_SPHERE, ProgramEntry.PATH_ASSETS_DIFFUSE)
     .then((mesh) => meshArray.push(mesh));
@@ -26,7 +27,7 @@ const light = new Light();
 
 const loop = () => {
     renderer.render(camera, light, meshArray);
-    camera.position = camera.position.rotateY(Math.PI / ProgramEntry.CAMERA_ANGLE_DIVISION);
+    camera.position = (camera.position as Transformation).rotateY(Math.PI / ProgramEntry.CAMERA_ANGLE_DIVISION);
     requestAnimationFrame(loop);
 }
 

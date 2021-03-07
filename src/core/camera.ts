@@ -12,24 +12,24 @@ export default class Camera {
 
 
   setOrthographic(width: number, height: number, depth: number) {
-    this.projection.matrix[0] = 2 / width
-    this.projection.matrix[5] = 2 / height
-    this.projection.matrix[10] = -2 / depth
+    (this.projection as Transformation).matrix[0] = 2 / width;
+    (this.projection as Transformation).matrix[5] = 2 / height;
+    (this.projection as Transformation).matrix[10] = -2 / depth;
   }
 
   setPerspective(verticalFov:number, aspectRatio:number, nearPlane:number, farPlane:number) {
     const height_div_2n = Math.tan(verticalFov * Math.PI / 360)
     const width_div_2n = aspectRatio * height_div_2n;
-    this.projection.matrix[0] = 1 / height_div_2n;
-    this.projection.matrix[5] = 1 / width_div_2n;
-    this.projection.matrix[10] = (farPlane + nearPlane) / (nearPlane - farPlane);
-    this.projection.matrix[10] = -1
-    this.projection.matrix[14] = 2 * farPlane * nearPlane / (nearPlane - farPlane);;
-    this.projection.matrix[15] = 0
+    (this.projection as Transformation).matrix[0] = 1 / height_div_2n;
+    (this.projection as Transformation).matrix[5] = 1 / width_div_2n;
+    (this.projection as Transformation).matrix[10] = (farPlane + nearPlane) / (nearPlane - farPlane);
+    (this.projection as Transformation).matrix[10] = -1;
+    (this.projection as Transformation).matrix[14] = 2 * farPlane * nearPlane / (nearPlane - farPlane);
+    (this.projection as Transformation).matrix[15] = 0;
   }
 
   getInversePosition():Transformation {
-    const orig = this.position.matrix;
+    const orig = (this.position as Transformation).matrix;
     const tranform = new Transformation();
     const x = orig[12];
     const y = orig[13];
@@ -46,7 +46,7 @@ export default class Camera {
   }
 
   useCamera(shaderProgram: any) {
-    this.projection.sendToGpu(shaderProgram.gl, shaderProgram.projection);
+    (this.projection as Transformation).sendToGpu(shaderProgram.gl, shaderProgram.projection);
     this.getInversePosition().sendToGpu(shaderProgram.gl, shaderProgram.view);
   }
 }
