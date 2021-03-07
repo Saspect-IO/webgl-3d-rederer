@@ -1,11 +1,11 @@
-import Renderer from './renderer';
-import ShaderProgram  from './shaderProgram';
-import Camera  from './camera';
-import Light  from './light';
-import Mesh from './mesh';
+import Renderer from './core/renderer';
+import ShaderProgram  from './core/shaderProgram';
+import Camera  from './core/camera';
+import Light  from './core/light';
+import Mesh from './core/mesh';
 import {
     ProgramEntry
-} from '../modules';
+} from './modules/index';
 
 
 const renderer = new Renderer(document.getElementById(ProgramEntry.WEBGL_CANVAS_ID) as HTMLCanvasElement)
