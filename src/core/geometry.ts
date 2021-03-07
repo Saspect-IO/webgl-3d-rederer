@@ -78,8 +78,6 @@ export default class Geometry {
         })
     }
 
-
-
     vertexCount() {
         return this.surfaces.length * 3;
     }

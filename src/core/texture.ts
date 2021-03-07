@@ -16,13 +16,13 @@ export default class Texture {
     }
 
     texture: any = null;
-    gl: WebGLRenderingContext = null;
+    gl: WebGLRenderingContext|null = null;
     data = null;
     TEXTURE_KEY = 'TEXTURE';
 
-    paint(uniform, binding: number): void {
+    useTexture(uniform:WebGLUniformLocation, binding: number): void {
         binding = binding;
-        var gl = this.gl;
+        var gl = this.gl as WebGLRenderingContext;
         // We can bind multiple textures, and here we pick which of the bindings
         // we're setting right now
         gl.activeTexture(gl[this.TEXTURE_KEY + binding])

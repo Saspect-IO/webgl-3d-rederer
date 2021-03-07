@@ -7,17 +7,17 @@ import Mesh from './mesh';
 export default class Renderer {
     constructor(canvas:HTMLCanvasElement ){
         this.gl = canvas.getContext(ProgramEntry.WEBGL_CONTEXT);
-        this.gl.enable(this.gl.DEPTH_TEST);
+        this.gl?.enable(this.gl.DEPTH_TEST);
         this.shaderProgram = null;
     }
 
-    gl:WebGLRenderingContext = null;
-    shaderProgram:ShaderProgram = null;
+    gl:WebGLRenderingContext|null = null;
+    shaderProgram:ShaderProgram|null = null;
     rgb_32_bit = 255;
     alpha = 1;
 
     setClearColor(red:number, green:number, blue:number, alpha:number = 1){
-        this.gl.clearColor(red / this.rgb_32_bit, green / this.rgb_32_bit, blue / this.rgb_32_bit, alpha);
+        this.gl?.clearColor(red / this.rgb_32_bit, green / this.rgb_32_bit, blue / this.rgb_32_bit, alpha);
     }
 
     getContext() {
@@ -29,7 +29,7 @@ export default class Renderer {
     }
     
     render(camera: Camera, light: Light, objects: Array<Mesh>){
-        this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
+        this.gl?.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
         const shaderProgram = this.shaderProgram;
 
         if (!shaderProgram) {

@@ -6,7 +6,7 @@ import ShaderProgram  from './shaderProgram';
 
 export default class Mesh {
 
-  constructor(gl: WebGLRenderingContext, geometry:any, texture:any) {
+  constructor(gl: WebGLRenderingContext, geometry:Geometry, texture:Texture) {
       this.vertexCount = geometry.vertexCount();
       this.positions = new Vbuffer(gl, geometry.positions(), this.vertexCount);
       this.normals = new Vbuffer(gl, geometry.normals(), this.vertexCount);
@@ -21,9 +21,9 @@ export default class Mesh {
   positions:any;
   normals:any;
   uvs:any;
-  texture:any;
+  texture:Texture;
   position:any;
-  gl: WebGLRenderingContext = null;
+  gl: WebGLRenderingContext|null = null;
 
 
   destroy() {
@@ -37,15 +37,15 @@ export default class Mesh {
     this.normals.bindToAttribute(shaderProgram.normal);
     this.uvs.bindToAttribute(shaderProgram.uv);
     this.position.sendToGpu(this.gl, shaderProgram.model);
-    this.texture.use(shaderProgram.diffuse, 0);
-    this.gl.drawArrays(this.gl.TRIANGLES, 0, this.vertexCount);
+    this.texture.useTexture(shaderProgram.diffuse as WebGLUniformLocation, 0);
+    this.gl?.drawArrays(this.gl.TRIANGLES, 0, this.vertexCount);
   }
 
   static async loadMesh(gl: WebGLRenderingContext, modelPath: string, texturePath: string) {
     const geometry = Geometry.loadOBJ(modelPath);
     const texture = Texture.loadTexture(gl, texturePath);
     return Promise.all([geometry, texture]).then(function (params) {
-      return new Mesh(gl, params[0], params[1]);
+      return new Mesh(gl, params[0] as Geometry, params[1] as Texture);
     })
   }
 

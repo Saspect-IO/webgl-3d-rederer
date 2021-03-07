@@ -1,8 +1,9 @@
 import {Vec3Struct} from "./geometry";
+import ShaderProgram  from './shaderProgram';
 
 export default class Light {
     constructor() {
-        this.lightDirection = new Vec3Struct(-1, -1, -1);
+        this.lightDirection = Vec3Struct(-1, -1, -1);
         this.ambientLight = 0.3;
     }
 
@@ -10,7 +11,7 @@ export default class Light {
     ambientLight: number;
 
 
-    useLight(shaderProgram): void {
+    useLight(shaderProgram:ShaderProgram): void {
         const dir = this.lightDirection;
         const gl = shaderProgram.gl;
         gl.uniform3f(shaderProgram.lightDirection, dir.x, dir.y, dir.z);
