@@ -1,1 +1,1 @@
-export * from './renderer_constants';
+export * from './rendere_constants';
