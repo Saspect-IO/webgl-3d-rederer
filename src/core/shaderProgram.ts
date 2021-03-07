@@ -1,11 +1,11 @@
 export default class ShaderProgram {
   constructor(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
 
-    const vertexShader = this.loadShader(gl, gl.VERTEX_SHADER, vsSource);
-    const fragmentShader = this.loadShader(gl, gl.FRAGMENT_SHADER, fsSource);
+    const vertexShader = this.loadShader(gl, gl.VERTEX_SHADER, vsSource) as WebGLProgram;
+    const fragmentShader = this.loadShader(gl, gl.FRAGMENT_SHADER, fsSource) as WebGLProgram;
 
     // Create the shader program
-    const shaderProgram = gl.createProgram();
+    const shaderProgram = gl.createProgram() as WebGLProgram;
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
@@ -60,7 +60,7 @@ export default class ShaderProgram {
   }
 
   loadShader(gl: WebGLRenderingContext, type: number, source: string) {
-    const shader = gl.createShader(type);
+    const shader = gl.createShader(type) as WebGLShader;
 
     // Send the source to the shader object
 

@@ -65,17 +65,10 @@ export default class Geometry {
     }
 
     // Loads an OBJ file from the given URL, and returns it as a promise
-    static loadOBJ = function (url: string) {
-        return new Promise(function (resolve) {
-            var xhr = new XMLHttpRequest()
-            xhr.onreadystatechange = function () {
-                if (xhr.readyState == XMLHttpRequest.DONE) {
-                    resolve(Geometry.parseOBJ(xhr.responseText))
-                }
-            }
-            xhr.open('GET', url, true)
-            xhr.send(null)
-        })
+    static async loadOBJ(url: string) {
+        const response = await fetch(url);
+        const data = Geometry.parseOBJ(await response.text());
+        return data;
     }
 
     vertexCount() {

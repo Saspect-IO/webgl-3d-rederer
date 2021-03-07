@@ -13,7 +13,7 @@ const renderer = new Renderer(document.getElementById(ProgramEntry.WEBGL_CANVAS_
 renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
 const gl = renderer.getContext() as WebGLRenderingContext;
 
-const meshArray: Array<Mesh> = [];
+const meshArray: Mesh[] = [];
 
 Mesh.loadMesh(gl, ProgramEntry.PATH_ASSETS_SPHERE, ProgramEntry.PATH_ASSETS_DIFFUSE)
     .then((mesh) => meshArray.push(mesh));

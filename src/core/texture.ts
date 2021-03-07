@@ -21,11 +21,10 @@ export default class Texture {
     TEXTURE_KEY = 'TEXTURE';
 
     useTexture(uniform:WebGLUniformLocation, binding: number): void {
-        binding = binding;
-        var gl = this.gl as WebGLRenderingContext;
+        const gl = this.gl as WebGLRenderingContext;
         // We can bind multiple textures, and here we pick which of the bindings
         // we're setting right now
-        gl.activeTexture(gl[this.TEXTURE_KEY + binding])
+        gl.activeTexture(gl[`${this.TEXTURE_KEY}${binding}`])
         // After picking the binding, we set the texture
         gl.bindTexture(gl.TEXTURE_2D, this.data)
         // Finally, we pass to the uniform the binding ID we've used

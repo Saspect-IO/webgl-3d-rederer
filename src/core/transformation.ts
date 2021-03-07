@@ -16,11 +16,11 @@ export default class Transformation {
         const transform = new Transformation();
         for (var row = 0; row < 4; ++row) {
             for (var col = 0; col < 4; ++col) {
-                var sum = 0
+                var sum = 0;
                 for (var k = 0; k < 4; ++k) {
-                    sum += this.matrix[k * 4 + row] * t.matrix[col * 4 + k]
+                    sum += this.matrix[k * 4 + row] * t.matrix[col * 4 + k];
                 }
-                transform[col * 4 + row] = sum
+                transform.matrix[col * 4 + row] = sum;
             }
         }
         return transform;
@@ -80,7 +80,7 @@ export default class Transformation {
         return this.mult(transform);
     }
 
-    sendToGpu(gl:WebGLRenderingContext, uniform, transpose = false) {
+    sendToGpu(gl:WebGLRenderingContext, uniform: WebGLUniformLocation, transpose = false) {
         gl.uniformMatrix4fv(uniform, transpose, new Float32Array(this.matrix))
     }
 }
