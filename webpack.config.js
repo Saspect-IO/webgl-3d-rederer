@@ -37,11 +37,6 @@ module.exports = {
         ]
     },
 
-    // plugins
-    plugins: [
-        new ForkTsCheckerWebpackPlugin(), // run TSC on a separate thread
-    ],
-
     // set watch mode to `true`
     watch: true
 };
