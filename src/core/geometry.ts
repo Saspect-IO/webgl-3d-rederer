@@ -61,7 +61,7 @@ export default class Geometry {
             }
         })
 
-        return surfaces;
+        return new Geometry(surfaces);
     }
 
     // Loads an OBJ file from the given URL, and returns it as a promise
@@ -79,8 +79,8 @@ export default class Geometry {
         const result: number[] = [];
         this.surfaces.forEach(function (surface: Surface) {
             surface.vertices.forEach(function (vertex: Vertex) {
-                const v = vertex.position
-                result.push(v.x, v.y, v.z)
+                const v = vertex.position;
+                result.push(v.x, v.y, v.z);
             })
         })
         return result
@@ -90,8 +90,8 @@ export default class Geometry {
         const result: number[] = [];
         this.surfaces.forEach(function (surface: Surface) {
             surface.vertices.forEach(function (vertex: Vertex) {
-                const v = vertex.normal
-                result.push(v.x, v.y, v.z)
+                const v = vertex.normal;
+                result.push(v.x, v.y, v.z);
             })
         })
         return result
@@ -101,8 +101,8 @@ export default class Geometry {
         const result: number[] = [];
         this.surfaces.forEach(function (surface: Surface) {
             surface.vertices.forEach(function (vertex: Vertex) {
-                const v = vertex.uv
-                result.push(v.x, v.y)
+                const v = vertex.uv;
+                result.push(v.x, v.y);
             })
         })
         return result
@@ -112,7 +112,7 @@ export default class Geometry {
 
 export function SurfaceStruct(vertices: Array < Vertex > ) {
     return {
-        vertices
+        vertices,
     };
 }
 
