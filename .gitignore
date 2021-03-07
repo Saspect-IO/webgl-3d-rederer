@@ -1,0 +1,7 @@
+.DS_Store
+node_modules
+/distS
+
+# local env files
+.env.local
+.env.*.local
