@@ -6,10 +6,10 @@ import Mesh from './core/mesh';
 import Transformation  from './core/transformation';
 import {
     ProgramEntry
-} from './modules/index';
+} from './modules';
 
 
-const renderer = new Renderer(document.getElementById(ProgramEntry.WEBGL_CANVAS_ID) as HTMLCanvasElement)
+const renderer = new Renderer(document.getElementById(ProgramEntry.WEBGL_CANVAS_ID) as HTMLCanvasElement);
 renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
 const gl = renderer.getContext() as WebGLRenderingContext;
 
@@ -22,7 +22,8 @@ ShaderProgram.initShaderProgram(gl, ProgramEntry.PATH_SHADE_VERTEX, ProgramEntry
     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
 
 
-const camera = new Camera(); camera.setOrthographic(16, 10, 10);
+const camera = new Camera(); 
+camera.setOrthographic(16, 10, 10);
 const light = new Light();
 
 const loop = () => {

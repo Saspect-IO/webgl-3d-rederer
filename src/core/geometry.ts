@@ -12,8 +12,8 @@ export default class Geometry {
         this.surfaces = surfaces;
     }
 
-    surfaces: Array < Surface > = [];
-    vertices: Array < Vertex > = [];
+    surfaces: Surface[] = [];
+    vertices: Vertex[] = [];
     position: Position | null = null;
     normal: Normal | null = null;
     uv: UV | null = null;
@@ -26,9 +26,9 @@ export default class Geometry {
         const POSITION = /^v\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)/
         const NORMAL = /^vn\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)/
         const UV = /^vt\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)/
-        const FACE = /^f\s+(-?\d+)\/(-?\d+)\/(-?\d+)\s+(-?\d+)\/(-?\d+)\/(-?\d+)\s+(-?\d+)\/(-?\d+)\/(-?\d+)(?:\s+(-?\d+)\/(-?\d+)\/(-?\d+))?/
+        const SURFACE = /^f\s+(-?\d+)\/(-?\d+)\/(-?\d+)\s+(-?\d+)\/(-?\d+)\/(-?\d+)\s+(-?\d+)\/(-?\d+)\/(-?\d+)(?:\s+(-?\d+)\/(-?\d+)\/(-?\d+))?/
 
-        let lines = src.split('\n');
+        const lines = src.split('\n');
         const positions: Position[] = [];
         const uvs: UV[] = [];
         const normals: Normal[] = [];
@@ -37,18 +37,18 @@ export default class Geometry {
         lines.forEach(function (line: string) {
             // Match each line of the file against various RegEx-es
             let result = null;
-            if ((result = POSITION.exec(line)) != null) {
+            if ((result = POSITION.exec(line)) !== null) {
                 // Add new vertex position
                 positions.push(Vec3Struct(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3])))
-            } else if ((result = NORMAL.exec(line)) != null) {
+            } else if ((result = NORMAL.exec(line)) !== null) {
                 // Add new vertex normal
                 normals.push(Vec3Struct(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3])))
-            } else if ((result = UV.exec(line)) != null) {
+            } else if ((result = UV.exec(line)) !== null) {
                 // Add new texture mapping point
                 uvs.push(Vec2Struct(parseFloat(result[1]), 1 - parseFloat(result[2])))
-            } else if ((result = FACE.exec(line)) != null) {
+            } else if ((result = SURFACE.exec(line)) !== null) {
                 // Add new face
-                const vertices = [];
+                const vertices: Vertex[]= [];
                 // Create three vertices from the passed one-indexed indices
                 for (let i = 1; i < 10; i += 3) {
                     const part = result.slice(i, i + 3);
@@ -83,7 +83,7 @@ export default class Geometry {
                 result.push(v.x, v.y, v.z);
             })
         })
-        return result
+        return result;
     }
 
     normals() {
@@ -94,7 +94,7 @@ export default class Geometry {
                 result.push(v.x, v.y, v.z);
             })
         })
-        return result
+        return result;
     }
 
     uvs() {
@@ -105,7 +105,7 @@ export default class Geometry {
                 result.push(v.x, v.y);
             })
         })
-        return result
+        return result;
     }
 
 }
@@ -121,7 +121,7 @@ export function VertexStruct(position: Position, normal: Normal, uv: UV) {
         position,
         normal,
         uv
-    }
+    };
 }
 
 export function Vec3Struct(x: number, y: number, z: number) {
@@ -129,12 +129,12 @@ export function Vec3Struct(x: number, y: number, z: number) {
         x,
         y,
         z
-    }
+    };
 }
 
 export function Vec2Struct(x: number, y: number) {
     return {
         x,
         y
-    }
+    };
 }
