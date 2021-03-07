@@ -41,12 +41,13 @@ export default class Mesh {
     this.gl?.drawArrays(this.gl.TRIANGLES, 0, this.vertexCount);
   }
 
-  static async loadMesh(gl: WebGLRenderingContext, modelPath: string, texturePath: string) {
-    const geometry = await Geometry.loadOBJ(modelPath);
-    const texture = await Texture.loadTexture(gl, texturePath);
-    const data = await Promise.all([geometry, texture]);
+  static async loadMesh(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
+    const geometry = await Geometry.loadOBJ(objSrc);
+    const texture = await Texture.loadTexture(gl, textureSrc);
+    const [geometryData, geometryTexture ] = await Promise.all([geometry, texture]);
+    const mesh  = new Mesh(gl, geometryData, geometryTexture as any)
 
-    return (new Mesh(gl, data[0] as any, data[1] as Texture));
+    return mesh;
   }
 
 }
