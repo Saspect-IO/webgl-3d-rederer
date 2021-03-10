@@ -23,8 +23,9 @@ ShaderProgram.initShaderProgram(gl, ProgramEntry.PATH_SHADE_VERTEX, ProgramEntry
 
 
 const camera = new Camera(); 
-camera.setOrthographic(16, 10, 10);
-const light = new Light();
+camera.setOrthographic(16, 8, 12);
+camera.position = (camera.position as Transformation).scale(0.18,0.18,0.18).translate(0,50,0);
+const light = new Light(-1,-1,-1);
 
 const loop = () => {
     renderer.render(camera, light, meshArray);
