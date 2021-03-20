@@ -5,20 +5,22 @@ import Light  from './core/light';
 import Mesh from './core/mesh';
 import Transformation  from './core/transformation';
 import {
-    ProgramEntry
+    ProgramEntrySettings,
+    CameraSettings
 } from './modules';
 
 
-const renderer = new Renderer(document.getElementById(ProgramEntry.WEBGL_CANVAS_ID) as HTMLCanvasElement);
+const canvas = document.getElementById(ProgramEntrySettings.WEBGL_CANVAS_ID) as HTMLCanvasElement;
+const renderer = new Renderer(canvas);
 renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
 const gl = renderer.getContext() as WebGLRenderingContext;
 
 const meshArray: Mesh[] = [];
 
-Mesh.loadMesh(gl, ProgramEntry.PATH_ASSETS_SPHERE, ProgramEntry.PATH_ASSETS_DIFFUSE)
+Mesh.loadMesh(gl, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE)
     .then((mesh) => meshArray.push(mesh));
 
-ShaderProgram.initShaderProgram(gl, ProgramEntry.PATH_SHADE_VERTEX, ProgramEntry.PATH_SHADE_FRAGMENT)
+ShaderProgram.initShaderProgram(gl, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
 
 
@@ -29,7 +31,7 @@ const light = new Light(-1,-1,-1);
 
 const loop = () => {
     renderer.render(camera, light, meshArray);
-    camera.position = (camera.position as Transformation).rotateY(Math.PI / ProgramEntry.CAMERA_ANGLE_DIVISION);
+    camera.position = (camera.position as Transformation).rotateY(Math.PI / CameraSettings.CAMERA_ANGLE_DIVISION);
     requestAnimationFrame(loop);
 }
 

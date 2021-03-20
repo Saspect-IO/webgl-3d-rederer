@@ -1,5 +1,5 @@
 import {
-    ProgramEntry
+    ProgramEntrySettings
 } from '../modules';
 import ShaderProgram from './shaderProgram';
 import Camera from './camera';
@@ -8,7 +8,7 @@ import Mesh from './mesh';
 
 export default class Renderer {
     constructor(canvas: HTMLCanvasElement) {
-        this.gl = canvas.getContext(ProgramEntry.WEBGL_CONTEXT);
+        this.gl = canvas.getContext(ProgramEntrySettings.WEBGL_CONTEXT);
         this.gl?.enable(this.gl.DEPTH_TEST);
         this.shaderProgram = null;
     }
