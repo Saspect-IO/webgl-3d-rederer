@@ -8,9 +8,15 @@ import Mesh from './mesh';
 
 export default class Renderer {
     constructor(canvas: HTMLCanvasElement) {
-        this.gl = canvas.getContext(ProgramEntrySettings.WEBGL_CONTEXT);
+        ([
+            ProgramEntrySettings.WEBGL_CONTEXT,
+            ProgramEntrySettings.WEBGL_CONTEXT_EXPERIMENTAL,
+            ProgramEntrySettings.WEBGL_CONTEXT_WEBKIT,
+            ProgramEntrySettings.WEBGL_CONTEXT_MOZ
+        ]).some(option => this.gl = canvas.getContext(option) as WebGLRenderingContext);
+
+        this.gl ?? alert(ProgramEntrySettings.WEBGL_CONTEXT_ERROR_MESSAGE);
         this.gl?.enable(this.gl.DEPTH_TEST);
-        this.shaderProgram = null;
     }
 
     gl: WebGLRenderingContext | null = null;
