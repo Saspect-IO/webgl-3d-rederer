@@ -44,7 +44,7 @@ export default class Camera {
   }
 
   useCamera(shaderProgram: any) {
-    (this.projection as Transformation).sendToGpu(shaderProgram.gl, shaderProgram.projection);
-    this.getInversePosition().sendToGpu(shaderProgram.gl, shaderProgram.view);
+    (this.projection as Transformation).sendToGpu(shaderProgram.glContext, shaderProgram.projection);
+    this.getInversePosition().sendToGpu(shaderProgram.glContext, shaderProgram.view);
   }
 }
