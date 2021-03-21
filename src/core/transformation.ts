@@ -81,9 +81,7 @@ export default class Transformation {
         return this.mult(transform);
     }
 
-    sendToGpu(glContext:WebGLRenderingContext, uniform: WebGLUniformLocation, transpose = false) {
-        console.log('test');
-        
+    sendToGpu(glContext:WebGLRenderingContext, uniform: WebGLUniformLocation, transpose = false) {  
         glContext.uniformMatrix4fv(uniform, transpose, new Float32Array(this.matrix));
     }
 }
