@@ -48,7 +48,7 @@ export default class Geometry {
                 uvs.push(Vec2Struct(parseFloat(result[1]), 1 - parseFloat(result[2])))
             } else if ((result = SURFACE.exec(line)) !== null) {
                 // Add new face
-                const vertices: Vertex[]= [];
+                const vertices: Vertex[] = [];
                 // Create three vertices from the passed one-indexed indices
                 for (let i = 1; i < 10; i += 3) {
                     const part = result.slice(i, i + 3);
