@@ -7,10 +7,6 @@ import Controls from './core/controls';
 import Transformation  from './core/transformation';
 import { CameraSettings, ProgramEntrySettings } from './modules';
 
-
-let currentAngle = [0.0, 0.0];
-let translateX = 0;
-let translateY = 50;
 const model: Mesh[] = [];
 const canvas = document.getElementById(ProgramEntrySettings.WEBGL_CANVAS_ID) as HTMLCanvasElement;
 
@@ -18,6 +14,7 @@ const canvas = document.getElementById(ProgramEntrySettings.WEBGL_CANVAS_ID) as 
 const renderer = new Renderer(canvas);
 const camera = new Camera(); 
 const light = new Light(-1,-1,-1);
+const controls = new Controls(canvas, camera);
 
 
 renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
@@ -30,15 +27,16 @@ Mesh.loadMesh(glContext, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySe
 ShaderProgram.initShaderProgram(glContext, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
 
-Controls.initMouseControl(canvas, camera, currentAngle, translateX, translateY);
-
-
 camera.setOrthographic(16, 8, 12);
-camera.position = (camera.position as Transformation).scale(0.18,0.18,0.18).translate(translateX,translateY,0);
+
+
+console.log(controls.scale?.matrix[0], controls.scale?.matrix[5], controls.scale?.matrix[10]);
+    
 
 
 const loop = () => {
     renderer.render(camera, light, model);
+    camera.position = controls.zoom(camera);
     requestAnimationFrame(loop);
 }
 loop();

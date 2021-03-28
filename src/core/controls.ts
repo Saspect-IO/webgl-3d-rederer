@@ -1,12 +1,15 @@
 import { KeyboardArrows } from '@/entities';
-import { ControlsSettings } from '../modules';
+import { CameraSettings, ControlsSettings } from '../modules';
 import Camera from './camera';
+import Transformation from './transformation';
 
 export default class Controls {
 
-    constructor() {
+    constructor(canvas:HTMLCanvasElement, camera: Camera) {
         document.addEventListener(ControlsSettings.KEY_DOWN_EVENT, this.keyDownHandler, false);
         document.addEventListener(ControlsSettings.KEY_UP_EVENT, this.keyUpHandler, false);
+        this.scale = (camera.position as Transformation).scale(0.18,0.18,0.18);
+        this.canvas = canvas;
     }
 
     rightPressed = false;
@@ -15,7 +18,18 @@ export default class Controls {
     downPressed = false;
 
     camera: Camera | null = null;
-    canvas: HTMLCanvasElement | null = null; 
+    canvas:HTMLCanvasElement;
+
+    scale: Transformation | null = null;
+    rotateY: Transformation | null = null;
+
+
+    scaleX = 0;
+    scaleY = 0;
+    scaleZ = 0;
+    zoomRange = 0.1;
+    wheelNormalize = 1200;
+    
 
 
     keyDownHandler(event: any) {
@@ -50,7 +64,7 @@ export default class Controls {
         }
     }
 
-    static initMouseControl(canvas: HTMLCanvasElement, camera: Camera, currentAngle: number[], Tx:number, Ty:number) {
+    initMouseControl(canvas: HTMLCanvasElement, camera: Camera, currentAngle: number[], Tx:number, Ty:number) {
         let dragging1 = false;
         let dragging2 = false;
         let dragging3 = false;
@@ -58,7 +72,8 @@ export default class Controls {
         let lastY = -1;
 
         canvas.onmousedown = function (event: any) { //Press the mouse to trigger the listening event
-
+            console.log('mouse down');
+            
             const x = event.clientX;
             const y = event.clientY;
             switch (event.button) {
@@ -87,11 +102,7 @@ export default class Controls {
             }
         };
 
-        //Scroll wheel zoom operation
-        (canvas as any).onmousewheel = function (event: any) {
-            camera.position?.scale(-5, -5, -5);
-            console.log(event.wheelDelta);
-        };
+
 
         //Release the mouse
         canvas.onmouseup = function (event) {
@@ -109,6 +120,7 @@ export default class Controls {
 
         //Move the mouse
         canvas.onmousemove = function (event) { //Mouse movement monitoring
+            console.log('mouse move');
             const x = event.clientX;
             const y = event.clientY;
 
@@ -138,5 +150,26 @@ export default class Controls {
             lastX = x;
             lastY = y;
         };
+
+        //Scroll wheel zoom operation
+
     }
+
+    zoom(camera: Camera): Transformation {
+        
+        (this.canvas as any).onmousewheel = (event: any) =>{
+
+            const factor = event.wheelDelta / this.wheelNormalize;
+            this.scale = (camera.position as Transformation).scale(
+                this.scaleX += (factor / this.zoomRange), 
+                this.scaleY += (factor / this.zoomRange), 
+                this.scaleZ += (factor / this.zoomRange)
+            );
+
+            console.log({factor, scale:this.scale});
+        };
+
+        return this.scale as Transformation;
+    }
+
 }
