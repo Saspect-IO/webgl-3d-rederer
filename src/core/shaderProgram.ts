@@ -11,6 +11,7 @@ export default class ShaderProgram {
     glContext.linkProgram(shaderProgram);
     if (!glContext.getProgramParameter(shaderProgram, glContext.LINK_STATUS)) {
       console.error(glContext.getProgramInfoLog(shaderProgram));
+      glContext.deleteProgram(shaderProgram);
       throw new Error('Failed to link shaderProgram');
     }
 
@@ -45,6 +46,29 @@ export default class ShaderProgram {
   shaderProgram: WebGLProgram;
 
 
+  loadShader(glContext: WebGLRenderingContext, type: number, source: string) {
+    const shader = glContext.createShader(type) as WebGLShader;
+
+    // Send the source to the shader object
+    glContext.shaderSource(shader, source);
+
+    // Compile the shader program
+    glContext.compileShader(shader);
+
+    // See if it compiled successfully
+    if (!glContext.getShaderParameter(shader, glContext.COMPILE_STATUS)) {
+      alert('An error occurred compiling the shaders: ' + glContext.getShaderInfoLog(shader));
+      glContext.deleteShader(shader);
+      return null;
+    }
+
+    return shader;
+  }
+
+  useShaderProgram() {
+    this.glContext.useProgram(this.shaderProgram);
+  }
+
   // Loads shader files from the given URLs, and returns a program as a promise
   static async initShaderProgram(glContext: WebGLRenderingContext, vsSource: string, fsSource: string) {
 
@@ -58,31 +82,5 @@ export default class ShaderProgram {
     const shaderProgram = new ShaderProgram(glContext, vertexShaderFile, fragmentShaderFile);
 
     return shaderProgram;
-  }
-
-  loadShader(glContext: WebGLRenderingContext, type: number, source: string) {
-    const shader = glContext.createShader(type) as WebGLShader;
-
-    // Send the source to the shader object
-
-    glContext.shaderSource(shader, source);
-
-    // Compile the shader program
-
-    glContext.compileShader(shader);
-
-    // See if it compiled successfully
-
-    if (!glContext.getShaderParameter(shader, glContext.COMPILE_STATUS)) {
-      alert('An error occurred compiling the shaders: ' + glContext.getShaderInfoLog(shader));
-      glContext.deleteShader(shader);
-      return null;
-    }
-
-    return shader;
-  }
-
-  useShaderProgram() {
-    this.glContext.useProgram(this.shaderProgram);
   }
 }
