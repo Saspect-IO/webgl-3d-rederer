@@ -14,8 +14,8 @@ export default class Light {
     useLight(shaderProgram: ShaderProgram): void {
         const dir = this.lightDirection;
         const glContext = shaderProgram.glContext;
-        glContext.uniform3f(shaderProgram.lightDirection, dir.x, dir.y, dir.z);
-        glContext.uniform1f(shaderProgram.ambientLight, this.ambientLight);
+        glContext?.uniform3f(shaderProgram.lightDirection, dir.x, dir.y, dir.z);
+        glContext?.uniform1f(shaderProgram.ambientLight, this.ambientLight);
     }
 
 }

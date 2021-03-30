@@ -1,3 +1,4 @@
+import ShaderProgram from "./shaderProgram";
 import Transformation from "./transformation";
 
 export default class Camera {
@@ -44,8 +45,8 @@ export default class Camera {
     return inverse
   }
 
-  useCamera(shaderProgram: any) {
-    (this.projection as Transformation).sendToGpu(shaderProgram.glContext, shaderProgram.projection);
-    this.getInversePosition().sendToGpu(shaderProgram.glContext, shaderProgram.view);
+  useCamera(shaderProgram: ShaderProgram) {
+    (this.projection as Transformation).sendToGpu((shaderProgram.glContext as WebGLRenderingContext), (shaderProgram.projection as WebGLUniformLocation ));
+    this.getInversePosition().sendToGpu((shaderProgram.glContext as WebGLRenderingContext), (shaderProgram.view as WebGLUniformLocation ));
   }
 }
