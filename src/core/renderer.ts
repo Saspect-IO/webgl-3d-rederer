@@ -16,6 +16,7 @@ export default class Renderer {
         ]).some(option => this.glContext = canvas.getContext(option) as WebGLRenderingContext);
 
         this.glContext ?? alert(ProgramEntrySettings.WEBGL_CONTEXT_ERROR_MESSAGE);
+        this.glContext?.enable(this.glContext.CULL_FACE);
         this.glContext?.enable(this.glContext.DEPTH_TEST);
     }
 
