@@ -3,33 +3,34 @@ import ShaderProgram  from './core/shaderProgram';
 import Camera  from './core/camera';
 import Light  from './core/light';
 import Mesh from './core/mesh';
-import Transformation  from './core/transformation';
-import {
-    ProgramEntry
-} from './modules/index';
+import Controls from './core/controls';
+import { CameraSettings, ProgramEntrySettings } from './modules';
 
 
-const renderer = new Renderer(document.getElementById(ProgramEntry.WEBGL_CANVAS_ID) as HTMLCanvasElement)
+const model: Mesh[] = [];
+const canvas = document.getElementById(ProgramEntrySettings.WEBGL_CANVAS_ID) as HTMLCanvasElement;
+
+const renderer = new Renderer(canvas);
+const camera = new Camera(); 
+const light = new Light(-1,-1,-1);
+const controls = new Controls(canvas, camera);
+
 renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
-const gl = renderer.getContext() as WebGLRenderingContext;
+const glContext = renderer.getContext() as WebGLRenderingContext;
+const aspect = glContext.canvas.width / glContext.canvas.height
 
-const meshArray: Mesh[] = [];
+Mesh.loadMesh(glContext, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE)
+    .then((mesh) => model.push(mesh));
 
-Mesh.loadMesh(gl, ProgramEntry.PATH_ASSETS_SPHERE, ProgramEntry.PATH_ASSETS_DIFFUSE)
-    .then((mesh) => meshArray.push(mesh));
-
-ShaderProgram.initShaderProgram(gl, ProgramEntry.PATH_SHADE_VERTEX, ProgramEntry.PATH_SHADE_FRAGMENT)
+ShaderProgram.initShaderProgram(glContext, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
 
-
-const camera = new Camera(); camera.setOrthographic(16, 10, 10);
-const light = new Light();
+camera.setPerspective(aspect, CameraSettings.FIELD_OF_VIEW, CameraSettings.NEAR_PLANE, CameraSettings.FAR_PLANE);
 
 const loop = () => {
-    renderer.render(camera, light, meshArray);
-    camera.position = (camera.position as Transformation).rotateY(Math.PI / ProgramEntry.CAMERA_ANGLE_DIVISION);
+    renderer.render(camera, light, model);
+    camera.position = controls.zoom(camera);
     requestAnimationFrame(loop);
 }
-
 loop();
 

@@ -15,14 +15,14 @@ export default class Camera {
     (this.projection as Transformation).matrix[10] = -2 / depth;
   }
 
-  setPerspective(verticalFov:number, aspectRatio:number, nearPlane:number, farPlane:number) {
-    const height_div_2n = Math.tan(verticalFov * Math.PI / 360);
-    const width_div_2n = aspectRatio * height_div_2n;
-    (this.projection as Transformation).matrix[0] = 1 / height_div_2n;
-    (this.projection as Transformation).matrix[5] = 1 / width_div_2n;
-    (this.projection as Transformation).matrix[10] = (farPlane + nearPlane) / (nearPlane - farPlane);
-    (this.projection as Transformation).matrix[10] = -1;
-    (this.projection as Transformation).matrix[14] = 2 * farPlane * nearPlane / (nearPlane - farPlane);
+  setPerspective(fieldOfViewInRadians:number, aspectRatio:number, nearPlane:number, farPlane:number) {
+    const f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
+    const rangeInv = 1.0 / (nearPlane - farPlane);
+    (this.projection as Transformation).matrix[0] = f / aspectRatio;
+    (this.projection as Transformation).matrix[5] = f;
+    (this.projection as Transformation).matrix[10] = (nearPlane + farPlane) * rangeInv;
+    (this.projection as Transformation).matrix[11] = -1;
+    (this.projection as Transformation).matrix[14] = nearPlane * farPlane * rangeInv * 2;
     (this.projection as Transformation).matrix[15] = 0;
   }
 
@@ -40,7 +40,8 @@ export default class Camera {
     }
 
     // Translation by -p will apply R^T, which is equal to R^-1
-    return tranform.translate(-x, -y, -z);
+    const inverse = tranform.translate(-x, -y, -z);
+    return inverse
   }
 
   useCamera(shaderProgram: any) {
