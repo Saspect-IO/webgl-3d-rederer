@@ -1,4 +1,5 @@
 const path = require( 'path' );
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 
@@ -36,14 +37,19 @@ module.exports = {
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
-                type: 'asset/resource',
+                type: 'assets/resource',
               },
               {
                 test: /\.(woff|woff2|eot|ttf|otf|obj)$/i,
-                type: 'asset/resource',
+                type: 'assets/resource',
               },
         ]
     },
+    plugins: [
+        new HtmlWebpackPlugin({
+          template: './src/index.html'
+        })
+      ],
 
     // set watch mode to `true`
     watch: true

@@ -9,8 +9,6 @@ export default class Camera {
   position: Transformation | null = null;
   projection: Transformation | null = null;
 
-
-
   setOrthographic(width: number, height: number, depth: number) {
     (this.projection as Transformation).matrix[0] = 2 / width;
     (this.projection as Transformation).matrix[5] = 2 / height;
@@ -18,7 +16,7 @@ export default class Camera {
   }
 
   setPerspective(verticalFov:number, aspectRatio:number, nearPlane:number, farPlane:number) {
-    const height_div_2n = Math.tan(verticalFov * Math.PI / 360)
+    const height_div_2n = Math.tan(verticalFov * Math.PI / 360);
     const width_div_2n = aspectRatio * height_div_2n;
     (this.projection as Transformation).matrix[0] = 1 / height_div_2n;
     (this.projection as Transformation).matrix[5] = 1 / width_div_2n;
@@ -46,7 +44,7 @@ export default class Camera {
   }
 
   useCamera(shaderProgram: any) {
-    (this.projection as Transformation).sendToGpu(shaderProgram.gl, shaderProgram.projection);
-    this.getInversePosition().sendToGpu(shaderProgram.gl, shaderProgram.view);
+    (this.projection as Transformation).sendToGpu(shaderProgram.glContext, shaderProgram.projection);
+    this.getInversePosition().sendToGpu(shaderProgram.glContext, shaderProgram.view);
   }
 }

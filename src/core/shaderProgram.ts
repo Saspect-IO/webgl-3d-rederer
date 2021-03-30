@@ -1,36 +1,36 @@
 export default class ShaderProgram {
-  constructor(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
+  constructor(glContext: WebGLRenderingContext, vsSource: string, fsSource: string) {
 
-    const vertexShader = this.loadShader(gl, gl.VERTEX_SHADER, vsSource) as WebGLShader;
-    const fragmentShader = this.loadShader(gl, gl.FRAGMENT_SHADER, fsSource) as WebGLShader;
+    const vertexShader = this.loadShader(glContext, glContext.VERTEX_SHADER, vsSource) as WebGLShader;
+    const fragmentShader = this.loadShader(glContext, glContext.FRAGMENT_SHADER, fsSource) as WebGLShader;
 
     // Create the shader program
-    const shaderProgram = gl.createProgram() as WebGLProgram;
-    gl.attachShader(shaderProgram, vertexShader);
-    gl.attachShader(shaderProgram, fragmentShader);
-    gl.linkProgram(shaderProgram);
-    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-      console.error(gl.getProgramInfoLog(shaderProgram));
+    const shaderProgram = glContext.createProgram() as WebGLProgram;
+    glContext.attachShader(shaderProgram, vertexShader);
+    glContext.attachShader(shaderProgram, fragmentShader);
+    glContext.linkProgram(shaderProgram);
+    if (!glContext.getProgramParameter(shaderProgram, glContext.LINK_STATUS)) {
+      console.error(glContext.getProgramInfoLog(shaderProgram));
       throw new Error('Failed to link shaderProgram');
     }
 
-    this.gl = gl;
-    this.positionIndex = gl.getAttribLocation(shaderProgram, 'position');
-    this.normalIndex = gl.getAttribLocation(shaderProgram, 'normal');
-    this.uvIndex = gl.getAttribLocation(shaderProgram, 'uv');
-    this.model = gl.getUniformLocation(shaderProgram, 'model') as WebGLUniformLocation;
-    this.view = gl.getUniformLocation(shaderProgram, 'view') as WebGLUniformLocation;
-    this.projection = gl.getUniformLocation(shaderProgram, 'projection') as WebGLUniformLocation;
-    this.ambientLight = gl.getUniformLocation(shaderProgram, 'ambientLight') as WebGLUniformLocation;
-    this.lightDirection = gl.getUniformLocation(shaderProgram, 'lightDirection') as WebGLUniformLocation;
-    this.diffuse = gl.getUniformLocation(shaderProgram, 'diffuse') as WebGLUniformLocation;
+    this.glContext = glContext;
+    this.positionIndex = glContext.getAttribLocation(shaderProgram, 'position');
+    this.normalIndex = glContext.getAttribLocation(shaderProgram, 'normal');
+    this.uvIndex = glContext.getAttribLocation(shaderProgram, 'uv');
+    this.model = glContext.getUniformLocation(shaderProgram, 'model') as WebGLUniformLocation;
+    this.view = glContext.getUniformLocation(shaderProgram, 'view') as WebGLUniformLocation;
+    this.projection = glContext.getUniformLocation(shaderProgram, 'projection') as WebGLUniformLocation;
+    this.ambientLight = glContext.getUniformLocation(shaderProgram, 'ambientLight') as WebGLUniformLocation;
+    this.lightDirection = glContext.getUniformLocation(shaderProgram, 'lightDirection') as WebGLUniformLocation;
+    this.diffuse = glContext.getUniformLocation(shaderProgram, 'diffuse') as WebGLUniformLocation;
     this.vertexShader = vertexShader;
     this.fragmentShader = fragmentShader;
     this.shaderProgram = shaderProgram;
 
   }
 
-  gl: WebGLRenderingContext;
+  glContext: WebGLRenderingContext;
   positionIndex: number;
   normalIndex: number;
   uvIndex: number;
@@ -46,35 +46,36 @@ export default class ShaderProgram {
 
 
   // Loads shader files from the given URLs, and returns a program as a promise
-  static async initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
+  static async initShaderProgram(glContext: WebGLRenderingContext, vsSource: string, fsSource: string) {
 
     const loadFile = async (src: string) => {
       const response = await fetch(src);
       const data = await response.text();
       return data;
     }
-    const files = await Promise.all([loadFile(vsSource), loadFile(fsSource)]);
-    const shaderProgram = new ShaderProgram(gl, files[0] as string, files[1] as string);
+    
+    const [vertexShaderFile, fragmentShaderFile] = await Promise.all([loadFile(vsSource), loadFile(fsSource)]);
+    const shaderProgram = new ShaderProgram(glContext, vertexShaderFile, fragmentShaderFile);
 
-    return shaderProgram
+    return shaderProgram;
   }
 
-  loadShader(gl: WebGLRenderingContext, type: number, source: string) {
-    const shader = gl.createShader(type) as WebGLShader;
+  loadShader(glContext: WebGLRenderingContext, type: number, source: string) {
+    const shader = glContext.createShader(type) as WebGLShader;
 
     // Send the source to the shader object
 
-    gl.shaderSource(shader, source);
+    glContext.shaderSource(shader, source);
 
     // Compile the shader program
 
-    gl.compileShader(shader);
+    glContext.compileShader(shader);
 
     // See if it compiled successfully
 
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      alert('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
-      gl.deleteShader(shader);
+    if (!glContext.getShaderParameter(shader, glContext.COMPILE_STATUS)) {
+      alert('An error occurred compiling the shaders: ' + glContext.getShaderInfoLog(shader));
+      glContext.deleteShader(shader);
       return null;
     }
 
@@ -82,6 +83,6 @@ export default class ShaderProgram {
   }
 
   useShaderProgram() {
-    this.gl.useProgram(this.shaderProgram);
+    this.glContext.useProgram(this.shaderProgram);
   }
 }

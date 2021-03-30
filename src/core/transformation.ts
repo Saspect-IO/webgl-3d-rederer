@@ -48,20 +48,20 @@ export default class Transformation {
     // Multiply by rotation matrix around X axis
     rotateX(angle:number) {
         const transform = new Transformation();
-        const cos = Math.cos(angle)
-        const sin = Math.sin(angle)
-        transform.matrix[5] = cos
-        transform.matrix[10] = cos
-        transform.matrix[9] = -sin
-        transform.matrix[6] = sin
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        transform.matrix[5] = cos;
+        transform.matrix[10] = cos;
+        transform.matrix[9] = -sin;
+        transform.matrix[6] = sin;
         return this.mult(transform);
     }
 
     // Multiply by rotation matrix around Y axis
     rotateY(angle:number) {
         const transform = new Transformation();
-        const cos = Math.cos(angle)
-        const sin = Math.sin(angle)
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
         transform.matrix[0] = cos;
         transform.matrix[10] = cos;
         transform.matrix[2] = -sin;
@@ -72,8 +72,8 @@ export default class Transformation {
     // Multiply by rotation matrix around Z axis
     rotateZ(angle:number) {
         const transform = new Transformation();
-        const cos = Math.cos(angle)
-        const sin = Math.sin(angle)
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
         transform.matrix[0] = cos;
         transform.matrix[5] = cos;
         transform.matrix[4] = -sin;
@@ -81,7 +81,7 @@ export default class Transformation {
         return this.mult(transform);
     }
 
-    sendToGpu(gl:WebGLRenderingContext, uniform: WebGLUniformLocation, transpose = false) {
-        gl.uniformMatrix4fv(uniform, transpose, new Float32Array(this.matrix))
+    sendToGpu(glContext:WebGLRenderingContext, uniform: WebGLUniformLocation, transpose = false) {  
+        glContext.uniformMatrix4fv(uniform, transpose, new Float32Array(this.matrix));
     }
 }
