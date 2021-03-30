@@ -16,33 +16,16 @@ export default class Camera {
     (this.projection as Transformation).matrix[10] = -2 / depth;
   }
 
-  setPerspective(fieldOfViewInRadians:number, aspectRatio:number, nearPlane:number, farPlane:number) {
-    const f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfViewInRadians);
-    const rangeInv = 1.0 / (nearPlane - farPlane);
-    (this.projection as Transformation).matrix[0] = f / aspectRatio;
-    (this.projection as Transformation).matrix[5] = f;
-    (this.projection as Transformation).matrix[10] = (nearPlane + farPlane) * rangeInv;
-    (this.projection as Transformation).matrix[11] = -1;
-    (this.projection as Transformation).matrix[14] = nearPlane * farPlane * rangeInv * 2;
-    (this.projection as Transformation).matrix[15] = 0;
+  setPerspective(fieldOfView:number, aspectRatio:number, nearPlane:number, farPlane:number): void {
+    const y = Math.tan(fieldOfView * Math.PI / 360) * nearPlane;
+    const x = y * aspectRatio;
+    Transformation.frustum(-x, x, -y, y, nearPlane, farPlane, this.projection as Transformation);
   }
 
   getInversePosition():Transformation {
     const orig = (this.position as Transformation).matrix;
-    const tranform = new Transformation();
-    const x = orig[12];
-    const y = orig[13];
-    const z = orig[14];
-    // Transpose the rotation matrix
-    for (let i = 0; i < 3; ++i) {
-      for (let j = 0; j < 3; ++j) {
-        tranform.matrix[i * 4 + j] = orig[i + j * 4];
-      }
-    }
-
-    // Translation by -p will apply R^T, which is equal to R^-1
-    const inverse = tranform.translate(-x, -y, -z);
-    return inverse
+    const inverse = Transformation.inverse(orig);
+    return inverse;
   }
 
   useCamera(shaderProgram: ShaderProgram) {
