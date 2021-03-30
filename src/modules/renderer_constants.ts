@@ -14,6 +14,9 @@ export enum ProgramEntrySettings {
 
 export enum CameraSettings {
     CAMERA_ANGLE_DIVISION = 120,
+    NEAR_PLANE = 1,
+    FAR_PLANE = 2000,
+    FIELD_OF_VIEW = 0.785398,
 }
 
 export enum ControlsSettings {
