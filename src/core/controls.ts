@@ -8,7 +8,7 @@ export default class Controls {
     constructor(canvas:HTMLCanvasElement, camera: Camera) {
         document.addEventListener(ControlsSettings.KEY_DOWN_EVENT, this.keyDownHandler, false);
         document.addEventListener(ControlsSettings.KEY_UP_EVENT, this.keyUpHandler, false);
-        this.scale = (camera.position as Transformation).scale(0.18,0.18,0.18);
+        this.cameraPosition = camera.position as Transformation;
         this.canvas = canvas;
     }
 
@@ -20,14 +20,12 @@ export default class Controls {
     camera: Camera | null = null;
     canvas:HTMLCanvasElement;
 
-    scale: Transformation | null = null;
+    cameraPosition: Transformation | null = null;
     rotateY: Transformation | null = null;
 
 
-    scaleX = 0;
-    scaleY = 0;
-    scaleZ = 0;
-    zoomRange = 0.1;
+    scale = 0;
+    zoomRange = 1;
     wheelNormalize = 1200;
     
 
@@ -103,7 +101,6 @@ export default class Controls {
         };
 
 
-
         //Release the mouse
         canvas.onmouseup = function (event) {
 
@@ -160,16 +157,11 @@ export default class Controls {
         (this.canvas as any).onmousewheel = (event: any) =>{
 
             const factor = event.wheelDelta / this.wheelNormalize;
-            this.scale = (camera.position as Transformation).scale(
-                this.scaleX += (factor / this.zoomRange), 
-                this.scaleY += (factor / this.zoomRange), 
-                this.scaleZ += (factor / this.zoomRange)
-            );
-
-            console.log({factor, scale:this.scale});
+            const scale = this.scale += factor;
+            this.cameraPosition = (camera.position as Transformation).scale(scale, scale, scale);
         };
 
-        return this.scale as Transformation;
+        return this.cameraPosition as Transformation;
     }
 
 }
