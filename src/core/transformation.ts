@@ -42,7 +42,8 @@ export default class Transformation {
         transform.matrix[0] = x;
         transform.matrix[5] = y;
         transform.matrix[10] = z;
-        return this.mult(transform);
+        const scale = this.mult(transform); 
+        return scale;
     }
 
     // Multiply by rotation matrix around X axis
