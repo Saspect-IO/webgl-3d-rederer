@@ -1,5 +1,5 @@
 import { KeyboardArrows } from '@/entities';
-import { CameraSettings, ControlsSettings } from '../modules';
+import { CameraSettings, ControlsSettings, degToRad } from '../modules';
 import Camera from './camera';
 import Transformation from './transformation';
 
@@ -8,9 +8,25 @@ export default class Controls {
     constructor(canvas:HTMLCanvasElement, camera: Camera) {
         document.addEventListener(ControlsSettings.KEY_DOWN_EVENT, this.keyDownHandler, false);
         document.addEventListener(ControlsSettings.KEY_UP_EVENT, this.keyUpHandler, false);
+        this.sliderFieldOfView = document.getElementById("fielOfView");
+        this.sliderTranslateX = document.getElementById("translateX");
+        this.sliderTranslateY = document.getElementById("translateY");
+        this.sliderTranslateZ = document.getElementById("translateZ");
+        this.sliderAngleX = document.getElementById("angleX");
+        this.sliderAngleY = document.getElementById("angleY");
+        this.sliderAngleZ = document.getElementById("angleZ");
         this.cameraPosition = camera.position as Transformation;
         this.canvas = canvas;
     }
+
+
+    sliderFieldOfView:HTMLElement | null = null;
+    sliderTranslateX:HTMLElement | null = null;
+    sliderTranslateY:HTMLElement | null = null;
+    sliderTranslateZ:HTMLElement | null = null;
+    sliderAngleX:HTMLElement | null = null;
+    sliderAngleY:HTMLElement | null = null;
+    sliderAngleZ:HTMLElement | null = null;
 
     rightPressed = false;
     leftPressed = false;
@@ -23,8 +39,8 @@ export default class Controls {
     cameraPosition: Transformation | null = null;
     rotateY: Transformation | null = null;
 
-
     scale = 0;
+    fov = 60;
     wheelNormalize = 1200;
     
 
@@ -151,6 +167,7 @@ export default class Controls {
 
     }
 
+
     zoom(camera: Camera): Transformation {
         
         (this.canvas as any).onmousewheel = (event: any) =>{
@@ -162,5 +179,16 @@ export default class Controls {
 
         return this.cameraPosition as Transformation;
     }
+
+
+  updateFieldOfView(fieldOfView:number) {
+
+    (this.sliderFieldOfView as HTMLElement ).oninput  = function (event: Event){
+        fieldOfView = degToRad(this.value);
+        // this.cameraPosition = (camera.position as Transformation).scale(scale, scale, scale);
+    
+    }
+  }
+
 
 }

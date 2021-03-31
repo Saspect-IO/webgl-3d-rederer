@@ -19,23 +19,22 @@ const camera = new Camera();
 const light = new Light(-1,-1,-1);
 const controls = new Controls(canvas, camera);
 
-const fieldOfViewRadians = degToRad(CameraSettings.FIELD_OF_VIEW);
+const cameraData = {
+    fieldOfView: degToRad(CameraSettings.FIELD_OF_VIEW),
+} 
 
-renderer.setClearColor(255.0, 255.0, 255.0, 1.0);
+renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
 const glContext = renderer.getContext() as WebGLRenderingContext;
 const aspect = glContext.canvas.width / glContext.canvas.height
 
-// Mesh.loadMesh(glContext, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE)
-//     .then((mesh) => model.push(mesh));
+Mesh.loadMesh(glContext, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE)
+    .then((mesh) => model.push(mesh));
 
-Primitives.loadPrimitives(glContext)
-    .then((data) => primitives.push(data));
+// Primitives.loadPrimitives(glContext)
+//     .then((data) => primitives.push(data));
 
 ShaderProgram.initShaderProgram(glContext, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
-
-
-camera.position = (camera.position as Transformation).scale(0.05,0.05,0.05).rotateY(180);
 
 camera.setOrthographic(
     CameraSettings.SCREEN_LEFT, 
@@ -46,11 +45,12 @@ camera.setOrthographic(
     CameraSettings.ORTHO_FAR
 );
 
-// camera.setPerspective(fieldOfViewRadians, aspect, CameraSettings.NEAR_PLANE, CameraSettings.FAR_PLANE);
+camera.setPerspective(cameraData.fieldOfView, aspect, CameraSettings.NEAR_PLANE, CameraSettings.FAR_PLANE);
 
 const loop = () => {
-    renderer.render(camera, light, primitives);
-    //controls.zoom(camera, fieldOfViewRadians, aspect, CameraSettings.NEAR_PLANE, CameraSettings.FAR_PLANE);
+    renderer.render(camera, light, model, camera.position?.matrix as number[]);
+    // controls.updateFieldOfView(cameraData.fieldOfView);
+    camera.position = controls.zoom(camera);
     requestAnimationFrame(loop);
 }
 loop();

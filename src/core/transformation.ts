@@ -151,7 +151,7 @@ export default class Transformation {
         return transform;
     };
 
-    sendToGpu(glContext: WebGLRenderingContext, uniform: WebGLUniformLocation, transpose = false) {
-        glContext.uniformMatrix4fv(uniform, transpose, new Float32Array(this.matrix));
+    sendToGpu(glContext: WebGLRenderingContext, uniform: WebGLUniformLocation,  matrix?:number[], transpose = false) {
+        glContext.uniformMatrix4fv(uniform, transpose, new Float32Array(matrix as number[]));
     }
 }

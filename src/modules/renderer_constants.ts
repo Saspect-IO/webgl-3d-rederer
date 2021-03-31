@@ -7,8 +7,8 @@ export enum ProgramEntrySettings {
     WEBGL_CONTEXT_ERROR_MESSAGE = 'Could not initialise WebGL',
     PATH_ASSETS_SPHERE = '/assets/resources/sphere.obj',
     PATH_ASSETS_DIFFUSE = '/assets/resources/textures/diffuse.png',
-    PATH_SHADE_VERTEX = '/shaders/basic.vert',
-    PATH_SHADE_FRAGMENT = '/shaders/basic.frag',
+    PATH_SHADE_VERTEX = '/shaders/primitive.vert',
+    PATH_SHADE_FRAGMENT = '/shaders/primitive.frag',
 }
 
 
@@ -16,7 +16,7 @@ export enum CameraSettings {
     CAMERA_ANGLE_DIVISION = 120,
     NEAR_PLANE = 1,
     FAR_PLANE = 2000,
-    FIELD_OF_VIEW = 10,
+    FIELD_OF_VIEW = 60,
     PROJECTION_DEPTH = 400,
     SCREEN_LEFT = 0,
     SCREEN_TOP = 0,

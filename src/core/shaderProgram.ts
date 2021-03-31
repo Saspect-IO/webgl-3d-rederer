@@ -4,7 +4,8 @@ export default class ShaderProgram {
     const vertexShader = this.loadShader(glContext, glContext.VERTEX_SHADER, vsSource) as WebGLShader;
     const fragmentShader = this.loadShader(glContext, glContext.FRAGMENT_SHADER, fsSource) as WebGLShader;
     const program = glContext.createProgram() as WebGLProgram;
-    this.createShaderProgram(glContext, program, fragmentShader, vertexShader);
+    // this.createShaderProgram(glContext, program, fragmentShader, vertexShader);
+    this.createPrimitiveShaderProgram(glContext, program, fragmentShader, vertexShader);
     this.glContext = glContext;
 
   }

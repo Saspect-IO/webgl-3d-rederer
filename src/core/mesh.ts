@@ -31,11 +31,11 @@ export default class Mesh {
     this.uvs.destroy();
   }
 
-  drawMesh(shaderProgram: ShaderProgram) {
+  drawMesh(shaderProgram: ShaderProgram, matrix: number[]) {
     this.positions.bindToAttribute(shaderProgram.positionIndex as number);
     this.normals.bindToAttribute(shaderProgram.normalIndex as number);
     this.uvs.bindToAttribute(shaderProgram.uvIndex as number);
-    this.position.sendToGpu(this.glContext as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation);
+    this.position.sendToGpu(this.glContext as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation, matrix);
     this.texture.useTexture(shaderProgram.diffuse as WebGLUniformLocation, 0);
     this.glContext?.drawArrays(this.glContext.TRIANGLES, 0, this.vertexCount);
   }

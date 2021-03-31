@@ -1,4 +1,4 @@
-export const GEOMETRY_COLORS: [
+export const GEOMETRY_COLORS = [
   // left column front
   200, 70, 120,
   200, 70, 120,
@@ -126,5 +126,4 @@ export const GEOMETRY_COLORS: [
   160, 160, 220,
   160, 160, 220,
   160, 160, 220
-]
-}
+];
