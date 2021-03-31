@@ -10,22 +10,27 @@ export default class Camera {
   position: Transformation | null = null;
   projection: Transformation | null = null;
 
-  setOrthographic(width: number, height: number, depth: number) {
-    (this.projection as Transformation).matrix[0] = 2 / width;
-    (this.projection as Transformation).matrix[5] = 2 / height;
-    (this.projection as Transformation).matrix[10] = -2 / depth;
+  setOrthographic(left: number, right: number, top: number, bottom: number, near: number, far:number) {
+    (this.projection as Transformation).matrix[0] = 2 / (right - left);
+    (this.projection as Transformation).matrix[5] = 2 / (top - bottom);
+    (this.projection as Transformation).matrix[10] = 2 / (near - far);
   }
 
-  setPerspective(fieldOfView:number, aspectRatio:number, nearPlane:number, farPlane:number): void {
-    const y = Math.tan(fieldOfView * Math.PI / 360) * nearPlane;
-    const x = y * aspectRatio;
-    Transformation.frustum(-x, x, -y, y, nearPlane, farPlane, this.projection as Transformation);
+  setPerspective(fieldOfView:number, aspectRatio:number, near:number, far:number): void {
+    const f = Math.tan(Math.PI * 0.5 - 0.5 * fieldOfView);
+    const rangeInv = 1.0 / (near - far);
+    (this.projection as Transformation).matrix[0] = f / aspectRatio;
+    (this.projection as Transformation).matrix[5] = f;
+    (this.projection as Transformation).matrix[10] = (near + far) * rangeInv;
+    (this.projection as Transformation).matrix[11] = -1;
+    (this.projection as Transformation).matrix[14] = near * far * rangeInv * 2;
   }
 
   getInversePosition():Transformation {
     const orig = (this.position as Transformation).matrix;
     const inverse = Transformation.inverse(orig);
-
+    // console.log(inverse.matrix);
+    
     return inverse;
   }
 
