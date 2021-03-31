@@ -26,7 +26,7 @@ ShaderProgram.initShaderProgram(glContext, ProgramEntrySettings.PATH_SHADE_VERTE
     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
 
 
-camera.setOrthographic(16, 8, 12);
+camera.setOrthographic(glContext.canvas.width , glContext.canvas.height, 30);
 
 // camera.setPerspective(CameraSettings.FIELD_OF_VIEW, aspect, CameraSettings.NEAR_PLANE, CameraSettings.FAR_PLANE);
 

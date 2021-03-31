@@ -25,6 +25,7 @@ export default class Camera {
   getInversePosition():Transformation {
     const orig = (this.position as Transformation).matrix;
     const inverse = Transformation.inverse(orig);
+
     return inverse;
   }
 
