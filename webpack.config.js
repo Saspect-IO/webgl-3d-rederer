@@ -37,11 +37,11 @@ module.exports = {
             },
             {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i,
-                type: 'assets/resource',
+                type: 'assets/resources',
               },
               {
                 test: /\.(woff|woff2|eot|ttf|otf|obj)$/i,
-                type: 'assets/resource',
+                type: 'assets/resources',
               },
         ]
     },
@@ -50,7 +50,4 @@ module.exports = {
           template: './src/index.html'
         })
       ],
-
-    // set watch mode to `true`
-    watch: true
 };

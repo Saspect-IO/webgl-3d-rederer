@@ -25,7 +25,6 @@ export default class Controls {
 
 
     scale = 0;
-    zoomRange = 1;
     wheelNormalize = 1200;
     
 

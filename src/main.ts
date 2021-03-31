@@ -25,7 +25,10 @@ Mesh.loadMesh(glContext, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySe
 ShaderProgram.initShaderProgram(glContext, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
 
-camera.setPerspective(aspect, CameraSettings.FIELD_OF_VIEW, CameraSettings.NEAR_PLANE, CameraSettings.FAR_PLANE);
+
+camera.setOrthographic(glContext.canvas.width , glContext.canvas.height, 30);
+
+// camera.setPerspective(CameraSettings.FIELD_OF_VIEW, aspect, CameraSettings.NEAR_PLANE, CameraSettings.FAR_PLANE);
 
 const loop = () => {
     renderer.render(camera, light, model);
