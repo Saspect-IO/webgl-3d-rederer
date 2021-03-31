@@ -25,12 +25,16 @@ export default class Vbuffer {
 
   bindToAttribute(vertexAttributIndex: number) {
     const glContext = this.glContext
-    // Tell which buffer object we want to operate on as a VBO
-    glContext.bindBuffer(glContext.ARRAY_BUFFER, this.buffer)
-    // Enable this vertexAttributIndex in the shader
-    glContext.enableVertexAttribArray(vertexAttributIndex)
-    // Define format of the vertexAttributIndex array. Must match parameters in shader
-    glContext.vertexAttribPointer(vertexAttributIndex, this.size, glContext.FLOAT, false, 0, 0)
+    // Turn on the vertex attribute
+    glContext.enableVertexAttribArray(vertexAttributIndex);
+    // Bind the vertex buffer.
+    glContext.bindBuffer(glContext.ARRAY_BUFFER, this.buffer);
+
+    const stride = 0;// 0 = move forward size * sizeof(type) each iteration to get the next vertex
+    const offset = 0;// start at the beginning of the buffer
+
+    // Tell the vertex attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
+    glContext.vertexAttribPointer(vertexAttributIndex, this.size, glContext.FLOAT, false, stride, offset);
   }
 
 }

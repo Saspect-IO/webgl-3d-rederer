@@ -23,6 +23,12 @@ export default class ShaderProgram {
   fragmentShader: WebGLShader | null = null;
   shaderProgram: WebGLProgram | null = null;
 
+  // primitive
+  positionLocation: number | null = null;
+  colorLocation: number | null = null;
+  matrixLocation: WebGLUniformLocation | null = null;
+  fudgeLocation: WebGLUniformLocation | null = null;
+
 
   createShaderProgram(glContext: WebGLRenderingContext, program: WebGLProgram, vertexShader: WebGLShader, fragmentShader: WebGLShader):void{
       
@@ -34,7 +40,6 @@ export default class ShaderProgram {
         glContext.deleteProgram(program);
         throw new Error('Failed to link shaderProgram');
       }
-
       
       this.positionIndex = glContext.getAttribLocation(program, 'position');
       this.normalIndex = glContext.getAttribLocation(program, 'normal');
@@ -49,6 +54,27 @@ export default class ShaderProgram {
       this.fragmentShader = fragmentShader;
       this.shaderProgram = program;
   }
+
+
+  createPrimitiveShaderProgram(glContext: WebGLRenderingContext, program: WebGLProgram, vertexShader: WebGLShader, fragmentShader: WebGLShader):void{
+      
+    glContext.attachShader(program, vertexShader);
+    glContext.attachShader(program, fragmentShader);
+    glContext.linkProgram(program);
+    if (!glContext.getProgramParameter(program, glContext.LINK_STATUS)) {
+      console.error(glContext.getProgramInfoLog(program));
+      glContext.deleteProgram(program);
+      throw new Error('Failed to link shaderProgram');
+    }
+
+    this.positionLocation = glContext.getAttribLocation(program, 'a_position');
+    this.colorLocation = glContext.getAttribLocation(program, 'v_color');
+    this.matrixLocation = glContext.getUniformLocation(program, 'u_matrix') as WebGLUniformLocation;
+    this.fudgeLocation = glContext.getUniformLocation(program, 'u_fudgeFactor') as WebGLUniformLocation;
+    this.vertexShader = vertexShader;
+    this.fragmentShader = fragmentShader;
+    this.shaderProgram = program;
+}
 
 
   loadShader(glContext: WebGLRenderingContext, type: number, source: string) {

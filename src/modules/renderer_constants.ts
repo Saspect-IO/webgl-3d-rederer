@@ -16,7 +16,12 @@ export enum CameraSettings {
     CAMERA_ANGLE_DIVISION = 120,
     NEAR_PLANE = 1,
     FAR_PLANE = 2000,
-    FIELD_OF_VIEW = 180,
+    FIELD_OF_VIEW = 10,
+    PROJECTION_DEPTH = 400,
+    SCREEN_LEFT = 0,
+    SCREEN_TOP = 0,
+    ORTHO_NEAR = 400,
+    ORTHO_FAR = -400,
 }
 
 export enum ControlsSettings {

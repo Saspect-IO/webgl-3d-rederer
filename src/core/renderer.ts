@@ -5,6 +5,7 @@ import ShaderProgram from './shaderProgram';
 import Camera from './camera';
 import Light from './light';
 import Mesh from './mesh';
+import Primitives from './primitives';
 
 export default class Renderer {
     constructor(canvas: HTMLCanvasElement) {
@@ -37,7 +38,7 @@ export default class Renderer {
         this.shaderProgram = shaderProgram;
     }
 
-    render(camera: Camera, light: Light, model: Array < Mesh > ) {
+    render(camera: Camera, light: Light, model: Primitives[] ) {
         this.glContext?.clear(this.glContext.COLOR_BUFFER_BIT | this.glContext.DEPTH_BUFFER_BIT)
         const shaderProgram = this.shaderProgram;
 
@@ -48,7 +49,7 @@ export default class Renderer {
         shaderProgram.useShaderProgram();
         light.useLight(shaderProgram);
         camera.useCamera(shaderProgram);
-        model.forEach((mesh) => mesh.drawMesh(shaderProgram));
+        model.forEach((mesh) => mesh.drawMockGeometry(shaderProgram));
     }
 
 }
