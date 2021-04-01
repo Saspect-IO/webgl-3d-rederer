@@ -31,11 +31,11 @@ export default class Mesh {
     this.uvs.destroy();
   }
 
-  drawMesh(shaderProgram: ShaderProgram, matrix: number[]) {
+  drawMesh(shaderProgram: ShaderProgram) {
     this.positions.bindToAttribute(shaderProgram.positionIndex as number);
     this.normals.bindToAttribute(shaderProgram.normalIndex as number);
     this.uvs.bindToAttribute(shaderProgram.uvIndex as number);
-    this.position.sendToGpu(this.glContext as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation, matrix);
+    this.position.sendToGpu(this.glContext as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation);
     this.texture.useTexture(shaderProgram.diffuse as WebGLUniformLocation, 0);
     this.glContext?.drawArrays(this.glContext.TRIANGLES, 0, this.vertexCount);
   }
@@ -45,7 +45,7 @@ export default class Mesh {
     const objTexture = await Texture.loadTexture(glContext, textureSrc);
     const [geometry, texture] = await Promise.all([objGeometry, objTexture]);
     const mesh = new Mesh(glContext, geometry, texture as any);
-
+    
     return mesh;
   }
 

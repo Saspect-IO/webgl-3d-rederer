@@ -11,8 +11,10 @@ export default class Camera {
   projection: Transformation | null = null;
 
   setOrthographic(left: number, right: number, top: number, bottom: number, near: number, far:number) {
+    console.log({left, right, top, bottom, near, far});
+    
     (this.projection as Transformation).matrix[0] = 2 / (right - left);
-    (this.projection as Transformation).matrix[5] = 2 / (top - bottom);
+    (this.projection as Transformation).matrix[5] = 2 / (bottom - top);
     (this.projection as Transformation).matrix[10] = 2 / (near - far);
   }
 

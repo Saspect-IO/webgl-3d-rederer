@@ -173,7 +173,7 @@ export default class Controls {
         (this.canvas as any).onmousewheel = (event: any) =>{
 
             const factor = event.wheelDelta / this.wheelNormalize;
-            const scale = this.scale += factor;
+            const scale = this.scale -= factor;
             this.cameraPosition = (camera.position as Transformation).scale(scale, scale, scale);
         };
 

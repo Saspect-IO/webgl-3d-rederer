@@ -25,13 +25,14 @@ const cameraData = {
 
 renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
 const glContext = renderer.getContext() as WebGLRenderingContext;
-const aspect = glContext.canvas.width / glContext.canvas.height
+const aspect = (glContext.canvas.width / glContext.canvas.height);
+
+// Primitives.loadPrimitives(glContext)
+//     .then((data) => primitives.push(data));
 
 Mesh.loadMesh(glContext, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE)
     .then((mesh) => model.push(mesh));
 
-// Primitives.loadPrimitives(glContext)
-//     .then((data) => primitives.push(data));
 
 ShaderProgram.initShaderProgram(glContext, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
@@ -45,10 +46,10 @@ camera.setOrthographic(
     CameraSettings.ORTHO_FAR
 );
 
-camera.setPerspective(cameraData.fieldOfView, aspect, CameraSettings.NEAR_PLANE, CameraSettings.FAR_PLANE);
+// camera.setPerspective(cameraData.fieldOfView, aspect, CameraSettings.NEAR_PLANE, CameraSettings.FAR_PLANE);
 
 const loop = () => {
-    renderer.render(camera, light, model, camera.position?.matrix as number[]);
+    renderer.render(camera, light, model);
     // controls.updateFieldOfView(cameraData.fieldOfView);
     camera.position = controls.zoom(camera);
     requestAnimationFrame(loop);

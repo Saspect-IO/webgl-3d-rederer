@@ -38,7 +38,7 @@ export default class Renderer {
         this.shaderProgram = shaderProgram;
     }
 
-    render(camera: Camera, light: Light, model: Mesh[], matrix: number[] ) {
+    render(camera: Camera, light: Light, model: Mesh[]) {
         this.glContext?.clear(this.glContext.COLOR_BUFFER_BIT | this.glContext.DEPTH_BUFFER_BIT)
         const shaderProgram = this.shaderProgram;
 
@@ -49,7 +49,7 @@ export default class Renderer {
         shaderProgram.useShaderProgram();
         light.useLight(shaderProgram);
         camera.useCamera(shaderProgram);
-        model.forEach((mesh) => mesh.drawMesh(shaderProgram, matrix));
+        model.forEach((mesh) => mesh.drawMesh(shaderProgram));
     }
 
 }

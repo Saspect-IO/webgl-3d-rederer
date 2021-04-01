@@ -7,8 +7,8 @@ export enum ProgramEntrySettings {
     WEBGL_CONTEXT_ERROR_MESSAGE = 'Could not initialise WebGL',
     PATH_ASSETS_SPHERE = '/assets/resources/sphere.obj',
     PATH_ASSETS_DIFFUSE = '/assets/resources/textures/diffuse.png',
-    PATH_SHADE_VERTEX = '/shaders/primitive.vert',
-    PATH_SHADE_FRAGMENT = '/shaders/primitive.frag',
+    PATH_SHADE_VERTEX = '/shaders/basic.vert',
+    PATH_SHADE_FRAGMENT = '/shaders/basic.frag',
 }
 
 

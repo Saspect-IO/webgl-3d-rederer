@@ -25,7 +25,7 @@ export default class Primitives {
     this.colors.destroy();
   }
 
-  drawMockGeometry(shaderProgram: ShaderProgram, matrix: number[]) {
+  drawMockGeometry(shaderProgram: ShaderProgram) {
 
     const primitiveType = this.glContext.TRIANGLES;
     const offset = 0;
@@ -33,7 +33,7 @@ export default class Primitives {
 
     this.positions.bindToAttribute(shaderProgram.positionIndex as number);
     this.colors.bindToAttribute(shaderProgram.uvIndex as number);
-    this.position.sendToGpu(this.glContext as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation, matrix);
+    this.position.sendToGpu(this.glContext as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation);
     
     this.glContext?.drawArrays(primitiveType, offset, count);
   }
