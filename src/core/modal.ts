@@ -1,8 +1,7 @@
-import { Vector } from "@/entities";
+import { MeshData } from "@/entities";
 import Transformation from "./transformation";
-
 export default class Modal {
-    constructor(meshData: { drawMode: number; vao: any; }) {
+    constructor(meshData: MeshData) {
         this.transform = new Transformation();
         this.mesh = meshData;
     }
