@@ -11,7 +11,6 @@ export enum ProgramEntrySettings {
     PATH_SHADE_FRAGMENT = '/shaders/basic.frag',
 }
 
-
 export enum CameraSettings {
     CAMERA_ANGLE_DIVISION = 120,
     NEAR_PLANE = 1,
@@ -31,4 +30,13 @@ export enum ControlsSettings {
     KEY_UP = 38,
     KEY_LEFT = 37,
     KEY_RIGHT = 39,
+}
+
+export enum GLSetttings {
+    ATTR_POSITION_NAME = "a_position",
+    ATTR_POSITION_LOC = 0,
+    ATTR_NORMAL_NAME = "a_norm",
+    ATTR_NORMAL_LOC = 1,
+    ATTR_UV_NAME = "a_uv",
+    ATTR_UV_LOC = 2,
 }
