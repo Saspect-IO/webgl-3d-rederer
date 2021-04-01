@@ -317,7 +317,7 @@ class Matrix4 {
     }
 
     //https://github.com/toji/gl-matrix/blob/master/src/gl-matrix/vec4.js, vec4.transformMat4
-    static transformVec4(out: Float32Array, v: Float32Array, m: Float32Array) {
+    static transformVec4(out: Float32Array, v: number[], m: Float32Array) {
         out[0] = m[0] * v[0] + m[4] * v[1] + m[8] * v[2] + m[12] * v[3];
         out[1] = m[1] * v[0] + m[5] * v[1] + m[9] * v[2] + m[13] * v[3];
         out[2] = m[2] * v[0] + m[6] * v[1] + m[10] * v[2] + m[14] * v[3];
