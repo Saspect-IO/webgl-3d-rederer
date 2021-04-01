@@ -1,13 +1,15 @@
 import { GLSetttings } from "@/modules";
+import GLContext from "./glContext";
 import Modal from "./modal";
 class GridAxis {
 
-  static createModal(gl: WebGLRenderingContext, incAxis:boolean) {
-    return new Modal(GridAxis.createMesh(gl, incAxis));
+  static createModal(glContext: GLContext, incAxis:boolean) {
+    return new Modal(GridAxis.createMesh(glContext, incAxis));
   }
 
-  static createMesh(gl: WebGLRenderingContext, incAxis:boolean) {
+  static createMesh(glContext: GLContext, incAxis:boolean) {
     //Dynamiclly create a grid
+    let gl = glContext.gl as WebGLRenderingContext;
     let verts = [],
       size = 2, // W/H of the outer box of the grid, from origin we can only go 1 unit in each direction, so from left to right is 2 units max
       div = 10.0, // How to divide up the grid
@@ -109,7 +111,7 @@ class GridAxis {
 
     gl.vertexAttribPointer(
       attrColorLoc //new shader has "in float a_color" as the second attrib
-      , 1 //This atttrib is just a single float
+      , 1 //This atttrib is just a singlgle float
       , gl.FLOAT, false, strideLen //Each vertex chunk is 4 floats long
       , Float32Array.BYTES_PER_ELEMENT * 3 //skip first 3 floats in our vertex chunk, its like str.substr(3,1) in theory.
     );
@@ -117,7 +119,11 @@ class GridAxis {
     //Cleanup and Finalize
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    gl.mMeshCache["grid"] = mesh;
+    glContext.mMeshCache["grid"] = mesh;
     return mesh;
   }
+}
+
+export{
+  GridAxis
 }
