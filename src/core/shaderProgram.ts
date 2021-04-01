@@ -1,84 +1,71 @@
 export default class ShaderProgram {
   constructor(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
 
-    const vertexShader = this.loadShader(gl, gl.VERTEX_SHADER, vsSource) as WebGLShader;
-    const fragmentShader = this.loadShader(gl, gl.FRAGMENT_SHADER, fsSource) as WebGLShader;
-    const program = gl.createProgram() as WebGLProgram;
-    this.createShaderProgram(gl, program, fragmentShader, vertexShader);
-    //this.createPrimitiveShaderProgram(gl, program, fragmentShader, vertexShader);
-    this.gl = gl;
+    const vertexShader = this.createShader(gl, gl.VERTEX_SHADER, vsSource) as WebGLShader;
+    const fragmentShader = this.createShader(gl, gl.FRAGMENT_SHADER, fsSource) as WebGLShader;
 
+    this.createShaderProgram(gl, fragmentShader, vertexShader);
+
+    this.gl = gl;
   }
 
   gl: WebGLRenderingContext | null = null;
   positionIndex: number | null = null;
   normalIndex: number | null = null;
   uvIndex: number | null = null;
-  model: WebGLUniformLocation | null = null;
-  diffuse: WebGLUniformLocation | null = null;
-  view: WebGLUniformLocation | null = null;
-  projection: WebGLUniformLocation | null = null;
+
+  modalMatrix: WebGLUniformLocation | null = null;
+  perspective: WebGLUniformLocation | null = null;
+  cameraMatrix: WebGLUniformLocation | null = null;
+  mainTexture: WebGLUniformLocation | null = null;
+
   ambientLight: WebGLUniformLocation | null = null;
   lightDirection: WebGLUniformLocation | null = null;
   vertexShader: WebGLShader | null = null;
   fragmentShader: WebGLShader | null = null;
   shaderProgram: WebGLProgram | null = null;
 
-  // primitive
-  positionLocation: number | null = null;
-  colorLocation: number | null = null;
-  matrixLocation: WebGLUniformLocation | null = null;
-  fudgeLocation: WebGLUniformLocation | null = null;
 
 
-  createShaderProgram(gl: WebGLRenderingContext, program: WebGLProgram, vertexShader: WebGLShader, fragmentShader: WebGLShader):void{
-      
-      gl.attachShader(program, vertexShader);
-      gl.attachShader(program, fragmentShader);
-      gl.linkProgram(program);
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error(gl.getProgramInfoLog(program));
-        gl.deleteProgram(program);
-        throw new Error('Failed to link shaderProgram');
-      }
-      
-      this.positionIndex = gl.getAttribLocation(program, 'position');
-      this.normalIndex = gl.getAttribLocation(program, 'normal');
-      this.uvIndex = gl.getAttribLocation(program, 'uv');
-      this.model = gl.getUniformLocation(program, 'model') as WebGLUniformLocation;
-      this.view = gl.getUniformLocation(program, 'view') as WebGLUniformLocation;
-      this.projection = gl.getUniformLocation(program, 'projection') as WebGLUniformLocation;
-      this.ambientLight = gl.getUniformLocation(program, 'ambientLight') as WebGLUniformLocation;
-      this.lightDirection = gl.getUniformLocation(program, 'lightDirection') as WebGLUniformLocation;
-      this.diffuse = gl.getUniformLocation(program, 'diffuse') as WebGLUniformLocation;
-      this.vertexShader = vertexShader;
-      this.fragmentShader = fragmentShader;
-      this.shaderProgram = program;
-  }
+  createShaderProgram(gl: WebGLRenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader): void {
 
+    const program = gl.createProgram() as WebGLProgram;
 
-  createPrimitiveShaderProgram(gl: WebGLRenderingContext, program: WebGLProgram, vertexShader: WebGLShader, fragmentShader: WebGLShader):void{
-      
     gl.attachShader(program, vertexShader);
     gl.attachShader(program, fragmentShader);
     gl.linkProgram(program);
+
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-      console.error(gl.getProgramInfoLog(program));
+      console.error("Error creating shader program.", gl.getProgramInfoLog(program));
       gl.deleteProgram(program);
       throw new Error('Failed to link shaderProgram');
     }
 
-    this.positionLocation = gl.getAttribLocation(program, 'a_position');
-    this.colorLocation = gl.getAttribLocation(program, 'v_color');
-    this.matrixLocation = gl.getUniformLocation(program, 'u_matrix') as WebGLUniformLocation;
-    this.fudgeLocation = gl.getUniformLocation(program, 'u_fudgeFactor') as WebGLUniformLocation;
+    this.positionIndex = gl.getAttribLocation(program, 'position');
+    this.normalIndex = gl.getAttribLocation(program, 'normal');
+    this.uvIndex = gl.getAttribLocation(program, 'uv');
+
+    this.modalMatrix = gl.getUniformLocation(program, 'uMVMatrix') as WebGLUniformLocation;
+    this.perspective = gl.getUniformLocation(program, 'uPMatrix') as WebGLUniformLocation;
+    this.cameraMatrix = gl.getUniformLocation(program, 'uCameraMatrix') as WebGLUniformLocation;
+    this.mainTexture = gl.getUniformLocation(program, 'uMainTexture') as WebGLUniformLocation;
+
+    this.ambientLight = gl.getUniformLocation(program, 'ambientLight') as WebGLUniformLocation;
+    this.lightDirection = gl.getUniformLocation(program, 'lightDirection') as WebGLUniformLocation;
+
     this.vertexShader = vertexShader;
     this.fragmentShader = fragmentShader;
     this.shaderProgram = program;
+
+    //Can delete the shaders since the program has been made.
+    gl.detachShader(program, vertexShader); //TODO, detaching might cause issues on some browsers, Might only need to delete.
+    gl.detachShader(program, fragmentShader);
+    gl.deleteShader(fragmentShader);
+    gl.deleteShader(vertexShader);
   }
 
 
-  loadShader(gl: WebGLRenderingContext, type: number, source: string) {
+  createShader(gl: WebGLRenderingContext, type: number, source: string) {
     const shader = gl.createShader(type) as WebGLShader;
 
     // Send the source to the shader object
@@ -97,9 +84,58 @@ export default class ShaderProgram {
     return shader;
   }
 
-  useShaderProgram() {
+  activate() {
     (this.gl as WebGLRenderingContext).useProgram(this.shaderProgram);
+    return this;
   }
+
+  deactivate() {
+    (this.gl as WebGLRenderingContext).useProgram(null);
+    return this;
+  }
+
+  setPerspective(matData: Float32Array) {
+    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.perspective, false, matData);
+    return this;
+  }
+
+  setModalMatrix(matData: Float32Array) {
+    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.modalMatrix, false, matData);
+    return this;
+  }
+
+  setCameraMatrix(matData: Float32Array) {
+    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.cameraMatrix, false, matData);
+    return this;
+  }
+
+  dispose() {
+    //unbind the program if its currently active
+    if ((this.gl as WebGLRenderingContext).getParameter((this.gl as WebGLRenderingContext).CURRENT_PROGRAM) === this.shaderProgram) {
+      (this.gl as WebGLRenderingContext).useProgram(null);
+    }
+    (this.gl as WebGLRenderingContext).deleteProgram(this.shaderProgram);
+  }
+
+
+  	//RENDER RELATED METHODS
+
+	//Setup custom properties
+	preRender(){} //abstract method, extended object may need need to do some things before rendering.
+
+	// //Handle rendering a modal
+	// renderModal(modal){
+	// 	this.setModalMatrix(modal.transform.getViewMatrix());	//Set the transform, so the shader knows where the modal exists in 3d space
+	// 	this.gl.bindVertexArray(modal.mesh.vao);				//Enable VAO, this will set all the predefined attributes for the shader
+		
+	// 	if(modal.mesh.indexCount) this.gl.drawElements(modal.mesh.drawMode, modal.mesh.indexLength, gl.UNSIGNED_SHORT, 0);
+	// 	else this.gl.drawArrays(modal.mesh.drawMode, 0, modal.mesh.vertexCount);
+
+	// 	this.gl.bindVertexArray(null);
+
+	// 	return this;
+	// }
+
 
   // Loads shader files from the given URLs, and returns a program as a promise
   static async initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
@@ -109,7 +145,7 @@ export default class ShaderProgram {
       const data = await response.text();
       return data;
     }
-    
+
     const [vertexShaderFile, fragmentShaderFile] = await Promise.all([loadFile(vsSource), loadFile(fsSource)]);
     const shaderProgram = new ShaderProgram(gl, vertexShaderFile, fragmentShaderFile);
 
