@@ -35,8 +35,8 @@ export default class Mesh {
     this.positions.bindToAttribute(shaderProgram.positionIndex as number);
     this.normals.bindToAttribute(shaderProgram.normalIndex as number);
     this.uvs.bindToAttribute(shaderProgram.uvIndex as number);
-    this.position.sendToGpu(this.gl as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation);
-    this.texture.useTexture(shaderProgram.diffuse as WebGLUniformLocation, 0);
+    this.position.sendToGpu(this.gl as WebGLRenderingContext, shaderProgram.modalMatrix as WebGLUniformLocation);
+    this.texture.useTexture(shaderProgram.mainTexture as WebGLUniformLocation, 0);
     this.gl?.drawArrays(this.gl.TRIANGLES, 0, this.vertexCount);
   }
 

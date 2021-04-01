@@ -1,4 +1,4 @@
-import { GLSetttings } from "@/modules";
+import { GLSetttings } from "../modules";
 import GLContext from "./glContext";
 import Modal from "./modal";
 class GridAxis {

@@ -4,7 +4,7 @@
 import {
     ProgramEntrySettings,
     GLSetttings
-} from "@/modules";
+} from "../modules";
 
 //--------------------------------------------------
 // Custom GL Context Object

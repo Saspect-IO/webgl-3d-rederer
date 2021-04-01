@@ -3,7 +3,6 @@ import {Camera, CameraController} from './camera';
 import Light from './light';
 import Mesh from './mesh';
 import { GridAxisShader } from './shaderExtend';
-import { GridAxis } from './primitives';
 import Modal from './modal';
 import GLContext from './glContext';
 

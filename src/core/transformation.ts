@@ -1,6 +1,6 @@
 import {
     degToRad
-} from "@/modules";
+} from "../modules";
 import {
     Matrix4,
     Vector3

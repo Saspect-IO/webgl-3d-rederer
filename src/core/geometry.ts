@@ -1,6 +1,6 @@
 import {
     Normal,
-    Position,
+    Vector,
     Surface,
     UV,
     Vertex
@@ -14,7 +14,7 @@ export default class Geometry {
 
     surfaces: Surface[] = [];
     vertices: Vertex[] = [];
-    position: Position | null = null;
+    position: Vector | null = null;
     normal: Normal | null = null;
     uv: UV | null = null;
     x: number = 0;
@@ -29,7 +29,7 @@ export default class Geometry {
         const SURFACE = /^f\s+(-?\d+)\/(-?\d+)\/(-?\d+)\s+(-?\d+)\/(-?\d+)\/(-?\d+)\s+(-?\d+)\/(-?\d+)\/(-?\d+)(?:\s+(-?\d+)\/(-?\d+)\/(-?\d+))?/
 
         const lines = src.split('\n');
-        const positions: Position[] = [];
+        const positions: Vector[] = [];
         const uvs: UV[] = [];
         const normals: Normal[] = [];
         const surfaces: Surface[] = [];
@@ -116,7 +116,7 @@ export function SurfaceStruct(vertices: Array < Vertex > ) {
     };
 }
 
-export function VertexStruct(position: Position, normal: Normal, uv: UV) {
+export function VertexStruct(position: Vector, normal: Normal, uv: UV) {
     return {
         position,
         normal,
