@@ -6,14 +6,14 @@ import ShaderProgram from './shaderProgram';
 
 export default class Mesh {
 
-  constructor(glContext: WebGLRenderingContext, geometry: Geometry, texture: Texture) {
+  constructor(gl: WebGLRenderingContext, geometry: Geometry, texture: Texture) {
     this.vertexCount = geometry.vertexCount();
-    this.positions = new Vbuffer(glContext, geometry.positions(), this.vertexCount);
-    this.normals = new Vbuffer(glContext, geometry.normals(), this.vertexCount);
-    this.uvs = new Vbuffer(glContext, geometry.uvs(), this.vertexCount);
+    this.positions = new Vbuffer(gl, geometry.positions(), this.vertexCount);
+    this.normals = new Vbuffer(gl, geometry.normals(), this.vertexCount);
+    this.uvs = new Vbuffer(gl, geometry.uvs(), this.vertexCount);
     this.texture = texture;
     this.position = new Transformation();
-    this.glContext = glContext;
+    this.gl = gl;
   }
 
   vertexCount: number;
@@ -22,7 +22,7 @@ export default class Mesh {
   uvs: Vbuffer;
   texture: Texture;
   position: Transformation;
-  glContext: WebGLRenderingContext | null = null;
+  gl: WebGLRenderingContext | null = null;
 
 
   destroy() {
@@ -35,16 +35,16 @@ export default class Mesh {
     this.positions.bindToAttribute(shaderProgram.positionIndex as number);
     this.normals.bindToAttribute(shaderProgram.normalIndex as number);
     this.uvs.bindToAttribute(shaderProgram.uvIndex as number);
-    this.position.sendToGpu(this.glContext as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation);
+    this.position.sendToGpu(this.gl as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation);
     this.texture.useTexture(shaderProgram.diffuse as WebGLUniformLocation, 0);
-    this.glContext?.drawArrays(this.glContext.TRIANGLES, 0, this.vertexCount);
+    this.gl?.drawArrays(this.gl.TRIANGLES, 0, this.vertexCount);
   }
 
-  static async loadMesh(glContext: WebGLRenderingContext, objSrc: string, textureSrc: string) {
+  static async loadMesh(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
     const objGeometry = await Geometry.loadOBJ(objSrc);
-    const objTexture = await Texture.loadTexture(glContext, textureSrc);
+    const objTexture = await Texture.loadTexture(gl, textureSrc);
     const [geometry, texture] = await Promise.all([objGeometry, objTexture]);
-    const mesh = new Mesh(glContext, geometry, texture as any);
+    const mesh = new Mesh(gl, geometry, texture as any);
     
     return mesh;
   }

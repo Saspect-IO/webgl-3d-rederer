@@ -14,24 +14,24 @@ export default class Renderer {
             ProgramEntrySettings.WEBGL_CONTEXT_EXPERIMENTAL,
             ProgramEntrySettings.WEBGL_CONTEXT_WEBKIT,
             ProgramEntrySettings.WEBGL_CONTEXT_MOZ
-        ]).some(option => this.glContext = canvas.getContext(option) as WebGLRenderingContext);
+        ]).some(option => this.gl = canvas.getContext(option) as WebGLRenderingContext);
 
-        this.glContext ?? alert(ProgramEntrySettings.WEBGL_CONTEXT_ERROR_MESSAGE);
-        this.glContext?.enable(this.glContext.CULL_FACE);
-        this.glContext?.enable(this.glContext.DEPTH_TEST);
+        this.gl ?? alert(ProgramEntrySettings.WEBGL_CONTEXT_ERROR_MESSAGE);
+        this.gl?.enable(this.gl.CULL_FACE);
+        this.gl?.enable(this.gl.DEPTH_TEST);
     }
 
-    glContext: WebGLRenderingContext | null = null;
+    gl: WebGLRenderingContext | null = null;
     shaderProgram: ShaderProgram | null = null;
     rgb_32_bit = 255;
     alpha = 1;
 
     setClearColor(red: number, green: number, blue: number, alpha: number = 1) {
-        this.glContext?.clearColor(red / this.rgb_32_bit, green / this.rgb_32_bit, blue / this.rgb_32_bit, alpha);
+        this.gl?.clearColor(red / this.rgb_32_bit, green / this.rgb_32_bit, blue / this.rgb_32_bit, alpha);
     }
 
     getContext() {
-        return this.glContext;
+        return this.gl;
     }
 
     setShaderProgram(shaderProgram: ShaderProgram) {
@@ -39,7 +39,7 @@ export default class Renderer {
     }
 
     render(camera: Camera, light: Light, model: Mesh[]) {
-        this.glContext?.clear(this.glContext.COLOR_BUFFER_BIT | this.glContext.DEPTH_BUFFER_BIT)
+        this.gl?.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
         const shaderProgram = this.shaderProgram;
 
         if (!shaderProgram) {

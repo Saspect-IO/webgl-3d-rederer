@@ -6,18 +6,18 @@ import { GEOMETRY_MODEL } from '../mock/geometry';
 
 export default class Primitives {
 
-  constructor(glContext: WebGLRenderingContext, geometry: number[], colors: number[]) {
+  constructor(gl: WebGLRenderingContext, geometry: number[], colors: number[]) {
     this.vertexCount = geometry.length;
-    this.positions = new Vbuffer(glContext, geometry, geometry.length);
-    this.colors = new Vbuffer(glContext, colors, colors.length);
+    this.positions = new Vbuffer(gl, geometry, geometry.length);
+    this.colors = new Vbuffer(gl, colors, colors.length);
     this.position = new Transformation();
-    this.glContext = glContext;
+    this.gl = gl;
   }
 
   vertexCount: number;
   positions: Vbuffer;
   position: Transformation;
-  glContext: WebGLRenderingContext;
+  gl: WebGLRenderingContext;
   colors: Vbuffer;
 
   destroy() {
@@ -27,22 +27,22 @@ export default class Primitives {
 
   drawMockGeometry(shaderProgram: ShaderProgram) {
 
-    const primitiveType = this.glContext.TRIANGLES;
+    const primitiveType = this.gl.TRIANGLES;
     const offset = 0;
     const count = 16 * 6;
 
     this.positions.bindToAttribute(shaderProgram.positionIndex as number);
     this.colors.bindToAttribute(shaderProgram.uvIndex as number);
-    this.position.sendToGpu(this.glContext as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation);
+    this.position.sendToGpu(this.gl as WebGLRenderingContext, shaderProgram.model as WebGLUniformLocation);
     
-    this.glContext?.drawArrays(primitiveType, offset, count);
+    this.gl?.drawArrays(primitiveType, offset, count);
   }
 
-  static async loadPrimitives(glContext: WebGLRenderingContext) {
+  static async loadPrimitives(gl: WebGLRenderingContext) {
     const objGeometry = GEOMETRY_MODEL;
     const objColors = GEOMETRY_COLORS;
     const [geometry, colors] = await Promise.all([objGeometry, objColors]); 
-    const primititve = new Primitives(glContext, geometry, colors);
+    const primititve = new Primitives(gl, geometry, colors);
     return primititve;
   }
 

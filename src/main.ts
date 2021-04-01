@@ -24,24 +24,24 @@ const cameraData = {
 } 
 
 renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
-const glContext = renderer.getContext() as WebGLRenderingContext;
-const aspect = (glContext.canvas.width / glContext.canvas.height);
+const gl = renderer.getContext() as WebGLRenderingContext;
+const aspect = (gl.canvas.width / gl.canvas.height);
 
-// Primitives.loadPrimitives(glContext)
+// Primitives.loadPrimitives(gl)
 //     .then((data) => primitives.push(data));
 
-Mesh.loadMesh(glContext, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE)
+Mesh.loadMesh(gl, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE)
     .then((mesh) => model.push(mesh));
 
 
-ShaderProgram.initShaderProgram(glContext, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
+ShaderProgram.initShaderProgram(gl, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
 
 camera.setOrthographic(
     CameraSettings.SCREEN_LEFT, 
-    glContext.canvas.width,
+    gl.canvas.clientWidth,
     CameraSettings.SCREEN_TOP, 
-    glContext.canvas.height, 
+    gl.canvas.clientHeight, 
     CameraSettings.ORTHO_NEAR, 
     CameraSettings.ORTHO_FAR
 );

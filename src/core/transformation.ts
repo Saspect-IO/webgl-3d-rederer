@@ -74,7 +74,7 @@ export default class Transformation {
         this.rotation.set(0, 0, 0);
     }
 
-    sendToGpu(glContext: WebGLRenderingContext, uniform: WebGLUniformLocation, transpose = false) {
-        glContext.uniformMatrix4fv(uniform, transpose, new Float32Array(this.matView.matrix));
+    sendToGpu(gl: WebGLRenderingContext, uniform: WebGLUniformLocation, transpose = false) {
+        gl.uniformMatrix4fv(uniform, transpose, new Float32Array(this.matView.matrix));
     }
 }

@@ -9,7 +9,7 @@ export interface Normal {
     z: number;
 }
 
-export interface Position {
+export interface Vector {
     x: number;
     y: number;
     z: number;
@@ -18,7 +18,7 @@ export interface Position {
 export interface Vertex {
     uv: UV;
     normal: Normal;
-    position: Position;
+    position: Vector;
 }
 
 export interface Surface {
