@@ -24,3 +24,11 @@ export interface Vertex {
 export interface Surface {
     vertices: Array < Vertex > ;
 }
+
+export interface MeshData {
+    drawMode: number; 
+    vao: any; 
+    indexCount:number;
+    vertexCount:number;
+    indexLength:number;
+}
