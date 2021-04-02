@@ -17,6 +17,9 @@ export default class ShaderProgram {
   normalIndex: number | null = null;
   uvIndex: number | null = null;
 
+  colorIndex: number | null = null;
+  gridIndex: number | null = null;
+
   modalMatrix: WebGLUniformLocation | null = null;
   perspective: WebGLUniformLocation | null = null;
   cameraMatrix: WebGLUniformLocation | null = null;
@@ -77,7 +80,7 @@ export default class ShaderProgram {
 
     // See if it compiled successfully
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      alert('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+      console.error('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
       gl.deleteShader(shader);
       return null;
     }
@@ -124,7 +127,7 @@ export default class ShaderProgram {
   // //Handle rendering a grid
   renderGrid(grid: GridAxis) {
     this.setModalMatrix(grid.transform.getViewMatrix()); //Set the transform, so the shader knows where the grid exists in 3d space
-    grid.drawGrid()
+    grid.drawGrid(this)
     return this;
   }
 
