@@ -1,18 +1,21 @@
 import {
   GLSetttings
 } from "../modules";
+import ShaderProgram from "./shaderProgram";
 import Transformation from "./transformation";
 import Vbuffer from "./vbuffer";
 class GridAxis {
 
-  constructor(gl: WebGLRenderingContext, gridVertexCount: number, gridPositions: number[]) {
-    this.vertexCount = gridVertexCount;
+  constructor(gl: WebGLRenderingContext, vertexComponentLen: number, gridPositions: number[]) {
+    this.vertexComponentLen  = vertexComponentLen;
+    this.vertexCount = gridPositions.length/vertexComponentLen;
     this.positions = new Vbuffer(gl, gridPositions, this.vertexCount);
     this.transform = new Transformation();
     this.gl = gl;
     this.drawMode = gl.LINES;
   }
 
+  vertexComponentLen: number;
   vertexCount: number;
   positions: Vbuffer;
   transform: Transformation;
@@ -66,11 +69,11 @@ class GridAxis {
     return this;
   }
 
-  drawGrid() {
-    const strideLen = Float32Array.BYTES_PER_ELEMENT * this.vertexCount; //Stride Length is the Vertex Size for the buffer in Bytes
+  drawGrid(shaderProgram: ShaderProgram) {
+    const strideLen = Float32Array.BYTES_PER_ELEMENT * this.vertexComponentLen; //Stride Length is the Vertex Size for the buffer in Bytes
     const offset = Float32Array.BYTES_PER_ELEMENT * 3;
-    this.positions.bindToAttribute(GLSetttings.ATTR_POSITION_LOC as number, strideLen, 0, GLSetttings.GRID_VECTOR_SIZE);
-    this.positions.bindToAttribute(GLSetttings.ATTR_GRID_COLOR_LOC as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE);
+    this.positions.bindToAttribute(shaderProgram.gridIndex as number, strideLen, 0, GLSetttings.GRID_VECTOR_SIZE);
+    this.positions.bindToAttribute(shaderProgram.colorIndex as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE);
     this.gl?.drawArrays(this.drawMode , 0, this.vertexCount);
   }
 
@@ -145,7 +148,7 @@ class GridAxis {
       verts.push(3); //c2
     }
 
-    const grid = new GridAxis(gl, GLSetttings.GRID_VERTEX_COUNT, verts);
+    const grid = new GridAxis(gl, GLSetttings.GRID_VERTEX_LEN, verts);
 
     return grid;
   }

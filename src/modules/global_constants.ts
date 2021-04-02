@@ -42,5 +42,5 @@ export enum GLSetttings {
     ATTR_GRID_COLOR_LOC = 4,
     GRID_VECTOR_SIZE = 3,
     GRID_COLOR_SIZE = 1,
-    GRID_VERTEX_COUNT = 4,
+    GRID_VERTEX_LEN = 4,
 }
