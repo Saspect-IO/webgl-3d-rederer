@@ -1,14 +1,14 @@
-attribute vec3 position;
+attribute vec3 a_position;
 attribute vec3 normal;
 attribute vec2 uv;
-uniform mat4 model;
-uniform mat4 view;
-uniform mat4 projection;
+uniform mat4 uMVMatrix;
+uniform mat4 uCameraMatrix;
+uniform mat4 uPMatrix;
 varying vec3 vNormal;
 varying vec2 vUv;
 
 void main() {
     vUv = uv;
-    vNormal = (model * vec4(normal, 0.)).xyz;
-    gl_Position = projection * view * model * vec4(position, 1.);
+    vNormal = (uMVMatrix * vec4(normal, 0.)).xyz;
+    gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.);
 }

@@ -41,17 +41,17 @@ export default class ShaderProgram {
       throw new Error('Failed to link shaderProgram');
     }
 
-    this.positionIndex = gl.getAttribLocation(program, 'position');
-    this.normalIndex = gl.getAttribLocation(program, 'normal');
-    this.uvIndex = gl.getAttribLocation(program, 'uv');
+    this.positionIndex = gl.getAttribLocation(program, 'a_position');
+    this.normalIndex = gl.getAttribLocation(program, 'a_norm');
+    this.uvIndex = gl.getAttribLocation(program, 'a_uv');
 
     this.modalMatrix = gl.getUniformLocation(program, 'uMVMatrix') as WebGLUniformLocation;
     this.perspective = gl.getUniformLocation(program, 'uPMatrix') as WebGLUniformLocation;
     this.cameraMatrix = gl.getUniformLocation(program, 'uCameraMatrix') as WebGLUniformLocation;
     this.mainTexture = gl.getUniformLocation(program, 'uMainTexture') as WebGLUniformLocation;
 
-    // this.ambientLight = gl.getUniformLocation(program, 'ambientLight') as WebGLUniformLocation;
-    // this.lightDirection = gl.getUniformLocation(program, 'lightDirection') as WebGLUniformLocation;
+    this.ambientLight = gl.getUniformLocation(program, 'ambientLight') as WebGLUniformLocation;
+    this.lightDirection = gl.getUniformLocation(program, 'lightDirection') as WebGLUniformLocation;
 
     this.vertexShader = vertexShader;
     this.fragmentShader = fragmentShader;

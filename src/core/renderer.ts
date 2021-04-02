@@ -71,13 +71,15 @@ export default class Renderer {
         this.gl?.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
         const shaderProgram = this.shaderProgram;
 
+        // console.log(gridModal.mesh);
+        
         if (!shaderProgram) {
             return;
         }
-
         gGridShader.activate().setCameraMatrix(camera.viewMatrix).renderModal(gridModal.preRender());
-        // light.useLight(shaderProgram);
-        // model.forEach((mesh) => mesh.drawMesh(shaderProgram));
+        //shaderProgram.activate()
+        light.useLight(shaderProgram);
+        //model.forEach((mesh) => mesh.drawMesh(shaderProgram));
     }
 
 }
