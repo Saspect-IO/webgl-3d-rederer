@@ -102,15 +102,11 @@ class CameraController {
     this.prevX = 0; //Previous X,Y position on mouse move
     this.prevY = 0;
 
-    this.canvas.addEventListener("mouseup", this.onUpHandler);
-    this.canvas.addEventListener("mousemove", this.onMoveHandler);
+		this.onUpHandler = function(e){ self.onMouseUp(e); };		//Cache func reference that gets bound and unbound a lot
+		this.onMoveHandler = function(e){ self.onMouseMove(e); }
 
-    this.canvas.addEventListener("mousedown", function (e) {
-      self.onMouseDown(e);
-    }); //Initializes the up and move events
-    this.canvas.addEventListener("mousewheel", function (e) {
-      self.onMouseWheel(e);
-    }); //Handles zoom/forward movement
+		this.canvas.addEventListener("mousedown",function(e){ self.onMouseDown(e); });		//Initializes the up and move events
+		this.canvas.addEventListener("mousewheel", function(e){ self.onMouseWheel(e); });	//Handles zoom/forward movement
   }
 
   canvas: HTMLCanvasElement;
@@ -124,6 +120,8 @@ class CameraController {
   initY: number;
   prevX: number; //Previous X,Y position on mouse move
   prevY: number;
+  onUpHandler:any;
+  onMoveHandler:any;
 
   //Transform mouse x,y cords to something useable by the canvas.
   getMouseVec2(e: MouseEvent) {
@@ -133,12 +131,6 @@ class CameraController {
     };
   }
 
-  onUpHandler(e: MouseEvent) {
-    this.onMouseUp(e);
-  };
-  onMoveHandler(e: MouseEvent) {
-    this.onMouseMove(e);
-  }
 
   //Begin listening for dragging movement
   onMouseDown(e: MouseEvent) {

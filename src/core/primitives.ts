@@ -83,7 +83,6 @@ class GridAxis {
       strideLen,
       mesh: any = {
         drawMode: gl.LINES,
-        vao: (gl as any).createVertexArray()
       };
 
     //Do some math
@@ -93,7 +92,6 @@ class GridAxis {
 
     //Setup our Buffer
     mesh.bufVertices = gl.createBuffer();
-    (gl as any).bindVertexArray(mesh.vao);
     gl.bindBuffer(gl.ARRAY_BUFFER, mesh.bufVertices);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
     gl.enableVertexAttribArray(GLSetttings.ATTR_POSITION_LOC);
@@ -116,7 +114,6 @@ class GridAxis {
     );
 
     //Cleanup and Finalize
-    gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
 
     return mesh;

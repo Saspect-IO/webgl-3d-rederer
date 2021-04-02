@@ -126,12 +126,9 @@ export default class ShaderProgram {
   // //Handle rendering a modal
   renderModal(modal: Modal) {
     this.setModalMatrix(modal.transform.getViewMatrix()); //Set the transform, so the shader knows where the modal exists in 3d space
-    (this.gl as WebGLRenderingContext).bindVertexArray(modal.mesh.vao); //Enable VAO, this will set all the predefined attributes for the shader
 
     if (modal.mesh.indexCount) (this.gl as WebGLRenderingContext).drawElements(modal.mesh.drawMode, modal.mesh.indexLength, (this.gl as WebGLRenderingContext).UNSIGNED_SHORT, 0);
     else (this.gl as WebGLRenderingContext).drawArrays(modal.mesh.drawMode, 0, modal.mesh.vertexCount);
-
-    (this.gl as WebGLRenderingContext).bindVertexArray(null);
 
     return this;
   }

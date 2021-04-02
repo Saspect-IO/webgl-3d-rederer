@@ -6,7 +6,6 @@ import Mesh from './core/mesh';
 import { ProgramEntrySettings } from './modules';
 import { GridAxis } from './core/primitives';
 import { GridAxisShader } from './core/shaderExtend';
-import Modal from './core/modal';
 
 
 const model: Mesh[] = [];
@@ -14,9 +13,7 @@ const model: Mesh[] = [];
 const canvas = document.getElementById(ProgramEntrySettings.WEBGL_CANVAS_ID) as HTMLCanvasElement;
 
 const renderer = new Renderer(canvas);
-
-
-renderer.setClearColor(0.0, 0.0, 0.0, 1.0);
+renderer.fFitScreen(0.95,0.9).setClearColor(255, 255, 255, 1.0).fSetSize(800,600);
 const gl = renderer.getContext() as WebGLRenderingContext;
 
 const camera = new Camera(gl as WebGLRenderingContext); 
