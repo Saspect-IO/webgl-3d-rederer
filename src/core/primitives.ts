@@ -1,9 +1,34 @@
 import { GLSetttings } from "../modules";
-import Modal from "./modal";
+import ShaderProgram from "./shaderProgram";
+import Transformation from "./transformation";
+import Vbuffer from "./vbuffer";
 class GridAxis {
 
-  static createModal(glContext: WebGLRenderingContext, incAxis:boolean) {
-    return new Modal(GridAxis.createMesh(glContext, incAxis));
+  constructor(gl: WebGLRenderingContext, gridVertexCount: number, gridPositions: number[]) {
+    this.vertexCount = gridVertexCount;
+    this.positions = new Vbuffer(gl, gridPositions, this.vertexCount);
+    this.position = new Transformation();
+    this.gl = gl;
+  }
+
+  vertexCount: number;
+  positions: Vbuffer;
+  position: Transformation;
+  gl: WebGLRenderingContext | null = null;
+
+  destroy() {
+    this.positions.destroy();
+  }
+
+  drawGrid(shaderProgram: ShaderProgram) {
+    const strideLen = Float32Array.BYTES_PER_ELEMENT * this.vertexCount; //Stride Length is the Vertex Size for the buffer in Bytes
+    const offset = Float32Array.BYTES_PER_ELEMENT * 3;
+    this.positions.bindToAttribute(GLSetttings.ATTR_POSITION_LOC  as number, strideLen, 0, GLSetttings.GRID_VECTOR_SIZE);
+    this.positions.bindToAttribute(GLSetttings.ATTR_GRID_COLOR_LOC as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE);
+    this.position.sendToGpu(this.gl as WebGLRenderingContext, shaderProgram.modalMatrix as WebGLUniformLocation);
+    this.gl?.drawArrays(this.gl.TRIANGLES, 0, this.vertexCount);
+    //Cleanup and Finalize
+    this.gl?.bindBuffer(this.gl.ARRAY_BUFFER, null);
   }
 
   static createMesh(glContext: WebGLRenderingContext, incAxis:boolean) {
@@ -77,46 +102,9 @@ class GridAxis {
       verts.push(3); //c2
     }
 
-
-    //Setup
-    let attrColorLoc = 4,
-      strideLen,
-      mesh: any = {
-        drawMode: gl.LINES,
-      };
-
-    //Do some math
-    mesh.vertexComponentLen = 4;
-    mesh.vertexCount = verts.length / mesh.vertexComponentLen;
-    strideLen = Float32Array.BYTES_PER_ELEMENT * mesh.vertexComponentLen; //Stride Length is the Vertex Size for the buffer in Bytes
-
-    //Setup our Buffer
-    mesh.bufVertices = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, mesh.bufVertices);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(verts), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(GLSetttings.ATTR_POSITION_LOC);
-    gl.enableVertexAttribArray(attrColorLoc);
-
-    gl.vertexAttribPointer(
-      GLSetttings.ATTR_POSITION_LOC //Attribute Location
-      , 3 //How big is the vector by number count
-      , gl.FLOAT //What type of number we passing in
-      , false //Does it need to be normalized?
-      , strideLen //How big is a vertex chunk of data.
-      , 0 //Offset by how much
-    );
-
-    gl.vertexAttribPointer(
-      attrColorLoc //new shader has "in float a_color" as the second attrib
-      , 1 //This atttrib is just a singlgle float
-      , gl.FLOAT, false, strideLen //Each vertex chunk is 4 floats long
-      , Float32Array.BYTES_PER_ELEMENT * 3 //skip first 3 floats in our vertex chunk, its like str.substr(3,1) in theory.
-    );
-
-    //Cleanup and Finalize
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-
-    return mesh;
+    const grid = new GridAxis(gl, GLSetttings.GRID_VERTEX_COUNT, verts);
+    
+    return grid;
   }
 }
 
