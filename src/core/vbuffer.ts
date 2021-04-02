@@ -23,10 +23,10 @@ export default class Vbuffer {
     this.gl.deleteBuffer(this.buffer);
   }
 
-  bindToAttribute(vertexAttributIndex: number) {
+  bindToAttribute(vertexAttributeIndex: number) {
     const gl = this.gl
     // Turn on the vertex attribute
-    gl.enableVertexAttribArray(vertexAttributIndex);
+    gl.enableVertexAttribArray(vertexAttributeIndex);
     // Bind the vertex buffer.
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
 
@@ -34,7 +34,7 @@ export default class Vbuffer {
     const offset = 0;// start at the beginning of the buffer
 
     // Tell the vertex attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
-    gl.vertexAttribPointer(vertexAttributIndex, this.size, gl.FLOAT, false, stride, offset);
+    gl.vertexAttribPointer(vertexAttributeIndex, this.size, gl.FLOAT, false, stride, offset);
   }
 
 }

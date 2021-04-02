@@ -1,15 +1,14 @@
 import { GLSetttings } from "../modules";
-import GLContext from "./glContext";
 import Modal from "./modal";
 class GridAxis {
 
-  static createModal(glContext: GLContext, incAxis:boolean) {
+  static createModal(glContext: WebGLRenderingContext, incAxis:boolean) {
     return new Modal(GridAxis.createMesh(glContext, incAxis));
   }
 
-  static createMesh(glContext: GLContext, incAxis:boolean) {
+  static createMesh(glContext: WebGLRenderingContext, incAxis:boolean) {
     //Dynamiclly create a grid
-    let gl = glContext.gl as WebGLRenderingContext;
+    let gl = glContext as WebGLRenderingContext;
     let verts = [],
       size = 2, // W/H of the outer box of the grid, from origin we can only go 1 unit in each direction, so from left to right is 2 units max
       div = 10.0, // How to divide up the grid
@@ -119,7 +118,7 @@ class GridAxis {
     //Cleanup and Finalize
     gl.bindVertexArray(null);
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    glContext.mMeshCache["grid"] = mesh;
+
     return mesh;
   }
 }

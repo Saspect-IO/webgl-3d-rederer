@@ -27,8 +27,6 @@ export default class ShaderProgram {
   fragmentShader: WebGLShader | null = null;
   shaderProgram: WebGLProgram | null = null;
 
-
-
   createShaderProgram(gl: WebGLRenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader): void {
 
     const program = gl.createProgram() as WebGLProgram;
@@ -52,8 +50,8 @@ export default class ShaderProgram {
     this.cameraMatrix = gl.getUniformLocation(program, 'uCameraMatrix') as WebGLUniformLocation;
     this.mainTexture = gl.getUniformLocation(program, 'uMainTexture') as WebGLUniformLocation;
 
-    this.ambientLight = gl.getUniformLocation(program, 'ambientLight') as WebGLUniformLocation;
-    this.lightDirection = gl.getUniformLocation(program, 'lightDirection') as WebGLUniformLocation;
+    // this.ambientLight = gl.getUniformLocation(program, 'ambientLight') as WebGLUniformLocation;
+    // this.lightDirection = gl.getUniformLocation(program, 'lightDirection') as WebGLUniformLocation;
 
     this.vertexShader = vertexShader;
     this.fragmentShader = fragmentShader;
