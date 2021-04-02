@@ -12,6 +12,7 @@ import {
     GridAxisShader
 } from './shaderExtend';
 import Modal from './modal';
+import { GridAxis } from './primitives';
 
 export default class Renderer {
     constructor(canvas: HTMLCanvasElement) {
@@ -66,7 +67,7 @@ export default class Renderer {
         this.shaderProgram = shaderProgram;
     }
 
-    render(camera: Camera, controler: CameraController, model: Mesh[], gridModal: Modal, gGridShader: GridAxisShader, light: Light, ) {
+    render(camera: Camera, controler: CameraController, model: Mesh[], grid: GridAxis, gGridShader: GridAxisShader, light: Light, ) {
         camera.updateViewMatrix();
         this.gl?.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
         const shaderProgram = this.shaderProgram;
@@ -76,7 +77,8 @@ export default class Renderer {
         if (!shaderProgram) {
             return;
         }
-        gGridShader.activate().setCameraMatrix(camera.viewMatrix).renderModal(gridModal.preRender());
+        
+        gGridShader.activate().setCameraMatrix(camera.viewMatrix).renderModal(grid.preRender());
         //shaderProgram.activate()
         light.useLight(shaderProgram);
         //model.forEach((mesh) => mesh.drawMesh(shaderProgram));

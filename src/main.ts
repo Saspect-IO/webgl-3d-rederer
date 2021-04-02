@@ -23,10 +23,10 @@ const controls = new CameraController(gl as WebGLRenderingContext, camera);
 //Setup Grid
 const gGridShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection);
 
-const gridModal = GridAxis.createModal(gl, true);
+const gridMesh = GridAxis.loadGrid(gl, true);
 
-Mesh.loadMesh(gl, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE)
-    .then((mesh) => model.push(mesh));
+// Mesh.loadMesh(gl, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE)
+//     .then((mesh) => model.push(mesh));
 
 
 ShaderProgram.initShaderProgram(gl, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
@@ -35,7 +35,7 @@ ShaderProgram.initShaderProgram(gl, ProgramEntrySettings.PATH_SHADE_VERTEX, Prog
 const light = new Light(-1,-1,-1);
 
 const loop = () => {
-    renderer.render(camera, controls, model, gridModal, gGridShader, light);
+    renderer.render(camera, controls, model, gridMesh, gGridShader, light);
     requestAnimationFrame(loop);
 }
 loop();

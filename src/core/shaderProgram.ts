@@ -1,4 +1,5 @@
 import Modal from "./modal";
+import { GridAxis } from "./primitives";
 
 export default class ShaderProgram {
   constructor(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
@@ -117,19 +118,13 @@ export default class ShaderProgram {
     (this.gl as WebGLRenderingContext).deleteProgram(this.shaderProgram);
   }
 
-
-  //RENDER RELATED METHODS
-
   //Setup custom properties
   preRender() {} //abstract method, extended object may need need to do some things before rendering.
 
-  // //Handle rendering a modal
-  renderModal(modal: Modal) {
-    this.setModalMatrix(modal.transform.getViewMatrix()); //Set the transform, so the shader knows where the modal exists in 3d space
-
-    if (modal.mesh.indexCount) (this.gl as WebGLRenderingContext).drawElements(modal.mesh.drawMode, modal.mesh.indexLength, (this.gl as WebGLRenderingContext).UNSIGNED_SHORT, 0);
-    else (this.gl as WebGLRenderingContext).drawArrays(modal.mesh.drawMode, 0, modal.mesh.vertexCount);
-
+  // //Handle rendering a grid
+  renderGrid(grid: GridAxis) {
+    this.setModalMatrix(grid.transform.getViewMatrix()); //Set the transform, so the shader knows where the grid exists in 3d space
+    grid.drawGrid()
     return this;
   }
 

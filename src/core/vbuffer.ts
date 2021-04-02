@@ -32,6 +32,9 @@ export default class Vbuffer {
 
     // Tell the vertex attribute how to get data out of vertexBuffer (ARRAY_BUFFER)
     gl.vertexAttribPointer(vertexAttributeIndex, size, gl.FLOAT, false, stride, offset);
+
+    //Cleanup and Finalize
+		gl.bindBuffer(gl.ARRAY_BUFFER,null);
   }
 
 }
