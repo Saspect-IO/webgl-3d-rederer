@@ -18,6 +18,7 @@ class GridAxis extends Modal {
 
   drawMode: number;
 
+  //https://github.com/sketchpunk/FunWithWebGL2/tree/master/lesson_006
   static loadGridMesh(glContext: WebGLRenderingContext, shaderProgram: ShaderProgram, incAxis: boolean ) {
     //Dynamiclly create a grid
     let gl = glContext as WebGLRenderingContext;

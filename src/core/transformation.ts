@@ -1,10 +1,5 @@
-import {
-    degToRad
-} from "../modules";
-import {
-    Matrix4,
-    Vector3
-} from "./math";
+import { Matrix4, Vector3 } from "./math";
+import { degToRad } from "../modules";
 
 export default class Transformation {
 
@@ -72,9 +67,5 @@ export default class Transformation {
         this.position.set(0, 0, 0);
         this.scale.set(1, 1, 1);
         this.rotation.set(0, 0, 0);
-    }
-
-    sendToGpu(gl: WebGLRenderingContext, uniform: WebGLUniformLocation, transpose = false) {
-        gl.uniformMatrix4fv(uniform, transpose, new Float32Array(this.matView.matrix));
     }
 }

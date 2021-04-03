@@ -1,6 +1,5 @@
 import { loadShaders } from "../modules";
 import Modal from "./modal";
-import { GridAxis } from "./primitives";
 
 export default class ShaderProgram {
   constructor(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {

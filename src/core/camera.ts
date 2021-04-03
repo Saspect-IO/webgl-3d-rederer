@@ -1,11 +1,8 @@
-import {
-  degToRad
-} from "../modules";
-import {
-  Matrix4
-} from "./math";
+import { degToRad } from "../modules";
+import { Matrix4 } from "./math";
 import Transformation from "./transformation";
 
+//https://github.com/sketchpunk/FunWithWebGL2/tree/master/lesson_006
 class Camera {
   constructor(gl: WebGLRenderingContext, fov: number = 45, near: number = 0.1, far: number = 100.0) {
 
@@ -57,6 +54,7 @@ class Camera {
   }
 
   //To have different modes of movements, this function handles the view matrix update for the transform object.
+  
   updateViewMatrix() {
     //Optimize camera transform update, no need for scale nor rotateZ
     if (this.mode == Camera.MODE_FREE) {
