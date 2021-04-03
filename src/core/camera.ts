@@ -4,7 +4,6 @@ import {
 import {
   Matrix4
 } from "./math";
-import ShaderProgram from "./shaderProgram";
 import Transformation from "./transformation";
 
 class Camera {

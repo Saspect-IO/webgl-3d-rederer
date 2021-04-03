@@ -1,4 +1,4 @@
-import Modal from "./modal";
+import { loadShaders } from "../modules";
 import { GridAxis } from "./primitives";
 
 export default class ShaderProgram {
@@ -52,10 +52,10 @@ export default class ShaderProgram {
     this.modalMatrix = gl.getUniformLocation(program, 'uMVMatrix') as WebGLUniformLocation;
     this.perspective = gl.getUniformLocation(program, 'uPMatrix') as WebGLUniformLocation;
     this.cameraMatrix = gl.getUniformLocation(program, 'uCameraMatrix') as WebGLUniformLocation;
-    this.mainTexture = gl.getUniformLocation(program, 'uMainTexture') as WebGLUniformLocation;
+    // this.mainTexture = gl.getUniformLocation(program, 'uMainTexture') as WebGLUniformLocation;
 
-    this.ambientLight = gl.getUniformLocation(program, 'ambientLight') as WebGLUniformLocation;
-    this.lightDirection = gl.getUniformLocation(program, 'lightDirection') as WebGLUniformLocation;
+    // this.ambientLight = gl.getUniformLocation(program, 'ambientLight') as WebGLUniformLocation;
+    // this.lightDirection = gl.getUniformLocation(program, 'lightDirection') as WebGLUniformLocation;
 
     this.vertexShader = vertexShader;
     this.fragmentShader = fragmentShader;
@@ -99,17 +99,17 @@ export default class ShaderProgram {
   }
 
   setPerspective(matData: Float32Array) {
-    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.perspective, false, matData);
+    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.perspective  as WebGLUniformLocation, false, matData);
     return this;
   }
 
   setModalMatrix(matData: Float32Array) {
-    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.modalMatrix, false, matData);
+    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.modalMatrix  as WebGLUniformLocation, false, matData);
     return this;
   }
 
   setCameraMatrix(matData: Float32Array) {
-    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.cameraMatrix, false, matData);
+    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.cameraMatrix  as WebGLUniformLocation, false, matData);
     return this;
   }
 
@@ -135,13 +135,7 @@ export default class ShaderProgram {
   // Loads shader files from the given URLs, and returns a program as a promise
   static async initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
 
-    const loadFile = async (src: string) => {
-      const response = await fetch(src);
-      const data = await response.text();
-      return data;
-    }
-
-    const [vertexShaderFile, fragmentShaderFile] = await Promise.all([loadFile(vsSource), loadFile(fsSource)]);
+    const {vertexShaderFile, fragmentShaderFile} = await loadShaders(vsSource, fsSource);
     const shaderProgram = new ShaderProgram(gl, vertexShaderFile, fragmentShaderFile);
 
     return shaderProgram;
