@@ -3,7 +3,6 @@ import {Camera, CameraController }  from './core/camera';
 import { GridAxisShader } from './core/shaderExtend';
 import { GridAxis } from './core/primitives';
 import Renderer from './core/renderer';
-import ShaderProgram  from './core/shaderProgram';
 import Light  from './core/light';
 import Mesh from './core/mesh';
 import { ProgramEntrySettings } from './modules';
@@ -12,7 +11,7 @@ import { ProgramEntrySettings } from './modules';
 const model: Mesh[] = [];
 
 const glContext = new GLContext(ProgramEntrySettings.WEBGL_CANVAS_ID);
-glContext.fitScreen(0.99,0.98).setClearColor(255, 255, 255, 1.0).setSize(300, 300);
+glContext.fitScreen(0.95,0.90).setClearColor(255, 255, 255, 1.0).clear();
 const gl = glContext.getContext() as WebGLRenderingContext;
 
 const camera = new Camera(gl as WebGLRenderingContext); 
