@@ -1,13 +1,21 @@
-import { MeshData } from "../entities";
 import Transformation from "./transformation";
+import Vbuffer from "./vbuffer";
 export default class Modal {
-    
-    constructor(meshData: MeshData) {
+
+    constructor(gl: WebGLRenderingContext, vertexComponentLen: number, meshPositions: number[]) {
+        this.vertexComponentLen = vertexComponentLen;
+        this.vertexCount = meshPositions.length / vertexComponentLen;
+        this.positions = new Vbuffer(gl, meshPositions, this.vertexCount);
         this.transform = new Transformation();
-        this.mesh = meshData;
+        this.gl = gl;
     }
+
+    gl: WebGLRenderingContext | null = null;
+    vertexComponentLen: number;
+    vertexCount: number;
+    positions: Vbuffer;
     transform: Transformation;
-    mesh: MeshData;
+    drawMode: number = 0;
 
     //--------------------------------------------------------------------------
     //Getters/Setters
@@ -39,12 +47,20 @@ export default class Modal {
         this.transform.position.z += z;
         return this;
     }
-    
+
     addRotation(x: number, y: number, z: number) {
         this.transform.rotation.x += x;
         this.transform.rotation.y += y;
         this.transform.rotation.z += z;
         return this;
+    }
+
+    destroy() {
+        this.positions.destroy();
+    }
+
+    render() {
+        this.gl?.drawArrays(this.drawMode , 0, this.vertexCount);
     }
 
     //--------------------------------------------------------------------------

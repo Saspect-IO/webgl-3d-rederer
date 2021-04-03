@@ -1,4 +1,5 @@
 import { loadShaders } from "../modules";
+import Modal from "./modal";
 import { GridAxis } from "./primitives";
 
 export default class ShaderProgram {
@@ -125,9 +126,9 @@ export default class ShaderProgram {
   preRender() {} //abstract method, extended object may need need to do some things before rendering.
 
   // //Handle rendering a grid
-  renderGrid(grid: GridAxis) {
-    this.setModalMatrix(grid.transform.getViewMatrix()); //Set the transform, so the shader knows where the grid exists in 3d space
-    grid.drawGrid(this)
+  renderMesh(mesh: Modal) {
+    this.setModalMatrix(mesh.transform.getViewMatrix()); //Set the transform, so the shader knows where the mesh exists in 3d space
+    mesh.render()
     return this;
   }
 

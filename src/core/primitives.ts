@@ -1,83 +1,24 @@
-import {
-  GLSetttings
-} from "../modules";
+import { GLSetttings } from "../modules";
+import Modal from "./modal";
 import ShaderProgram from "./shaderProgram";
-import Transformation from "./transformation";
-import Vbuffer from "./vbuffer";
-class GridAxis {
+class GridAxis extends Modal {
 
-  constructor(gl: WebGLRenderingContext, vertexComponentLen: number, gridPositions: number[]) {
-    this.vertexComponentLen  = vertexComponentLen;
-    this.vertexCount = gridPositions.length/vertexComponentLen;
-    this.positions = new Vbuffer(gl, gridPositions, this.vertexCount);
-    this.transform = new Transformation();
-    this.gl = gl;
+  constructor(gl: WebGLRenderingContext, shaderProgram: ShaderProgram , vertexComponentLen: number, gridPositions: number[]) {
+
+    super(gl, vertexComponentLen, gridPositions);
+
+    const strideLen = Float32Array.BYTES_PER_ELEMENT * this.vertexComponentLen; //Stride Length is the Vertex Size for the buffer in Bytes
+    const offset = Float32Array.BYTES_PER_ELEMENT * 3;
+
+    this.positions.bindToAttribute(shaderProgram.gridIndex as number, strideLen, 0, GLSetttings.GRID_VECTOR_SIZE);
+    this.positions.bindToAttribute(shaderProgram.colorIndex as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE);
+
     this.drawMode = gl.LINES;
   }
 
-  vertexComponentLen: number;
-  vertexCount: number;
-  positions: Vbuffer;
-  transform: Transformation;
-  gl: WebGLRenderingContext | null = null;
   drawMode: number;
 
-  destroy() {
-    this.positions.destroy();
-  }
-
-  //--------------------------------------------------------------------------
-  //Getters/Setters
-  setScale(x: number, y: number, z: number) {
-    this.transform.scale.set(x, y, z);
-    return this;
-  }
-
-  setPosition(x: number, y: number, z: number) {
-    this.transform.position.set(x, y, z);
-    return this;
-  }
-
-  setRotation(x: number, y: number, z: number) {
-    this.transform.rotation.set(x, y, z);
-    return this;
-  }
-
-  addScale(x: number, y: number, z: number) {
-    this.transform.scale.x += x;
-    this.transform.scale.y += y;
-    this.transform.scale.y += y;
-    return this;
-  }
-
-  addPosition(x: number, y: number, z: number) {
-    this.transform.position.x += x;
-    this.transform.position.y += y;
-    this.transform.position.z += z;
-    return this;
-  }
-
-  addRotation(x: number, y: number, z: number) {
-    this.transform.rotation.x += x;
-    this.transform.rotation.y += y;
-    this.transform.rotation.z += z;
-    return this;
-  }
-
-  preRender() {
-    this.transform.updateMatrix();
-    return this;
-  }
-
-  drawGrid(shaderProgram: ShaderProgram) {
-    const strideLen = Float32Array.BYTES_PER_ELEMENT * this.vertexComponentLen; //Stride Length is the Vertex Size for the buffer in Bytes
-    const offset = Float32Array.BYTES_PER_ELEMENT * 3;
-    this.positions.bindToAttribute(shaderProgram.gridIndex as number, strideLen, 0, GLSetttings.GRID_VECTOR_SIZE);
-    this.positions.bindToAttribute(shaderProgram.colorIndex as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE);
-    this.gl?.drawArrays(this.drawMode , 0, this.vertexCount);
-  }
-
-  static loadGrid(glContext: WebGLRenderingContext, incAxis: boolean) {
+  static loadGridMesh(glContext: WebGLRenderingContext, shaderProgram: ShaderProgram, incAxis: boolean ) {
     //Dynamiclly create a grid
     let gl = glContext as WebGLRenderingContext;
     let verts = [],
@@ -148,7 +89,7 @@ class GridAxis {
       verts.push(3); //c2
     }
 
-    const grid = new GridAxis(gl, GLSetttings.GRID_VERTEX_LEN, verts);
+    const grid = new GridAxis(gl, shaderProgram, GLSetttings.GRID_VERTEX_LEN, verts);
 
     return grid;
   }
