@@ -1,21 +1,13 @@
-attribute vec4 a_position;
-attribute vec4 a_color;
+attribute vec3 grid_position;
+attribute float grid_color;
 
-uniform mat4 u_matrix;
-uniform float u_fudgeFactor;
-
+uniform mat4 uPMatrix;
+uniform mat4 uMVMatrix;
+uniform mat4 uCameraMatrix;
+uniform vec3 uColor[4];
 varying vec4 v_color;
 
-void main() {
-  // Multiply the position by the matrix.
-  vec4 position = u_matrix * a_position;
-
-  // Adjust the z to divide by
-  float zToDivideBy = 1.0 + position.z * u_fudgeFactor;
-
-  // Divide x and y by z.
-  gl_Position = vec4(position.xyz, zToDivideBy);
-
-  // Pass the color to the fragment shader.
-  v_color = a_color;
-}
+void main(void){
+	v_color = vec4(uColor[ int(grid_color) ],1.0);
+	gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(grid_position, 1.0);
+};

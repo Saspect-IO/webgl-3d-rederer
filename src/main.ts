@@ -29,8 +29,8 @@ const gridMesh = GridAxis.loadGrid(gl, true);
 //     .then((mesh) => model.push(mesh));
 
 
-ShaderProgram.initShaderProgram(gl, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
-    .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
+// ShaderProgram.initShaderProgram(gl, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
+//     .then(shaderProgram => renderer.setShaderProgram(shaderProgram));
 
 const light = new Light(-1,-1,-1);
 
