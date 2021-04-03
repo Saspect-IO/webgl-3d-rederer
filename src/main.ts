@@ -13,7 +13,7 @@ const model: Mesh[] = [];
 const canvas = document.getElementById(ProgramEntrySettings.WEBGL_CANVAS_ID) as HTMLCanvasElement;
 
 const renderer = new Renderer(canvas);
-renderer.fFitScreen(0.95,0.9).setClearColor(255, 255, 255, 1.0).fSetSize(800,600);
+renderer.fFitScreen(0.99,0.98).setClearColor(255, 255, 255, 1.0).fSetSize(300, 300)
 const gl = renderer.getContext() as WebGLRenderingContext;
 
 const camera = new Camera(gl as WebGLRenderingContext); 
@@ -21,7 +21,7 @@ camera.transform.position.set(0,1,3);
 const controls = new CameraController(gl as WebGLRenderingContext, camera);
 
 //Setup Grid
-const gGridShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection);
+const gridShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection);
 
 const gridMesh = GridAxis.loadGrid(gl, true);
 
@@ -35,7 +35,7 @@ const gridMesh = GridAxis.loadGrid(gl, true);
 const light = new Light(-1,-1,-1);
 
 const loop = () => {
-    renderer.render(camera, controls, model, gridMesh, gGridShader, light);
+    renderer.render(camera, controls, model, gridMesh, gridShader, light);
     requestAnimationFrame(loop);
 }
 loop();

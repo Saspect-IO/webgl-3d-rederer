@@ -67,7 +67,7 @@ export default class Renderer {
         this.shaderProgram = shaderProgram;
     }
 
-    render(camera: Camera, controler: CameraController, model: Mesh[], grid: GridAxis, gGridShader: GridAxisShader, light: Light, ) {
+    render(camera: Camera, controler: CameraController, model: Mesh[], grid: GridAxis, gridShader: GridAxisShader, light: Light, ) {
         camera.updateViewMatrix();
         this.gl?.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT)
         // const shaderProgram = this.shaderProgram;
@@ -78,10 +78,10 @@ export default class Renderer {
         //     return;
         // }
         
-        gGridShader.activate()
-            .setGridMatrix()
+        gridShader.activate()
             .setCameraMatrix(camera.viewMatrix)
-            .renderGrid(grid.preRender());
+            .renderGrid(grid.preRender())
+            .setGridMatrix();
         //shaderProgram.activate()
         // light.useLight(shaderProgram);
         //model.forEach((mesh) => mesh.drawMesh(shaderProgram));
