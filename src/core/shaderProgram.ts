@@ -1,5 +1,5 @@
 import { loadShaders } from "../modules";
-import Modal from "./modal";
+import Geometry from "./geometry";
 
 export default class ShaderProgram {
   constructor(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
@@ -125,7 +125,7 @@ export default class ShaderProgram {
   preRender() {} //abstract method, extended object may need need to do some things before rendering.
 
   // //Handle rendering a grid
-  renderMesh(mesh: Modal) {
+  renderMesh(mesh: Geometry) {
     this.setModalMatrix(mesh.transform.getViewMatrix()); //Set the transform, so the shader knows where the mesh exists in 3d space
     mesh.render()
     return this;

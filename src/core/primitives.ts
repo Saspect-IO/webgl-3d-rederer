@@ -1,22 +1,21 @@
 import { GLSetttings } from "../modules";
-import Modal from "./modal";
+import Geometry from "./geometry";
 import ShaderProgram from "./shaderProgram";
-class GridAxis extends Modal {
+class GridAxis extends Geometry {
 
-  constructor(gl: WebGLRenderingContext, shaderProgram: ShaderProgram , vertexComponentLen: number, gridPositions: number[]) {
+  constructor(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, vertexCount: number, gridPositions: number[]) {
 
-    super(gl, vertexComponentLen, gridPositions);
+    super(gl, vertexCount, gridPositions);
 
-    const strideLen = Float32Array.BYTES_PER_ELEMENT * this.vertexComponentLen; //Stride Length is the Vertex Size for the buffer in Bytes
-    const offset = Float32Array.BYTES_PER_ELEMENT * 3;
+    const strideLen = Float32Array.BYTES_PER_ELEMENT * GLSetttings.GRID_VERTEX_LEN; //Stride Length is the Vertex Size for the buffer in Bytes
+    const offset = Float32Array.BYTES_PER_ELEMENT * GLSetttings.GRID_VECTOR_SIZE;
 
-    this.positions.bindToAttribute(shaderProgram.gridIndex as number, strideLen, 0, GLSetttings.GRID_VECTOR_SIZE);
+    this.positions.bindToAttribute(shaderProgram.gridIndex as number, strideLen, GLSetttings.DEFAULT_OFFSET, GLSetttings.GRID_VECTOR_SIZE);
     this.positions.bindToAttribute(shaderProgram.colorIndex as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE);
 
     this.drawMode = gl.LINES;
   }
 
-  drawMode: number;
 
   //https://github.com/sketchpunk/FunWithWebGL2/tree/master/lesson_006
   static loadGridMesh(glContext: WebGLRenderingContext, shaderProgram: ShaderProgram, incAxis: boolean ) {
@@ -90,7 +89,8 @@ class GridAxis extends Modal {
       verts.push(3); //c2
     }
 
-    const grid = new GridAxis(gl, shaderProgram, GLSetttings.GRID_VERTEX_LEN, verts);
+    const vertexCount = verts.length / GLSetttings.GRID_VERTEX_LEN;
+    const grid = new GridAxis(gl, shaderProgram, vertexCount, verts);
 
     return grid;
   }

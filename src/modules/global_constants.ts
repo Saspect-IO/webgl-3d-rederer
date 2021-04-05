@@ -35,6 +35,8 @@ export enum ControlsSettings {
 }
 
 export enum GLSetttings {
+    DEFAULT_OFFSET = 0,
+    DEFAULT_STRIDE = 0,
     ATTR_POSITION_NAME = "a_position",
     ATTR_POSITION_LOC = 0,
     ATTR_NORMAL_NAME = "a_norm",

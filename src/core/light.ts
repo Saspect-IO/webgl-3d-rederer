@@ -1,4 +1,4 @@
-import { Vec3Struct } from "./model";
+import { Vec3Struct } from "./obj";
 import ShaderProgram from './shaderProgram';
 
 export default class Light {

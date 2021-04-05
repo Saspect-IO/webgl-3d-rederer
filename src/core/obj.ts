@@ -6,7 +6,7 @@ import {
     Vertex
 } from "../entities";
 
-export default class Model {
+export default class OBJ {
 
     constructor(surfaces: Array < Surface > ) {
         this.surfaces = surfaces;
@@ -61,13 +61,13 @@ export default class Model {
             }
         })
 
-        return new Model(surfaces);
+        return new OBJ(surfaces);
     }
 
     // Loads an OBJ file from the given URL, and returns it as a promise
     static async loadOBJ(url: string) {
         const response = await fetch(url);
-        const data = Model.parseOBJ(await response.text());
+        const data = OBJ.parseOBJ(await response.text());
         return data;
     }
 

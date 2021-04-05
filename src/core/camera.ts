@@ -58,13 +58,13 @@ class Camera {
   updateViewMatrix() {
     //Optimize camera transform update, no need for scale nor rotateZ
     if (this.mode == Camera.MODE_FREE) {
-      this.transform.matView.reset()
+      this.transform.matView.resetMat()
         .vtranslate(this.transform.position)
         .rotateX(degToRad(this.transform.rotation.x))
         .rotateY(degToRad(this.transform.rotation.y));
 
     } else {
-      this.transform.matView.reset()
+      this.transform.matView.resetMat()
         .rotateX(degToRad(this.transform.rotation.x))
         .rotateY(degToRad(this.transform.rotation.y))
         .vtranslate(this.transform.position);
@@ -145,12 +145,12 @@ class CameraController {
   }
 
   onMouseWheel(e: any) {
-    var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))); //Try to map wheel movement to a number between -1 and 1
+    let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))); //Try to map wheel movement to a number between -1 and 1
     this.camera.panZ(delta * (this.zoomRate / this.canvas.height)); //Keep the movement speed the same, no matter the height diff
   }
 
   onMouseMove(e: MouseEvent) {
-    var x = e.pageX - this.offsetX, //Get X,y where the canvas's position is origin.
+    let x = e.pageX - this.offsetX, //Get X,y where the canvas's position is origin.
       y = e.pageY - this.offsetY,
       dx = x - this.prevX, //Difference since last mouse move
       dy = y - this.prevY;

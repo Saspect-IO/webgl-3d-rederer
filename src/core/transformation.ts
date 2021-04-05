@@ -30,7 +30,7 @@ export default class Transformation {
     //--------------------------------------------------------------------------
     //Methods
     updateMatrix() {
-        this.matView.reset() //Order is very important!!
+        this.matView.resetMat() //Order is very important!!
             .vtranslate(this.position)
             .rotateX(degToRad(this.rotation.x))
             .rotateZ(degToRad(this.rotation.z))

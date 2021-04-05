@@ -124,7 +124,7 @@ class Matrix4 {
     }
 
     //reset data back to identity.
-    reset() {
+    resetMat() {
         for (let i = 0; i < this.matrix.length; i++) this.matrix[i] = (i % 5 == 0) ? 1 : 0; //only positions 0,5,10,15 need to be 1 else 0.
         return this;
     }

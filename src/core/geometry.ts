@@ -1,17 +1,15 @@
 import Transformation from "./transformation";
 import Vbuffer from "./vbuffer";
-export default class Modal {
+export default class Geometry {
 
-    constructor(gl: WebGLRenderingContext, vertexComponentLen: number, meshPositions: number[]) {
-        this.vertexComponentLen = vertexComponentLen;
-        this.vertexCount = meshPositions.length / vertexComponentLen;
+    constructor(gl: WebGLRenderingContext, vertexCount: number, meshPositions: number[]) {
+        this.vertexCount = vertexCount;
         this.positions = new Vbuffer(gl, meshPositions, this.vertexCount);
         this.transform = new Transformation();
         this.gl = gl;
     }
 
     gl: WebGLRenderingContext | null = null;
-    vertexComponentLen: number;
     vertexCount: number;
     positions: Vbuffer;
     transform: Transformation;
