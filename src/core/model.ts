@@ -32,7 +32,7 @@ export default class Model extends Geometry{
     this.uvs.destroy();
   }
 
-  static async loadMesh(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string) {
+  static async loadModel(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string) {
     const objModel = await OBJ.loadOBJ(objSrc);
     const objTexture = await Texture.loadTexture(gl, textureSrc);
     const [model, texture] = await Promise.all([objModel, objTexture]);

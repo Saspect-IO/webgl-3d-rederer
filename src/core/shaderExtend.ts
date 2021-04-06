@@ -1,3 +1,4 @@
+import { loadShaders } from "../modules";
 import ShaderProgram from "./shaderProgram";
 
 class GridAxisShader extends ShaderProgram{
@@ -43,6 +44,50 @@ class GridAxisShader extends ShaderProgram{
 
 }
 
+class ModelShader extends ShaderProgram{
+	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array, vertexShaderFile: string, fragmentShaderFile: string){
+				
+		super(gl,vertexShaderFile, fragmentShaderFile);
+
+		//Custom Uniforms 
+		this.positionIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_position');
+		this.normalIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_norm');
+		this.uvIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_uv');
+	
+		this.modalMatrix = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'uMVMatrix') as WebGLUniformLocation;
+		this.perspective = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'uPMatrix') as WebGLUniformLocation;
+		this.cameraMatrix = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'uCameraMatrix') as WebGLUniformLocation;
+		// this.mainTexture = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'uMainTexture') as WebGLUniformLocation;
+	
+		// this.ambientLight = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'ambientLight') as WebGLUniformLocation;
+		// this.lightDirection = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'lightDirection') as WebGLUniformLocation;
+		this.projectionMatrix = projectionMatrix;
+	}
+
+	projectionMatrix:Float32Array;
+
+	setGridMatrix() {
+		//Standrd Uniforms
+		this.setPerspective(this.projectionMatrix);
+		const gl = this.gl as WebGLRenderingContext;
+		const uColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram ,"uColor");
+		gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]));
+
+		return this;
+	}
+
+	// Loads shader files from the given URLs, and returns a program as a promise
+	static async initModelShader(gl: WebGLRenderingContext, projectionMatrix: Float32Array, vsSource: string, fsSource: string) {
+
+		const {vertexShaderFile, fragmentShaderFile} = await loadShaders(vsSource, fsSource);
+		const shaderProgram = new ModelShader(gl, projectionMatrix, vertexShaderFile, fragmentShaderFile);
+
+		return shaderProgram;
+	}
+
+}
+
 export {
-    GridAxisShader
+    GridAxisShader,
+	ModelShader
 }

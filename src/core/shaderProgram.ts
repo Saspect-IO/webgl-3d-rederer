@@ -45,18 +45,6 @@ export default class ShaderProgram {
       throw new Error('Failed to link shaderProgram');
     }
 
-    this.positionIndex = gl.getAttribLocation(program, 'a_position');
-    this.normalIndex = gl.getAttribLocation(program, 'a_norm');
-    this.uvIndex = gl.getAttribLocation(program, 'a_uv');
-
-    this.modalMatrix = gl.getUniformLocation(program, 'uMVMatrix') as WebGLUniformLocation;
-    this.perspective = gl.getUniformLocation(program, 'uPMatrix') as WebGLUniformLocation;
-    this.cameraMatrix = gl.getUniformLocation(program, 'uCameraMatrix') as WebGLUniformLocation;
-    // this.mainTexture = gl.getUniformLocation(program, 'uMainTexture') as WebGLUniformLocation;
-
-    // this.ambientLight = gl.getUniformLocation(program, 'ambientLight') as WebGLUniformLocation;
-    // this.lightDirection = gl.getUniformLocation(program, 'lightDirection') as WebGLUniformLocation;
-
     this.vertexShader = vertexShader;
     this.fragmentShader = fragmentShader;
     this.shaderProgram = program;
@@ -127,17 +115,8 @@ export default class ShaderProgram {
   // //Handle rendering a grid
   renderMesh(mesh: Geometry) {
     this.setModalMatrix(mesh.transform.getViewMatrix()); //Set the transform, so the shader knows where the mesh exists in 3d space
-    mesh.render()
+    mesh.render();
     return this;
   }
 
-
-  // Loads shader files from the given URLs, and returns a program as a promise
-  static async initShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
-
-    const {vertexShaderFile, fragmentShaderFile} = await loadShaders(vsSource, fsSource);
-    const shaderProgram = new ShaderProgram(gl, vertexShaderFile, fragmentShaderFile);
-
-    return shaderProgram;
-  }
 }
