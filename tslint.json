@@ -16,8 +16,7 @@
       "no-implicit-dependencies": [
         true,
         [
-          "@",
-          ".rdvue"
+          "@"
         ]
       ],
       "no-console": true,
