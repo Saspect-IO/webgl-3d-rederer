@@ -1,19 +1,15 @@
+import { MeshData } from "../entities";
 import Transformation from "./transformation";
-import Vbuffer from "./vbuffer";
 export default class Geometry {
 
-    constructor(gl: WebGLRenderingContext, vertexCount: number, meshPositions: number[]) {
-        this.vertexCount = vertexCount;
-        this.positions = new Vbuffer(gl, meshPositions, this.vertexCount);
+    constructor( model: MeshData) {
+
+        this.model = model;
         this.transform = new Transformation();
-        this.gl = gl;
     }
 
-    gl: WebGLRenderingContext | null = null;
-    vertexCount: number;
-    positions: Vbuffer;
+    model: MeshData;
     transform: Transformation;
-    drawMode: number = 0;
 
     //--------------------------------------------------------------------------
     //Getters/Setters
@@ -51,14 +47,6 @@ export default class Geometry {
         this.transform.rotation.y += y;
         this.transform.rotation.z += z;
         return this;
-    }
-
-    destroy() {
-        this.positions.destroy();
-    }
-
-    render() {
-        this.gl?.drawArrays(this.drawMode , 0, this.vertexCount);
     }
 
     //--------------------------------------------------------------------------

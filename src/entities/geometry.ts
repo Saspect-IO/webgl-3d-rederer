@@ -1,3 +1,6 @@
+import Texture from "../core/texture";
+import Vbuffer from "../core/vbuffer";
+
 export interface UV {
     x: number;
     y: number;
@@ -26,9 +29,9 @@ export interface Surface {
 }
 
 export interface MeshData {
-    drawMode: number; 
-    vao: any; 
-    indexCount:number;
-    vertexCount:number;
-    indexLength:number;
+    positions: Vbuffer; 
+    normals?: Vbuffer; 
+    uvs?: Vbuffer;
+    texture?: Texture;
+    drawMode: number;
 }

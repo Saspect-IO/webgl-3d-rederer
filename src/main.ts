@@ -15,12 +15,11 @@ import { ProgramEntrySettings } from './modules';
     camera.transform.position.set(0, 1, 3);
     const cemeraController = new CameraController(gl as WebGLRenderingContext, camera);
 
-    //Setup Grid
-    const gridShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection);
-    const gridMesh = GridAxis.loadGridMesh(gl, gridShader, true);
+    const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection);
+    const gridAxis = GridAxis.createModel(gl, gridAxisShader, false);
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection);
-    const gridModel = await Model.loadModel(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
+    const model = await Model.createModel(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
 
     const light = new Light(-1, -1, -1);
 
@@ -29,13 +28,13 @@ import { ProgramEntrySettings } from './modules';
         camera.updateViewMatrix();
         glContext.clear();
 
-        gridShader.activate()
+        gridAxisShader.activate()
             .setCameraMatrix(camera.viewMatrix)
-            .renderMesh(gridMesh.preRender());
+            .renderMesh(gridAxis.preRender());
 
-        modelShader.activate()
-            .setCameraMatrix(camera.viewMatrix)
-            .renderMesh(gridModel.preRender());
+        // modelShader.activate()
+        //     .setCameraMatrix(camera.viewMatrix)
+        //     .renderMesh(model.preRender());
 
         requestAnimationFrame(loop);
     }

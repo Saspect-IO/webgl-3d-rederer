@@ -3,42 +3,38 @@ import Texture from './texture';
 import Vbuffer from './vbuffer';
 import ShaderProgram from './shaderProgram';
 import OBJ from './obj';
-import { GLSetttings } from '../modules';
+import { MeshData } from '../entities';
 
-export default class Model extends Geometry{
+export default class Model {
 
-  constructor(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, geometry: OBJ, texture: Texture) {
+  constructor() {}
 
-    super(gl, geometry.vertexCount(), geometry.positions());
-
-    this.normals = new Vbuffer(gl, geometry.normals(), this.vertexCount);
-    this.uvs = new Vbuffer(gl, geometry.uvs(), this.vertexCount);
-    this.texture = texture;
-
-    this.positions.bindToAttribute(shaderProgram.positionIndex as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
-    this.normals.bindToAttribute(shaderProgram.normalIndex as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
-    this.uvs.bindToAttribute(shaderProgram.uvIndex as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
-
-    this.drawMode = gl.TRIANGLES;
+  static async createModel(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string){ 
+    return  new Geometry(await Model.createMesh(gl, shaderProgram, objSrc, textureSrc)); 
   }
 
-  normals: Vbuffer;
-  uvs: Vbuffer;
-  texture: Texture;
-  
-
-  destroy() {
-    this.normals.destroy();
-    this.uvs.destroy();
-  }
-
-  static async loadModel(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string) {
-    const objModel = await OBJ.loadOBJ(objSrc);
-    const objTexture = await Texture.loadTexture(gl, textureSrc);
-    const [model, texture] = await Promise.all([objModel, objTexture]);
-    const mesh = new Model(gl, shaderProgram, model, texture as any);
+  static async createMesh(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string) {
     
+    const verts = await Model.loadVerts(gl, shaderProgram, objSrc, textureSrc);
+    const vertexCount = verts.geometry.vertexCount();
+
+    const mesh: MeshData = {
+      positions : new Vbuffer(gl, verts.geometry.positions(), vertexCount),
+      normals: new Vbuffer(gl, verts.geometry.normals(), vertexCount),
+      uvs: new Vbuffer(gl, verts.geometry.uvs(), vertexCount),
+      texture: verts.texture as Texture,
+      drawMode : gl.TRIANGLES
+    }
+
     return mesh;
+  }
+  
+  static async loadVerts(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string) {
+    const objGeometry = await OBJ.loadOBJ(objSrc);
+    const objTexture = await Texture.loadTexture(gl, textureSrc);
+    const [geometry, texture] = await Promise.all([objGeometry, objTexture]);
+    
+    return {geometry, texture};
   }
 
 }

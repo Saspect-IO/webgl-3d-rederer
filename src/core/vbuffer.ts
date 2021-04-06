@@ -10,13 +10,11 @@ export default class Vbuffer {
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexAttribute), gl.STATIC_DRAW);
     this.gl = gl;
     this.size = vertexAttribute.length / count;
-    this.count = count;
   }
 
   buffer: WebGLBuffer;
   gl: WebGLRenderingContext;
   size: number;
-  count: number;
 
   destroy() {
     // Free memory that is occupied by our buffer object
@@ -24,6 +22,7 @@ export default class Vbuffer {
   }
 
   bindToAttribute(vertexAttributeIndex: number, stride: number, offset: number, size: number = this.size) {
+
     const gl = this.gl
     // Turn on the vertex attribute
     gl.enableVertexAttribArray(vertexAttributeIndex);
