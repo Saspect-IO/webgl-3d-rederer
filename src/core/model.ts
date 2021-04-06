@@ -25,7 +25,7 @@ export default class Model extends Geometry{
   normals: Vbuffer;
   uvs: Vbuffer;
   texture: Texture;
-  gl: WebGLRenderingContext | null = null;
+  
 
   destroy() {
     this.normals.destroy();

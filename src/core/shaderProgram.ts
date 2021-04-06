@@ -9,7 +9,17 @@ export default class ShaderProgram {
 
     this.createShaderProgram(gl, fragmentShader, vertexShader);
 
-    this.gl = gl;
+    if (this.shaderProgram ) {
+
+      gl.useProgram(this.shaderProgram);
+      console.log(this.shaderProgram);
+      
+      this.modalMatrix = gl.getUniformLocation(this.shaderProgram , 'uMVMatrix') as WebGLUniformLocation;
+      this.perspective = gl.getUniformLocation(this.shaderProgram , 'uPMatrix') as WebGLUniformLocation;
+      this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , 'uCameraMatrix') as WebGLUniformLocation;
+  
+      this.gl = gl;
+    }
   }
 
   gl: WebGLRenderingContext | null = null;

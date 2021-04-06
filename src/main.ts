@@ -2,37 +2,42 @@ import GLContext from './core/GLContext';
 import {Camera, CameraController }  from './core/camera';
 import { GridAxisShader, ModelShader } from './core/shaderExtend';
 import { GridAxis } from './core/primitives';
-import Renderer from './core/renderer';
 import Light  from './core/light';
 import Model from './core/model';
 import { ProgramEntrySettings } from './modules';
 
+(async () => {
+    const glContext = new GLContext(ProgramEntrySettings.WEBGL_CANVAS_ID);
+    glContext.fitScreen(0.95, 0.90).setClearColor(255, 255, 255, 1.0).clear();
+    const gl = glContext.getContext() as WebGLRenderingContext;
 
+    const camera = new Camera(gl as WebGLRenderingContext);
+    camera.transform.position.set(0, 1, 3);
+    const cemeraController = new CameraController(gl as WebGLRenderingContext, camera);
 
+    //Setup Grid
+    const gridShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection);
+    const gridMesh = GridAxis.loadGridMesh(gl, gridShader, true);
 
-const glContext = new GLContext(ProgramEntrySettings.WEBGL_CANVAS_ID);
-glContext.fitScreen(0.95,0.90).setClearColor(255, 255, 255, 1.0).clear();
-const gl = glContext.getContext() as WebGLRenderingContext;
+    const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection);
+    const gridModel = await Model.loadModel(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
 
-const camera = new Camera(gl as WebGLRenderingContext); 
-camera.transform.position.set(0,1,3);
-const cemeraController = new CameraController(gl as WebGLRenderingContext, camera);
+    const light = new Light(-1, -1, -1);
 
-//Setup Grid
-const gridShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection);
-const gridMesh = GridAxis.loadGridMesh(gl, gridShader, true);
+    const loop = () => {
+        
+        camera.updateViewMatrix();
+        glContext.clear();
 
-const modelShader = async () => await ModelShader.initModelShader(gl as WebGLRenderingContext, camera.projection, ProgramEntrySettings.PATH_SHADE_VERTEX, ProgramEntrySettings.PATH_SHADE_FRAGMENT)
-const gridModel = async () => await Model.loadModel(gl, await modelShader(), ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
+        gridShader.activate()
+            .setCameraMatrix(camera.viewMatrix)
+            .renderMesh(gridMesh.preRender());
 
-const renderer = new Renderer();
-const light = new Light(-1,-1,-1);
+        modelShader.activate()
+            .setCameraMatrix(camera.viewMatrix)
+            .renderMesh(gridModel.preRender());
 
-const loop = async () => {
-    renderer.render(glContext, camera, cemeraController, await gridModel(), gridMesh, gridShader, light);
-    requestAnimationFrame(loop);
-}
-loop();
-
-
-
+        requestAnimationFrame(loop);
+    }
+    loop();
+})()
