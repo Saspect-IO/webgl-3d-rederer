@@ -1,4 +1,3 @@
-import { loadShaders } from "../modules";
 import Geometry from "./geometry";
 
 export default class ShaderProgram {
