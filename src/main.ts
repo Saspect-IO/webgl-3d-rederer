@@ -8,7 +8,7 @@ import { ProgramEntrySettings } from './modules';
 
 (async () => {
     const glContext = new GLContext(ProgramEntrySettings.WEBGL_CANVAS_ID);
-    glContext.fitScreen(0.95, 0.90).setClearColor(255, 255, 255, 1.0).clear();
+    glContext.fitScreen(0.95, 0.90).setClearColor(0, 0, 0, 1.0).clear();
     const gl = glContext.getContext() as WebGLRenderingContext;
 
     const camera = new Camera(gl as WebGLRenderingContext);
