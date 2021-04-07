@@ -4,12 +4,14 @@ class GridAxisShader extends ShaderProgram{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){
 			
 		const vertexShader  = '#version 300 es\n' +
-			'in vec3 a_position;' +
-			'layout(location=4) in float a_color;' +
+			'layout(location=4) in vec3 a_position;' +
+			'layout(location=5) in float a_color;' +
+
 			'uniform mat4 uPMatrix;' +
 			'uniform mat4 uMVMatrix;' +
 			'uniform mat4 uCameraMatrix;' +
 			'uniform vec3 uColor[4];' +
+
 			'out lowp vec4 color;' +
 			'void main(void){' +
 				'color = vec4(uColor[ int(a_color) ],1.0);' +
@@ -59,7 +61,7 @@ class ModelShader extends ShaderProgram{
 
 			'uniform vec3 lightDirection;'+
 			'uniform float ambientLight;'+
-			'uniform sampler2D diffuse;'+
+			'uniform sampler2D uMainTexture;'+
 
 			'in vec3 vNormal;'+
 			'in highp vec2 texCoord;'+
@@ -68,21 +70,11 @@ class ModelShader extends ShaderProgram{
 			'void main(void) {'+
 				'float lightness = -clamp(dot(normalize(vNormal), normalize(lightDirection)), -1.0, 0.0);'+
 				'lightness = ambientLight + (1.0 - ambientLight) * lightness;'+
-				'finalColor = texture(uMainTex, vec2(texCoord.s, texCoord.t) * lightness, 1.0);'+
+				'finalColor = texture(uMainTexture, vec2(texCoord.s, texCoord.t) * lightness, 1.0);'+
 			'}';												
 
 		super(gl,vertexShader, fragmentShader);
 
-		//Custom Uniforms 
-		this.positionIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_position');
-		this.normalIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_norm');
-		this.uvIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_uv');
-	
-		
-		// this.mainTexture = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'uMainTexture') as WebGLUniformLocation;
-	
-		// this.ambientLight = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'ambientLight') as WebGLUniformLocation;
-		// this.lightDirection = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'lightDirection') as WebGLUniformLocation;
 		this.setPerspective(projectionMatrix);
 
 		//Cleanup

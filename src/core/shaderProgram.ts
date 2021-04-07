@@ -12,9 +12,20 @@ export default class ShaderProgram {
     if (this.shaderProgram ) {
 
       gl.useProgram(this.shaderProgram);
+
+      //standard attribute locations
+      this.positionIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_position');
+      this.normalIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_norm');
+      this.uvIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_uv');
+
+      //standard uniform locations
       this.modelMatrix = gl.getUniformLocation(this.shaderProgram , 'uMVMatrix') as WebGLUniformLocation;
       this.perspective = gl.getUniformLocation(this.shaderProgram , 'uPMatrix') as WebGLUniformLocation;
       this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , 'uCameraMatrix') as WebGLUniformLocation;
+      this.mainTexture = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'uMainTexture') as WebGLUniformLocation;
+
+      // this.ambientLight = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'ambientLight') as WebGLUniformLocation;
+		  // this.lightDirection = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'lightDirection') as WebGLUniformLocation;
   
       this.gl = gl;
     }
