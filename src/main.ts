@@ -19,9 +19,7 @@ import { ProgramEntrySettings } from './modules';
     const gridAxis = GridAxis.createModel(gl, gridAxisShader, false);
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection);
-    const model = await Model.createModel(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
-
-    const light = new Light(-1, -1, -1);
+    //const model = await Model.createModel(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
 
     const loop = () => {
         
@@ -30,11 +28,11 @@ import { ProgramEntrySettings } from './modules';
 
         gridAxisShader.activate()
             .setCameraMatrix(camera.viewMatrix)
-            .renderMesh(gridAxis.preRender());
+            .renderModel(gridAxis.preRender());
 
         // modelShader.activate()
         //     .setCameraMatrix(camera.viewMatrix)
-        //     .renderMesh(model.preRender());
+        //     .renderModel(model.preRender());
 
         requestAnimationFrame(loop);
     }

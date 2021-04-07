@@ -34,4 +34,7 @@ export interface MeshData {
     uvs?: Vbuffer;
     texture?: Texture;
     drawMode: number;
+    vertexCount: number;
+    noCulling?: boolean;
+    doBlending?: boolean;    
 }

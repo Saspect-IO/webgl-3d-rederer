@@ -88,11 +88,12 @@ class GridAxis {
 
     const mesh: MeshData = {
       positions : new Vbuffer(gl, verts, vertexCount),
-      drawMode : gl.LINES
+      drawMode : gl.LINES,
+      vertexCount,
     }
 
-    mesh.positions.bindToAttribute(shaderProgram.gridIndex as number, strideLen, GLSetttings.DEFAULT_OFFSET, GLSetttings.GRID_VECTOR_SIZE);
-    mesh.positions.bindToAttribute(shaderProgram.colorIndex as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE);
+    mesh.positions.bindToAttribute(GLSetttings.ATTR_POSITION_LOC as number, strideLen, GLSetttings.DEFAULT_OFFSET, GLSetttings.GRID_VECTOR_SIZE);
+    mesh.positions.bindToAttribute(GLSetttings.ATTR_GRID_COLOR_LOC as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE);
 
     return mesh;
   }

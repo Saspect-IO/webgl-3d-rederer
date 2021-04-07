@@ -2,13 +2,13 @@ import { MeshData } from "../entities";
 import Transformation from "./transformation";
 export default class Geometry {
 
-    constructor( model: MeshData) {
+    constructor( mesh: MeshData) {
 
-        this.model = model;
+        this.mesh = mesh;
         this.transform = new Transformation();
     }
 
-    model: MeshData;
+    mesh: MeshData;
     transform: Transformation;
 
     //--------------------------------------------------------------------------

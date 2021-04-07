@@ -3,28 +3,27 @@ import ShaderProgram from "./shaderProgram";
 class GridAxisShader extends ShaderProgram{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){
 			
-		const vertexShader =
-			'attribute vec3 grid_position;' +
-			'attribute float grid_color;' +
+		const vertexShader  = '#version 300 es\n' +
+			'in vec3 a_position;' +
+			'layout(location=4) in float a_color;' +
 			'uniform mat4 uPMatrix;' +
 			'uniform mat4 uMVMatrix;' +
 			'uniform mat4 uCameraMatrix;' +
 			'uniform vec3 uColor[4];' +
-			'varying vec4 v_color;' +
+			'out lowp vec4 color;' +
 			'void main(void){' +
-				'v_color = vec4(uColor[ int(grid_color) ],1.0);' +
-				'gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(grid_position, 1.0);' +
+				'color = vec4(uColor[ int(a_color) ],1.0);' +
+				'gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.0);' +
 			'}';
-		const fragmentShader =
+		const fragmentShader = '#version 300 es\n' +
 			'precision mediump float;' +
-			'varying vec4 v_color;' +
-			'void main(void){ gl_FragColor = v_color; }';
+			'in vec4 color;' +
+			'out vec4 finalColor;' +
+			'void main(void){ finalColor = color; }';
 
 		super(gl,vertexShader, fragmentShader);
 
 		//Custom Uniforms 
-		this.gridIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'grid_position');
-		this.colorIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'grid_color');
 
 		this.setPerspective(projectionMatrix);
 		const uColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram ,"uColor");
@@ -38,32 +37,38 @@ class GridAxisShader extends ShaderProgram{
 
 class ModelShader extends ShaderProgram{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){	
-		const vertexShader =
-			'attribute vec3 a_position;'+
-			'attribute vec3 a_norm;'+
-			'attribute vec2 a_uv;'+
+		const vertexShader = '#version 300 es\n' +
+			'in vec3 a_position;'+
+			'in vec3 a_norm;'+
+			'in vec2 a_uv;'+
+
 			'uniform mat4 uMVMatrix;'+
 			'uniform mat4 uCameraMatrix;'+
 			'uniform mat4 uPMatrix;'+
-			'varying vec3 vNormal;'+
-			'varying vec2 vUv;'+
-			'void main(){' +
-				'vUv = a_uv;'+
+
+			'out vec3 vNormal;'+
+			'out highp vec2 texCoord;'+
+			'void main(void){' +
+				'texCoord = a_uv;'+
 				'vNormal = (uMVMatrix * vec4(a_norm, 0.)).xyz;'+
 				'gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.0);'+
 			'}';
 
-		const fragmentShader =
-			'precision highp float;'+
+		const fragmentShader = '#version 300 es\n' +
+			'precision mediump float;'+
+
 			'uniform vec3 lightDirection;'+
 			'uniform float ambientLight;'+
 			'uniform sampler2D diffuse;'+
-			'varying vec3 vNormal;'+
-			'varying vec2 vUv;'+
-			'void main() {'+
+
+			'in vec3 vNormal;'+
+			'in highp vec2 texCoord;'+
+
+			'out vec4 finalColor;'+
+			'void main(void) {'+
 				'float lightness = -clamp(dot(normalize(vNormal), normalize(lightDirection)), -1.0, 0.0);'+
 				'lightness = ambientLight + (1.0 - ambientLight) * lightness;'+
-				'gl_FragColor = vec4(texture2D(diffuse, vUv).rgb * lightness, 1.0);'+
+				'finalColor = texture(uMainTex, vec2(texCoord.s, texCoord.t) * lightness, 1.0);'+
 			'}';												
 
 		super(gl,vertexShader, fragmentShader);

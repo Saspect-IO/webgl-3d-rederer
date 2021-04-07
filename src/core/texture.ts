@@ -3,14 +3,14 @@ export default class Texture {
     constructor(gl: WebGLRenderingContext, image: HTMLImageElement) {
         this.createdTexture = gl.createTexture() as WebGLTexture;
         // Set the newly created texture context as active texture
-        gl.bindTexture(gl.TEXTURE_2D, this.createdTexture)
+        gl.bindTexture(gl.TEXTURE_2D, this.createdTexture);
         // Set texture parameters, and pass the image that the texture is based on
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image)
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
         // Set filtering methods
         // Very often shaders will query the texture value between pixels,
         // and this is instructing how that value shall be calculated
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
         this.gl = gl;
     }

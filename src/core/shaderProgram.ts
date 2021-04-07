@@ -12,7 +12,7 @@ export default class ShaderProgram {
     if (this.shaderProgram ) {
 
       gl.useProgram(this.shaderProgram);
-      this.modalMatrix = gl.getUniformLocation(this.shaderProgram , 'uMVMatrix') as WebGLUniformLocation;
+      this.modelMatrix = gl.getUniformLocation(this.shaderProgram , 'uMVMatrix') as WebGLUniformLocation;
       this.perspective = gl.getUniformLocation(this.shaderProgram , 'uPMatrix') as WebGLUniformLocation;
       this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , 'uCameraMatrix') as WebGLUniformLocation;
   
@@ -28,7 +28,7 @@ export default class ShaderProgram {
   colorIndex: number | null = null;
   gridIndex: number | null = null;
 
-  modalMatrix: WebGLUniformLocation | null = null;
+  modelMatrix: WebGLUniformLocation | null = null;
   perspective: WebGLUniformLocation | null = null;
   cameraMatrix: WebGLUniformLocation | null = null;
   mainTexture: WebGLUniformLocation | null = null;
@@ -100,7 +100,7 @@ export default class ShaderProgram {
   }
 
   setModalMatrix(matData: Float32Array) {
-    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.modalMatrix  as WebGLUniformLocation, false, matData);
+    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.modelMatrix  as WebGLUniformLocation, false, matData);
     return this;
   }
 
@@ -121,10 +121,20 @@ export default class ShaderProgram {
   preRender() {} //abstract method, extended object may need need to do some things before rendering.
 
   // //Handle rendering a grid
-  renderMesh(mesh: Geometry) {
-    this.setModalMatrix(mesh.transform.getViewMatrix()); //Set the transform, so the shader knows where the mesh exists in 3d space
-    mesh.render();
-    return this;
+  renderModel(model: Geometry) {
+    const gl = this.gl as WebGLRenderingContext;
+		this.setModalMatrix(model.transform.getViewMatrix());	//Set the transform, so the shader knows where the model exists in 3d space
+
+		if(model.mesh.noCulling) gl.disable(gl.CULL_FACE);
+		if(model.mesh.doBlending) gl.enable(gl.BLEND);
+
+		gl.drawArrays(model.mesh.drawMode, 0, model.mesh.vertexCount);
+
+		//Cleanup
+		if(model.mesh.noCulling) gl.enable(gl.CULL_FACE);
+		if(model.mesh.doBlending) gl.disable(gl.BLEND);
+
+		return this;
   }
 
 }

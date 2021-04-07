@@ -1,6 +1,6 @@
 export enum ProgramEntrySettings {
     WEBGL_CANVAS_ID = 'qrius-glCanvas',
-    WEBGL_CONTEXT = 'webgl',
+    WEBGL_CONTEXT = 'webgl2',
     WEBGL_CONTEXT_EXPERIMENTAL = 'experimental-webgl',
     WEBGL_CONTEXT_WEBKIT = 'webkit-3d',
     WEBGL_CONTEXT_MOZ = 'moz-webgl',
