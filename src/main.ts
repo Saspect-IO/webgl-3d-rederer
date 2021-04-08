@@ -20,7 +20,7 @@ import { ProgramEntrySettings } from './modules';
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection);
     const model = await Model.createModel(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
-    model.setScale(0.0155,0.0155,0.0155).setPosition(0,-6,0);
+    model.setScale(0.15,0.15,0.15);
 
     const loop = () => {
         

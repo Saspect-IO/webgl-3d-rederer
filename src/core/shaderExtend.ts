@@ -70,7 +70,7 @@ class ModelShader extends ShaderProgram{
 			'void main(void) {'+
 				'float lightness = -clamp(dot(normalize(vNormal), normalize(lightDirection)), -1.0, 0.0);'+
 				'lightness = ambientLight + (1.0 - ambientLight) * lightness;'+
-				'finalColor = texture(uMainTexture, vec2(texCoord.s, texCoord.t) * lightness, 1.0);'+
+				'finalColor = texture(uMainTexture, texCoord);'+
 			'}';												
 
 		super(gl,vertexShader, fragmentShader);
