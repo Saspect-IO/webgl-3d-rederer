@@ -146,7 +146,7 @@ class CameraController {
 
   onMouseWheel(e: any) {
     let delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail))); //Try to map wheel movement to a number between -1 and 1
-    this.camera.panZ(delta * (this.zoomRate / this.canvas.height)); //Keep the movement speed the same, no matter the height diff
+    this.camera.panZ(-delta * (this.zoomRate / this.canvas.height)); //Keep the movement speed the same, no matter the height diff
   }
 
   onMouseMove(e: MouseEvent) {
