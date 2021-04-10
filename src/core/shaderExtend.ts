@@ -32,7 +32,7 @@ class GridAxisShader extends ShaderProgram{
 		gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]));
 
 		//Cleanup
-		gl.useProgram(null);
+		this.deactivateShader();
 
 	}
 }
@@ -78,7 +78,7 @@ class ModelShader extends ShaderProgram{
 		this.setPerspective(projectionMatrix);
 
 		//Cleanup
-		gl.useProgram(null);
+		this.deactivateShader();
 	}
 }
 

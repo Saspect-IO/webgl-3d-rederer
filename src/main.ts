@@ -27,11 +27,11 @@ import { ProgramEntrySettings } from './modules';
         camera.updateViewMatrix();
         glContext.clear();
 
-        gridAxisShader.activate()
+        gridAxisShader.activateShader()
             .setCameraMatrix(camera.viewMatrix)
             .renderModel(gridAxis.preRender());
 
-        modelShader.activate()
+        modelShader.activateShader()
             .setCameraMatrix(camera.viewMatrix)
             .renderModel(model.preRender());
 

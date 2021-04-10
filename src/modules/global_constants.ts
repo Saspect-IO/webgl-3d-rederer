@@ -48,4 +48,10 @@ export enum GLSetttings {
     GRID_VECTOR_SIZE = 3,
     GRID_COLOR_SIZE = 1,
     GRID_VERTEX_LEN = 4,
+    UNI_MODEL_MAT ='uMVMatrix',
+    UNI_PERSPECTIV_MAT = 'uPMatrix',
+    UNI_CAMERA_MAT = 'uCameraMatrix',
+    UNI_TEXTURE_MAT = 'uMainTexture',
+    UNI_LIGHT_AMBIENT = 'ambientLight',
+    UNI_LIGHT_DIRECTION = 'lightDirection',
 }

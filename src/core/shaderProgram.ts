@@ -1,3 +1,4 @@
+import { GLSetttings } from "../modules";
 import Geometry from "./geometry";
 
 export default class ShaderProgram {
@@ -5,49 +6,66 @@ export default class ShaderProgram {
 
     const vertexShader = this.createShader(gl, gl.VERTEX_SHADER, vsSource) as WebGLShader;
     const fragmentShader = this.createShader(gl, gl.FRAGMENT_SHADER, fsSource) as WebGLShader;
-
     this.createShaderProgram(gl, fragmentShader, vertexShader);
+
+    this.gl = gl;
 
     if (this.shaderProgram ) {
 
-      gl.useProgram(this.shaderProgram);
+      this.activateShader();
 
       //standard attribute locations
-      this.positionIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_position');
-      this.normalIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_norm');
-      this.uvIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , 'a_uv');
+      this.positionIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_POSITION_NAME);
+      this.normalIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_NORMAL_NAME);
+      this.uvIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_UV_NAME);
 
       //standard uniform locations
-      this.modelMatrix = gl.getUniformLocation(this.shaderProgram , 'uMVMatrix') as WebGLUniformLocation;
-      this.perspective = gl.getUniformLocation(this.shaderProgram , 'uPMatrix') as WebGLUniformLocation;
-      this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , 'uCameraMatrix') as WebGLUniformLocation;
-      this.mainTexture = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'uMainTexture') as WebGLUniformLocation;
-
-      // this.ambientLight = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'ambientLight') as WebGLUniformLocation;
-		  // this.lightDirection = gl.getUniformLocation(this.shaderProgram as WebGLProgram , 'lightDirection') as WebGLUniformLocation;
-  
-      this.gl = gl;
+      this.modelMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation;
+      this.perspective = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation;
+      this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation;
+      this.mainTexture = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation;
+      // this.ambientLight = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation;
+		  // this.lightDirection = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_DIRECTION) as WebGLUniformLocation;
     }
   }
 
   gl: WebGLRenderingContext | null = null;
+  
   positionIndex: number | null = null;
   normalIndex: number | null = null;
   uvIndex: number | null = null;
-
-  colorIndex: number | null = null;
-  gridIndex: number | null = null;
 
   modelMatrix: WebGLUniformLocation | null = null;
   perspective: WebGLUniformLocation | null = null;
   cameraMatrix: WebGLUniformLocation | null = null;
   mainTexture: WebGLUniformLocation | null = null;
-
   ambientLight: WebGLUniformLocation | null = null;
   lightDirection: WebGLUniformLocation | null = null;
+
   vertexShader: WebGLShader | null = null;
   fragmentShader: WebGLShader | null = null;
+
   shaderProgram: WebGLProgram | null = null;
+
+
+  createShader(gl: WebGLRenderingContext, type: number, source: string) {
+    const shader = gl.createShader(type) as WebGLShader;
+
+    // Send the source to the shader object
+    gl.shaderSource(shader, source);
+
+    // Compile the shader program
+    gl.compileShader(shader);
+
+    // See if it compiled successfully
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
+      gl.deleteShader(shader);
+      return null;
+    }
+
+    return shader;
+  }
 
   createShaderProgram(gl: WebGLRenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader): void {
 
@@ -74,32 +92,12 @@ export default class ShaderProgram {
     gl.deleteShader(vertexShader);
   }
 
-
-  createShader(gl: WebGLRenderingContext, type: number, source: string) {
-    const shader = gl.createShader(type) as WebGLShader;
-
-    // Send the source to the shader object
-    gl.shaderSource(shader, source);
-
-    // Compile the shader program
-    gl.compileShader(shader);
-
-    // See if it compiled successfully
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      console.error('An error occurred compiling the shaders: ' + gl.getShaderInfoLog(shader));
-      gl.deleteShader(shader);
-      return null;
-    }
-
-    return shader;
-  }
-
-  activate() {
+  activateShader() {
     (this.gl as WebGLRenderingContext).useProgram(this.shaderProgram);
     return this;
   }
 
-  deactivate() {
+  deactivateShader() {
     (this.gl as WebGLRenderingContext).useProgram(null);
     return this;
   }
