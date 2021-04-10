@@ -1,13 +1,14 @@
+import { Vector3 } from "./math";
 import { Vec3Struct } from "./obj";
 import ShaderProgram from './shaderProgram';
 
 export default class Light {
     constructor(x: number, y: number, z: number) {
-        this.lightDirection = Vec3Struct(x, y, z);
+        this.lightDirection = new Vector3(x, y, z);
         this.ambientLight = 0.3;
     }
 
-    lightDirection: any;
+    lightDirection: Vector3;
     ambientLight: number;
 
 
