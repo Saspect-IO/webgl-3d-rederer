@@ -107,7 +107,7 @@ export default class ShaderProgram {
     return this;
   }
 
-  setModalMatrix(matData: Float32Array) {
+  setModelMatrix(matData: Float32Array) {
     (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.modelMatrix  as WebGLUniformLocation, false, matData);
     return this;
   }
@@ -131,7 +131,7 @@ export default class ShaderProgram {
   // //Handle rendering a grid
   renderModel(model: Geometry) {
     const gl = this.gl as WebGLRenderingContext;
-		this.setModalMatrix(model.transform.getViewMatrix());	//Set the transform, so the shader knows where the model exists in 3d space
+		this.setModelMatrix(model.transform.getModelMatrix());	//Set the transform, so the shader knows where the model exists in 3d space
 
 		if(model.mesh.noCulling) gl.disable(gl.CULL_FACE);
 		if(model.mesh.doBlending) gl.enable(gl.BLEND);
