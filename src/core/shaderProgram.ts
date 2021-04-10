@@ -120,7 +120,7 @@ export default class ShaderProgram {
   dispose() {
     //unbind the program if its currently active
     if ((this.gl as WebGLRenderingContext).getParameter((this.gl as WebGLRenderingContext).CURRENT_PROGRAM) === this.shaderProgram) {
-      (this.gl as WebGLRenderingContext).useProgram(null);
+      this.deactivateShader();
     }
     (this.gl as WebGLRenderingContext).deleteProgram(this.shaderProgram);
   }
