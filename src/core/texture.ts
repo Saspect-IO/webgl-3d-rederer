@@ -32,7 +32,7 @@ export default class Texture {
         gl.bindTexture(gl.TEXTURE_2D, null);
     }
 
-    static loadTexture(gl: WebGLRenderingContext, url: string): Promise < unknown > {
+    static loadTexture(gl: WebGLRenderingContext, url: string): Promise < Texture > {
         return new Promise(function (resolve) {
             const image = new Image();
             image.onload = function () {
