@@ -16,7 +16,7 @@ import { ProgramEntrySettings } from './modules';
     const cemeraController = new CameraController(gl as WebGLRenderingContext, camera);
 
     const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection);
-    const gridAxis = GridAxis.createModel(gl, gridAxisShader, false);
+    const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false);
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection);
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);

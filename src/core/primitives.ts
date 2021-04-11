@@ -7,7 +7,7 @@ class GridAxis {
 
   constructor() {}
 
-  static createModel(gl:WebGLRenderingContext, shaderProgram:ShaderProgram, enableAxis: boolean){ 
+  static createGeometry(gl:WebGLRenderingContext, shaderProgram:ShaderProgram, enableAxis: boolean){ 
     return new Geometry(GridAxis.createMesh(gl, shaderProgram, enableAxis)); 
   }
 
