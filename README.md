@@ -5,14 +5,13 @@ Utilizes Webpack for deployment builds.
 
 ## Dev Usage
 
-Clone or download repo
-
-npm install
-npm run dev
+- Clone or download repo
+- npm install
+- npm run dev
 
 ## Deployment
 
-npm run build
+- npm run build
 
 
 ## Future Core Updates
