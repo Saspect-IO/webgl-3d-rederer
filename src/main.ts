@@ -1,4 +1,4 @@
-import GLContext from './core/GLContext';
+import GLExtend from './core/GLExtend';
 import {Camera, CameraController }  from './core/camera';
 import { GridAxisShader, ModelShader } from './core/shaderExtend';
 import { GridAxis } from './core/primitives';
@@ -7,9 +7,9 @@ import Model from './core/model';
 import { ProgramEntrySettings } from './modules';
 
 (async () => {
-    const glContext = new GLContext(ProgramEntrySettings.WEBGL_CANVAS_ID);
-    glContext.fitScreen(0.95, 0.90).setClearColor(0, 0, 0, 1.0).clear();
-    const gl = glContext.getContext() as WebGLRenderingContext;
+    const glExtend = new GLExtend(ProgramEntrySettings.WEBGL_CANVAS_ID);
+    glExtend.fitScreen(0.95, 0.90).setClearColor(0, 0, 0, 1.0).clear();
+    const gl = glExtend.getContext() as WebGLRenderingContext;
 
     const camera = new Camera(gl as WebGLRenderingContext);
     camera.transform.position.set(0, 1, 3);
@@ -25,7 +25,7 @@ import { ProgramEntrySettings } from './modules';
     const loop = () => {
         
         camera.updateViewMatrix();
-        glContext.clear();
+        glExtend.clear();
 
         gridAxisShader.activateShader()
             .setCameraMatrix(camera.viewMatrix)
