@@ -16,14 +16,14 @@ export default class Model {
 
   static async createMesh(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string) {
     
-    const verts = await Model.loadVerts(gl, objSrc, textureSrc);
-    const vertexCount = verts.geometry.vertexCount();
+    const attrib = await Model.loadAttributes(gl, objSrc, textureSrc);
+    const vertexCount = attrib.vertices.vertexCount();
 
     const mesh: MeshData = {
-      positions : new Vbuffer(gl, verts.geometry.positions(), vertexCount),
-      normals: new Vbuffer(gl, verts.geometry.normals(), vertexCount),
-      uvs: new Vbuffer(gl, verts.geometry.uvs(), vertexCount),
-      texture: verts.texture as Texture,
+      positions : new Vbuffer(gl, attrib.vertices.positions(), vertexCount),
+      normals: new Vbuffer(gl, attrib.vertices.normals(), vertexCount),
+      uvs: new Vbuffer(gl, attrib.vertices.uvs(), vertexCount),
+      texture: attrib.texture as Texture,
       drawMode : gl.TRIANGLES,
       vertexCount,
     }
@@ -35,12 +35,12 @@ export default class Model {
     return mesh;
   }
   
-  static async loadVerts(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
-    const objGeometry = await OBJ.loadOBJ(objSrc);
+  static async loadAttributes(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
+    const objVertices = await OBJ.loadOBJ(objSrc);
     const objTexture = await Texture.loadTexture(gl, textureSrc);
-    const [geometry, texture] = await Promise.all([objGeometry, objTexture]);
+    const [vertices, texture] = await Promise.all([objVertices, objTexture]);
     
-    return {geometry, texture};
+    return {vertices, texture};
   }
 
 }
