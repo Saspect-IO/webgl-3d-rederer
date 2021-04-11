@@ -2,7 +2,7 @@
 webgl 3d renderer implemented in typescript
 Utilizes Webpack for deployment
 
-## Dev Usaga
+## Dev Usage
 
 Clone or download repo
 npm install
