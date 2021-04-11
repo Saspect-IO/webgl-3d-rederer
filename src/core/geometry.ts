@@ -1,4 +1,5 @@
-import { MeshData } from "../entities";
+
+import { MeshData } from "@/entities";
 import Transformation from "./transformation";
 export default class Geometry {
 

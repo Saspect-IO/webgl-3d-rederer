@@ -1,5 +1,5 @@
 import { Matrix4, Vector3 } from "./math";
-import { degToRad } from "../modules";
+import { degToRad } from "@/modules";
 
 export default class Transformation {
 

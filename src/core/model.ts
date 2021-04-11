@@ -3,8 +3,8 @@ import Texture from './texture';
 import Vbuffer from './vbuffer';
 import ShaderProgram from './shaderProgram';
 import OBJ from './obj';
-import { MeshData } from '../entities';
-import { GLSetttings } from '../modules';
+import { MeshData } from '@/entities';
+import { GLSetttings } from '@/modules';
 
 export default class Model {
 

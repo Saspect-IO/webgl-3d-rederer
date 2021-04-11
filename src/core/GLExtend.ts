@@ -1,6 +1,5 @@
-import {
-    ProgramEntrySettings
-} from "../modules";
+import { ProgramEntrySettings } from "@/modules";
+
 
 export default class GLContext {
     constructor(WEBGL_CANVAS_ID: string) {

@@ -1,5 +1,5 @@
 import { MeshData } from "@/entities";
-import { GLSetttings } from "../modules";
+import { GLSetttings } from "@/modules";
 import Geometry from "./geometry";
 import ShaderProgram from "./shaderProgram";
 import Vbuffer from "./vbuffer";

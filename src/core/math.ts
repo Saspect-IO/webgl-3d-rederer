@@ -1,5 +1,6 @@
 //###########################################################################################
-import {Vector} from "../entities";
+import { Vector } from "@/entities";
+
 
 //https://github.com/sketchpunk/FunWithWebGL2/tree/master/lesson_006
 class Vector3 {

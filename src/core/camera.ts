@@ -1,4 +1,5 @@
-import { degToRad } from "../modules";
+
+import { degToRad } from "@/modules";
 import { Matrix4 } from "./math";
 import Transformation from "./transformation";
 

@@ -4,7 +4,7 @@ import {
     Surface,
     UV,
     Vertex
-} from "../entities";
+} from "@/entities";
 
 export default class OBJ {
 

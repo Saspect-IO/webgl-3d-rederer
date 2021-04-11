@@ -1,4 +1,4 @@
-import { GLSetttings } from "../modules";
+import { GLSetttings } from "@/modules";
 import Geometry from "./geometry";
 
 export default class ShaderProgram {

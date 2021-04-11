@@ -4,7 +4,8 @@ import { GridAxisShader, ModelShader } from './core/shaderExtend';
 import { GridAxis } from './core/primitives';
 import Light  from './core/light';
 import Model from './core/model';
-import { ProgramEntrySettings } from './modules';
+import { ProgramEntrySettings } from '@/modules';
+
 
 (async () => {
     const glExtend = new GLExtend(ProgramEntrySettings.WEBGL_CANVAS_ID);
