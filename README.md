@@ -23,7 +23,7 @@ Utilizes Webpack for deployment builds.
 ## Future UI Updates
 
 1) Add Vue.js for UI Framework
-2) Integrate bulma/buefy and tailwing for UI components.
+2) Integrate bulma/buefy and tailwind for UI components.
 
 
 ## Future Deployment Update
