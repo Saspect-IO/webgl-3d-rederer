@@ -19,7 +19,7 @@ import { ProgramEntrySettings } from './modules';
     const gridAxis = GridAxis.createModel(gl, gridAxisShader, false);
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection);
-    const model = await Model.createModel(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
+    const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
     model.setScale(0.15,0.15,0.15);
 
     const loop = () => {

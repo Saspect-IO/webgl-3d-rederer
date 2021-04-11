@@ -10,7 +10,7 @@ export default class Model {
 
   constructor() {}
 
-  static async createModel(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string){ 
+  static async createGeometry(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string){ 
     return  new Geometry(await Model.createMesh(gl, shaderProgram, objSrc, textureSrc)); 
   }
 
