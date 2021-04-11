@@ -1,10 +1,12 @@
-# webgl-3d-rederer
-webgl 3d renderer implemented in typescript
-Utilizes Webpack for deployment
+# WebGL 3D Rederer
+
+webgl 3d renderer implemented in typescript.
+Utilizes Webpack for deployment builds.
 
 ## Dev Usage
 
 Clone or download repo
+
 npm install
 npm run dev
 
@@ -28,5 +30,4 @@ npm run build
 ## Future Deployment Update
 
 1) Webpack Bundle Analyser
-2) Add Serverless Intigration for automated deployment to a selected cloud solution.
-3) CI/CD Pipeline
+2) CI/CD Pipeline
