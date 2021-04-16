@@ -1,7 +1,8 @@
-# WebGL 3D Rederer
+# WebGL 3D Renderer
 
-webgl 3d renderer implemented in typescript.
+Webgl 3d renderer implemented in typescript.
 Utilizes Webpack for deployment builds.
+
 
 ## 🚀 Demo 
 - [WebGL 3D Renderer Demo](https://saspect-io.github.io/webgl-3d-renderer/)
@@ -12,6 +13,7 @@ Utilizes Webpack for deployment builds.
 - Clone or download repo
 - npm install
 - npm run dev
+
 
 ## Deployment
 
