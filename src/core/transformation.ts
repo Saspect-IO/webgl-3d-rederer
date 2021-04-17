@@ -4,7 +4,7 @@ import { degToRad } from "@/modules";
 export default class Transformation {
 
     constructor() {
-        // identity matrix
+        //identity matrix
         //transform vectors
         this.position = new Vector3(0, 0, 0); //Traditional X,Y,Z 3d position
         this.scale = new Vector3(1, 1, 1); //How much to scale a mesh. Having a 1 means no scaling is done.

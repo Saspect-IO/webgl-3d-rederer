@@ -1,6 +1,6 @@
-# WebGL 3D Renderer
+# WebGL 3D Rederer
 
-Webgl 3d renderer implemented in typescript.
+webgl 3d rendering pipeline implemented with typescript.
 Utilizes Webpack for deployment builds.
 
 
@@ -20,19 +20,8 @@ Utilizes Webpack for deployment builds.
 - npm run build
 
 
-## Future Core Updates
+## Resource links for learning
 
-1) Add bounding box primitive to dynamically set initial position for all imported models.
-2) Add debugger
+- [WebGL Fundamentals](https://webglfundamentals.org)
+- [3D Graphics: A WebGL Tutorial](https://www.toptal.com/javascript/3d-graphics-a-webgl-tutorial)
 
-
-## Future UI Updates
-
-1) Add Vue.js for UI Framework
-2) Integrate bulma/buefy and tailwind for UI components.
-
-
-## Future Deployment Update
-
-1) Webpack Bundle Analyser
-2) CI/CD Pipeline
