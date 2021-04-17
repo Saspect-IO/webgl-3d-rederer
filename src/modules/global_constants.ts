@@ -1,3 +1,5 @@
+export const TEXTURE = 'TEXTURE'
+
 export enum ProgramEntrySettings {
     WEBGL_CANVAS_ID = 'qrius-glCanvas',
     WEBGL_CONTEXT = 'webgl2',
@@ -5,8 +7,8 @@ export enum ProgramEntrySettings {
     WEBGL_CONTEXT_WEBKIT = 'webkit-3d',
     WEBGL_CONTEXT_MOZ = 'moz-webgl',
     WEBGL_CONTEXT_ERROR_MESSAGE = 'Could not initialise WebGL',
-    PATH_ASSETS_SPHERE = '/assets/resources/yoshi/source/yoshi.obj',
-    PATH_ASSETS_DIFFUSE = '/assets/resources/yoshi/textures/yoshi.png',
+    PATH_ASSETS_OBJ = '/assets/resources/yoshi/source/yoshi.obj',
+    PATH_ASSETS_TEXTURE = '/assets/resources/yoshi/textures/yoshi.png',
     PATH_SHADE_VERTEX = '/shaders/basic.vert',
     PATH_SHADE_FRAGMENT = '/shaders/basic.frag',
     PRIMITIVE_SHADER_VERTEX = '/shaders/primitive.vert',

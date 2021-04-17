@@ -1,4 +1,4 @@
-import GLExtend from './core/GLExtend';
+import GLExtend from './core/glContext';
 import {Camera, CameraController }  from './core/camera';
 import { GridAxisShader, ModelShader } from './core/shaderExtend';
 import { GridAxis } from './core/primitives';
@@ -20,7 +20,7 @@ import { ProgramEntrySettings } from '@/modules';
     const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false);
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection);
-    const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_SPHERE, ProgramEntrySettings.PATH_ASSETS_DIFFUSE);
+    const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE);
     model.setScale(0.15,0.15,0.15);
 
     const loop = () => {
