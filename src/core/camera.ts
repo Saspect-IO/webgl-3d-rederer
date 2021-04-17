@@ -1,11 +1,11 @@
 
-import { degToRad } from "@/modules";
+import { CameraControlsSettings, CameraSettings, degToRad } from "@/modules";
 import { Matrix4 } from "./math";
 import Transformation from "./transformation";
 
 //https://github.com/sketchpunk/FunWithWebGL2/tree/master/lesson_006
 class Camera {
-  constructor(gl: WebGLRenderingContext, fov: number = 45, near: number = 0.1, far: number = 100.0) {
+  constructor(gl: WebGLRenderingContext, fov: number = CameraSettings.FIELD_OF_VIEW, near: number = CameraSettings.NEAR_PLANE, far: number = CameraSettings.FAR_PLANE) {
 
     this.projection = new Float32Array(16);
 
@@ -23,8 +23,8 @@ class Camera {
   viewMatrix: Float32Array;
   mode: number;
 
-  static MODE_FREE = 0; //Allows free movement of position and rotation, basicly first person type of camera
-  static MODE_ORBIT = 1; //Movement is locked to rotate around the origin, Great for 3d editors or a single model viewer
+  static MODE_FREE = CameraSettings.MODE_FREE; //Allows free movement of position and rotation, basicly first person type of camera
+  static MODE_ORBIT = CameraSettings.MODE_ORBIT; //Movement is locked to rotate around the origin, Great for 3d editors or a single model viewer
 
   panX(v: number) {
     if (this.mode == Camera.MODE_ORBIT) return; // Panning on the X Axis is only allowed when in free mode
@@ -83,14 +83,13 @@ class Camera {
 
 class CameraController {
   constructor(gl: WebGLRenderingContext, camera: Camera) {
-    const self = this;
     const box = (gl.canvas as HTMLCanvasElement).getBoundingClientRect();
     this.canvas = gl.canvas as HTMLCanvasElement; //Need access to the canvas html element, main to access events
     this.camera = camera; //Reference to the camera to control
 
-    this.rotateRate = -300; //How fast to rotate, degrees per dragging delta
-    this.panRate = 5; //How fast to pan, max unit per dragging delta
-    this.zoomRate = 200; //How fast to zoom or can be viewed as forward/backward movement
+    this.rotateRate = CameraControlsSettings.ROTATION_RATE; //How fast to rotate, degrees per dragging delta
+    this.panRate = CameraControlsSettings.PAN_RATE; //How fast to pan, max unit per dragging delta
+    this.zoomRate = CameraControlsSettings.ZOOM_RATE; //How fast to zoom or can be viewed as forward/backward movement
 
     this.offsetX = box.left; //Help calc global x,y mouse cords.
     this.offsetY = box.top;
@@ -100,11 +99,11 @@ class CameraController {
     this.prevX = 0; //Previous X,Y position on mouse move
     this.prevY = 0;
 
-		this.onUpHandler = function(e: MouseEvent){ self.onMouseUp(e); };		//Cache func reference that gets bound and unbound a lot
-		this.onMoveHandler = function(e: MouseEvent){ self.onMouseMove(e); }
+		this.onUpHandler = (e: MouseEvent) => this.onMouseUp(e);//Cache func reference that gets bound and unbound a lot
+		this.onMoveHandler = (e: MouseEvent) => this.onMouseMove(e);
 
-		this.canvas.addEventListener("mousedown", function(e: MouseEvent){ self.onMouseDown(e); });		//Initializes the up and move events
-		this.canvas.addEventListener("mousewheel", function(e: Event ){ self.onMouseWheel(e); });	//Handles zoom/forward movement
+		this.canvas.addEventListener(CameraControlsSettings.MOUSE_DOWN, (e: MouseEvent) => this.onMouseDown(e));		//Initializes the up and move events
+		this.canvas.addEventListener(CameraControlsSettings.MOUSE_WHEEL, (e: Event ) => this.onMouseWheel(e));	//Handles zoom/forward movement
   }
 
   canvas: HTMLCanvasElement;
@@ -135,14 +134,14 @@ class CameraController {
     this.initX = this.prevX = e.pageX - this.offsetX;
     this.initY = this.prevY = e.pageY - this.offsetY;
 
-    this.canvas.addEventListener("mouseup", this.onUpHandler);
-    this.canvas.addEventListener("mousemove", this.onMoveHandler);
+    this.canvas.addEventListener(CameraControlsSettings.MOUSE_UP, this.onUpHandler);
+    this.canvas.addEventListener(CameraControlsSettings.MOUSE_MOVE, this.onMoveHandler);
   }
 
   //End listening for dragging movement
   onMouseUp(e: MouseEvent) {
-    this.canvas.removeEventListener("mouseup", this.onUpHandler);
-    this.canvas.removeEventListener("mousemove", this.onMoveHandler);
+    this.canvas.removeEventListener(CameraControlsSettings.MOUSE_UP, this.onUpHandler);
+    this.canvas.removeEventListener(CameraControlsSettings.MOUSE_MOVE, this.onMoveHandler);
   }
 
   onMouseWheel(e: any) {

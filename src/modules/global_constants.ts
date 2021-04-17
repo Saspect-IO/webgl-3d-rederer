@@ -16,24 +16,28 @@ export enum ProgramEntrySettings {
 }
 
 export enum CameraSettings {
-    CAMERA_ANGLE_DIVISION = 120,
-    NEAR_PLANE = 1,
-    FAR_PLANE = 2000,
-    FIELD_OF_VIEW = 60,
-    PROJECTION_DEPTH = 400,
-    SCREEN_LEFT = 0,
-    SCREEN_TOP = 0,
-    ORTHO_NEAR = 400,
-    ORTHO_FAR = -400,
+    NEAR_PLANE = 2,
+    FAR_PLANE = 100.0,
+    FIELD_OF_VIEW = 45,
+    MODE_FREE = 0,
+    MODE_ORBIT = 1,
 }
 
-export enum ControlsSettings {
+export enum CameraControlsSettings {
     KEY_DOWN_EVENT = 'keydown',
     KEY_UP_EVENT = 'keyup',
     KEY_DOWN = 40,
     KEY_UP = 38,
     KEY_LEFT = 37,
     KEY_RIGHT = 39,
+    MOUSE_UP = 'mouseup',
+    MOUSE_DOWN = 'mousedown',
+    MOUSE_WHEEL = 'mousewheel',
+    MOUSE_MOVE = 'mousemove',
+    ROTATION_RATE = -300,
+    PAN_RATE = 5,
+    ZOOM_RATE = 200,
+
 }
 
 export enum GLSetttings {
