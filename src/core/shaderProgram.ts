@@ -44,7 +44,6 @@ export default class ShaderProgram {
 
   vertexShader: WebGLShader | null = null;
   fragmentShader: WebGLShader | null = null;
-
   shaderProgram: WebGLProgram | null = null;
 
 

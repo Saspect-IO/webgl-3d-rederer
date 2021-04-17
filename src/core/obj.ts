@@ -5,6 +5,7 @@ import {
     UV,
     Vertex
 } from "@/entities";
+import { SurfaceStruct, Vec2Struct, Vec3Struct, VertexStruct } from "@/modules";
 
 export default class OBJ {
 
@@ -108,33 +109,4 @@ export default class OBJ {
         return result;
     }
 
-}
-
-export function SurfaceStruct(vertices: Array < Vertex > ) {
-    return {
-        vertices,
-    };
-}
-
-export function VertexStruct(position: Vector, normal: Normal, uv: UV) {
-    return {
-        position,
-        normal,
-        uv
-    };
-}
-
-export function Vec3Struct(x: number, y: number, z: number) {
-    return {
-        x,
-        y,
-        z
-    };
-}
-
-export function Vec2Struct(x: number, y: number) {
-    return {
-        x,
-        y
-    };
 }
