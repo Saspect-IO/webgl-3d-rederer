@@ -12,12 +12,12 @@ export default class GLContext {
             ProgramEntrySettings.WEBGL_CONTEXT_MOZ
         ]).some(option => this.gl = canvas.getContext(option) as WebGLRenderingContext);
 
-        this.gl ?? alert(ProgramEntrySettings.WEBGL_CONTEXT_ERROR_MESSAGE);
-        this.gl?.cullFace(this.gl.BACK);								//Back is also default
-        this.gl?.frontFace(this.gl.CCW);								//Dont really need to set it, its ccw by default.
-        this.gl?.enable(this.gl.DEPTH_TEST);							//Shouldn't use this, use something else to add depth detection
-        this.gl?.enable(this.gl.CULL_FACE);							    //Cull back face, so only show triangles that are created clockwise
-        this.gl?.depthFunc(this.gl.LEQUAL);							    //Near things obscure far things
+        this.gl ?? alert(ProgramEntrySettings.WEBGL_CONTEXT_ERROR_MESSAGE); //user if webgl is not available
+        this.gl?.cullFace(this.gl.BACK);								    //Back is also default
+        this.gl?.frontFace(this.gl.CCW);								    //Dont really need to set it, its ccw by default.
+        this.gl?.enable(this.gl.DEPTH_TEST);							    //Shouldn't use this, use something else to add depth detection
+        this.gl?.enable(this.gl.CULL_FACE);							        //Cull back face, so only show triangles that are created clockwise
+        this.gl?.depthFunc(this.gl.LEQUAL);							        //Near things obscure far things
         this.gl?.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);	//Setup default alpha blending
 
         this.canvas = canvas;
