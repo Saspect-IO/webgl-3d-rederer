@@ -1,4 +1,4 @@
-# WebGL 3D Rederer
+# WebGL 3D Renderer
 
 webgl 3d rendering pipeline implemented with typescript.
 Utilizes Webpack for deployment builds.
