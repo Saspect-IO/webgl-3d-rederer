@@ -59,13 +59,13 @@ class Camera {
   updateViewMatrix() {
     //Optimize camera transform update, no need for scale nor rotateZ
     if (this.mode == Camera.MODE_FREE) {
-      this.transform.matModel.resetMat()
+      this.transform.matView.resetMat()
         .vtranslate(this.transform.position)
         .rotateX(degToRad(this.transform.rotation.x))
         .rotateY(degToRad(this.transform.rotation.y));
 
     } else {
-      this.transform.matModel.resetMat()
+      this.transform.matView.resetMat()
         .rotateX(degToRad(this.transform.rotation.x))
         .rotateY(degToRad(this.transform.rotation.y))
         .vtranslate(this.transform.position);
@@ -75,7 +75,7 @@ class Camera {
     this.transform.updateDirection();
 
     //Cameras work by doing the inverse transformation on all meshes, the camera itself is a lie :)
-    Matrix4.invert(this.viewMatrix, this.transform.matModel.matrix);
+    Matrix4.invert(this.viewMatrix, this.transform.matView.matrix);
 
     return this.viewMatrix;
   }
