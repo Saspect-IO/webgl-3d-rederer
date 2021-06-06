@@ -28,7 +28,7 @@ class GridAxisShader extends ShaderProgram{
 			'out vec4 finalColor;' +
 			'void main(void){ finalColor = color; }';
 
-		super(gl,vertexShader, fragmentShader);
+		super(gl, vertexShader, fragmentShader);
 
 		//Custom Uniforms 
 

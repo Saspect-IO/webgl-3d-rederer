@@ -7,7 +7,7 @@ import {
 } from "@/entities";
 import { SurfaceStruct, Vec2Struct, Vec3Struct, VertexStruct } from "@/modules";
 
-export default class OBJ {
+export default class ObjLoader {
 
     constructor(surfaces: Array < Surface > ) {
         this.surfaces = surfaces;
@@ -62,13 +62,13 @@ export default class OBJ {
             }
         })
 
-        return new OBJ(surfaces);
+        return new ObjLoader(surfaces);
     }
 
     // Loads an OBJ file from the given URL, and returns it as a promise
     static async loadOBJ(url: string) {
         const response = await fetch(url);
-        const data = OBJ.parseOBJ(await response.text());
+        const data = ObjLoader.parseOBJ(await response.text());
         return data;
     }
 

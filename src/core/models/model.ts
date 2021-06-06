@@ -2,7 +2,7 @@ import Geometry from '../geometry';
 import Texture from '../texture';
 import Vbuffer from '../vbuffer';
 import ShaderProgram from '../shaderProgram';
-import OBJ from '../obj';
+import ObjLoader from '../objLoader';
 import { MeshData } from '@/entities';
 import { GLSetttings } from '@/modules';
 
@@ -82,7 +82,7 @@ class Model {
   }
   
   static async loadAttributes(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
-    const objVertices = await OBJ.loadOBJ(objSrc);
+    const objVertices = await ObjLoader.loadOBJ(objSrc);
     const objTexture = await Texture.loadTexture(gl, textureSrc);
     const [vertices, texture] = await Promise.all([objVertices, objTexture]);
     
