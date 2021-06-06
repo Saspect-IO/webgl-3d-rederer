@@ -4,10 +4,8 @@ export const SurfaceStruct = (vertices: Array < Vertex > ) => ({ vertices })
 export const VertexStruct = (position: Vector, normal: Normal, uv: UV) => ({ position, normal, uv })
 export const Vec3Struct = (x: number, y: number, z: number) => ({ x, y, z })
 export const Vec2Struct = (x: number, y: number) => ({ x, y })
-
 export const radToDeg = (r: number) => r * 180 / Math.PI
 export const degToRad = (d: number) => d * Math.PI / 180
-
 export const loadShaders = async (vsSource: string, fsSource: string) => {
 
     const loadFile = async (src: string) => {
@@ -23,5 +21,7 @@ export const loadShaders = async (vsSource: string, fsSource: string) => {
         fragmentShaderFile
     };
 }
+
+export const mapValues = (x: number, xMin: number, xMax: number, zMin: number, zMax: number) => ( ((x-xMin)/(xMax-xMin)) * ((zMax-zMin)+zMin) )
 
 
