@@ -16,7 +16,7 @@ export enum ProgramEntrySettings {
 }
 
 export enum CameraSettings {
-    NEAR_PLANE = 2,
+    NEAR_PLANE = 0.1,
     FAR_PLANE = 100.0,
     FIELD_OF_VIEW = 45,
     MODE_FREE = 0,

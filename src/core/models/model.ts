@@ -1,12 +1,58 @@
-import Geometry from './geometry';
-import Texture from './texture';
-import Vbuffer from './vbuffer';
-import ShaderProgram from './shaderProgram';
-import OBJ from './obj';
+import Geometry from '../geometry';
+import Texture from '../texture';
+import Vbuffer from '../vbuffer';
+import ShaderProgram from '../shaderProgram';
+import OBJ from '../obj';
 import { MeshData } from '@/entities';
 import { GLSetttings } from '@/modules';
 
-export default class Model {
+
+class ModelShader extends ShaderProgram{
+	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){	
+		const vertexShader = '#version 300 es\n' +
+			'in vec3 a_position;'+
+			'in vec3 a_norm;'+
+			'in vec2 a_uv;'+
+
+			'uniform mat4 uMVMatrix;'+
+			'uniform mat4 uCameraMatrix;'+
+			'uniform mat4 uPMatrix;'+
+
+			'out vec3 vNormal;'+
+			'out highp vec2 texCoord;'+
+			'void main(void){' +
+				'texCoord = a_uv;'+
+				'vNormal = (uMVMatrix * vec4(a_norm, 0.)).xyz;'+
+				'gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.0);'+
+			'}';
+
+		const fragmentShader = '#version 300 es\n' +
+			'precision mediump float;'+
+
+			'uniform vec3 lightDirection;'+
+			'uniform float ambientLight;'+
+			'uniform sampler2D uMainTexture;'+
+
+			'in vec3 vNormal;'+
+			'in highp vec2 texCoord;'+
+
+			'out vec4 finalColor;'+
+			'void main(void) {'+
+				'float lightness = -clamp(dot(normalize(vNormal), normalize(lightDirection)), -1.0, 0.0);'+
+				'lightness = ambientLight + (1.0 - ambientLight) * lightness;'+
+				'finalColor = texture(uMainTexture, texCoord);'+
+			'}';												
+
+		super(gl,vertexShader, fragmentShader);
+
+		this.setPerspective(projectionMatrix);
+
+		//Cleanup
+		this.deactivateShader();
+	}
+}
+
+class Model {
 
   constructor() {}
 
@@ -43,4 +89,9 @@ export default class Model {
     return {vertices, texture};
   }
 
+}
+
+export {
+	ModelShader,
+	Model
 }
