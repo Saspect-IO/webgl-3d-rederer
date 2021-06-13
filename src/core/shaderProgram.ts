@@ -84,8 +84,7 @@ export default class ShaderProgram {
     this.fragmentShader = fragmentShader;
     this.shaderProgram = program;
 
-    //Can delete the shaders since the program has been made.
-    gl.detachShader(program, vertexShader); //TODO, detaching might cause issues on some browsers, Might only need to delete.
+    gl.detachShader(program, vertexShader);
     gl.detachShader(program, fragmentShader);
     gl.deleteShader(fragmentShader);
     gl.deleteShader(vertexShader);
@@ -102,9 +101,8 @@ export default class ShaderProgram {
   }
 
   updateGPU(matData: Float32Array, uniformMatrix:string) {
-    const self:{[key:string]:any} = this as {[key:string]:any}
-    (self.gl as WebGLRenderingContext).uniformMatrix4fv(self[uniformMatrix]  as WebGLUniformLocation, false, matData)
-    return self;
+    (this.gl as WebGLRenderingContext).uniformMatrix4fv( (this as { [key:string]: any} )[uniformMatrix]  as WebGLUniformLocation, false, matData)
+    return this;
   }
 
   dispose() {
