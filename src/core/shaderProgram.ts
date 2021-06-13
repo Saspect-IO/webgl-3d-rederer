@@ -20,12 +20,12 @@ export default class ShaderProgram {
       this.uvIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_UV_NAME);
 
       //standard uniform locations
-      this.modelMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation;
+      this.modelViewMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation;
       this.perspectiveMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation;
       this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation;
       this.mainTexture = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation;
-      // this.ambientLight = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation;
-		  // this.lightDirection = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_DIRECTION) as WebGLUniformLocation;
+      this.ambientLight = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation;
+		  this.lightDirection = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_DIRECTION) as WebGLUniformLocation;
     }
   }
 
@@ -35,7 +35,7 @@ export default class ShaderProgram {
   normalIndex: number | null = null;
   uvIndex: number | null = null;
 
-  modelMatrix: WebGLUniformLocation | null = null;
+  modelViewMatrix: WebGLUniformLocation | null = null;
   perspectiveMatrix: WebGLUniformLocation | null = null;
   cameraMatrix: WebGLUniformLocation | null = null;
   mainTexture: WebGLUniformLocation | null = null;

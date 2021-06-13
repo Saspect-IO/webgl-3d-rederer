@@ -64,6 +64,6 @@ export enum GLSetttings {
 
 export enum ShaderMatrixTypes {
     CAMERA_MATRIX = 'cameraMatrix',
-    MODEL_MATRIX = 'modelMatrix',
+    MODEL_MATRIX = 'modelViewMatrix',
     PERSPECTIVE_MATRIX = 'perspectiveMatrix'
 }
