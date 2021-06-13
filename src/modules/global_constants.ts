@@ -61,3 +61,9 @@ export enum GLSetttings {
     UNI_LIGHT_AMBIENT = 'ambientLight',
     UNI_LIGHT_DIRECTION = 'lightDirection',
 }
+
+export enum ShaderMatrixTypes {
+    CAMERA_MATRIX = 'cameraMatrix',
+    MODEL_MATRIX = 'modelMatrix',
+    PERSPECTIVE_MATRIX = 'perspectiveMatrix'
+}

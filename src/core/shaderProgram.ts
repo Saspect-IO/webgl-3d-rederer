@@ -1,4 +1,4 @@
-import { GLSetttings } from "@/modules";
+import { GLSetttings, ShaderMatrixTypes } from "@/modules";
 import Geometry from "./geometry";
 
 export default class ShaderProgram {
@@ -21,7 +21,7 @@ export default class ShaderProgram {
 
       //standard uniform locations
       this.modelMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation;
-      this.perspective = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation;
+      this.perspectiveMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation;
       this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation;
       this.mainTexture = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation;
       // this.ambientLight = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation;
@@ -36,7 +36,7 @@ export default class ShaderProgram {
   uvIndex: number | null = null;
 
   modelMatrix: WebGLUniformLocation | null = null;
-  perspective: WebGLUniformLocation | null = null;
+  perspectiveMatrix: WebGLUniformLocation | null = null;
   cameraMatrix: WebGLUniformLocation | null = null;
   mainTexture: WebGLUniformLocation | null = null;
   ambientLight: WebGLUniformLocation | null = null;
@@ -101,19 +101,10 @@ export default class ShaderProgram {
     return this;
   }
 
-  setPerspective(matData: Float32Array) {
-    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.perspective  as WebGLUniformLocation, false, matData);
-    return this;
-  }
-
-  setModelMatrix(matData: Float32Array) {
-    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.modelMatrix  as WebGLUniformLocation, false, matData);
-    return this;
-  }
-
-  setCameraMatrix(matData: Float32Array) {
-    (this.gl as WebGLRenderingContext).uniformMatrix4fv(this.cameraMatrix  as WebGLUniformLocation, false, matData);
-    return this;
+  updateGPU(matData: Float32Array, uniformMatrix:string) {
+    const self:{[key:string]:any} = this as {[key:string]:any}
+    (self.gl as WebGLRenderingContext).uniformMatrix4fv(self[uniformMatrix]  as WebGLUniformLocation, false, matData)
+    return self;
   }
 
   dispose() {
@@ -124,13 +115,11 @@ export default class ShaderProgram {
     (this.gl as WebGLRenderingContext).deleteProgram(this.shaderProgram);
   }
 
-  //Setup custom properties
-  preRender() {} //abstract method, extended object may need need to do some things before rendering.
 
   // //Handle rendering a grid
   renderModel(model: Geometry) {
     const gl = this.gl as WebGLRenderingContext;
-		this.setModelMatrix(model.transform.getModelMatrix());	//Set the transform, so the shader knows where the model exists in 3d space
+		this.updateGPU(model.transform.getModelMatrix(), ShaderMatrixTypes.MODEL_MATRIX);	//Set the transform, so the shader knows where the model exists in 3d space
 
 		if(model.mesh.noCulling) gl.disable(gl.CULL_FACE);
 		if(model.mesh.doBlending) gl.enable(gl.BLEND);

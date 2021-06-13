@@ -4,7 +4,7 @@ import Vbuffer from '../vbuffer';
 import ShaderProgram from '../shaderProgram';
 import ObjLoader from '../objLoader';
 import { MeshData } from '@/entities';
-import { GLSetttings } from '@/modules';
+import { GLSetttings, ShaderMatrixTypes } from '@/modules';
 
 
 class ModelShader extends ShaderProgram{
@@ -45,7 +45,7 @@ class ModelShader extends ShaderProgram{
 
 		super(gl,vertexShader, fragmentShader);
 
-		this.setPerspective(projectionMatrix);
+		this.updateGPU(projectionMatrix, ShaderMatrixTypes.PERSPECTIVE_MATRIX);
 
 		//Cleanup
 		this.deactivateShader();

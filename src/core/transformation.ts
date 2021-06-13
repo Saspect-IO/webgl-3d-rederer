@@ -32,8 +32,8 @@ export default class Transformation {
         this.matView.resetMat() //Order is very important!!
             .vtranslate(this.position)
             .rotateX(degToRad(this.rotation.x))
-            .rotateZ(degToRad(this.rotation.z))
             .rotateY(degToRad(this.rotation.y))
+            .rotateZ(degToRad(this.rotation.z))
             .vscale(this.scale);
 
         //Calcuate the Normal Matrix which doesn't need translate, then transpose and inverses the mat4 to mat3

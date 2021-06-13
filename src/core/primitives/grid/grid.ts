@@ -1,5 +1,5 @@
 import { MeshData } from "@/entities";
-import { GLSetttings } from "@/modules";
+import { GLSetttings, ShaderMatrixTypes } from "@/modules";
 import Geometry from "../../geometry";
 import ShaderProgram from "../../shaderProgram";
 import Vbuffer from "../../vbuffer";
@@ -32,7 +32,7 @@ class GridAxisShader extends ShaderProgram{
 
 		//Custom Uniforms 
 
-		this.setPerspective(projectionMatrix);
+    this.updateGPU(projectionMatrix, ShaderMatrixTypes.PERSPECTIVE_MATRIX);
 		const uColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram ,"uColor");
 		gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]));
 
@@ -45,7 +45,7 @@ class GridAxisShader extends ShaderProgram{
 class GridAxis {
 
   constructor() {}
-
+  
   static createGeometry(gl:WebGLRenderingContext, shaderProgram:ShaderProgram, enableAxis: boolean){ 
     return new Geometry(GridAxis.createMesh(gl, shaderProgram, enableAxis)); 
   }
