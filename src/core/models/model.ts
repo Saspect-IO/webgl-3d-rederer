@@ -22,7 +22,7 @@ class ModelShader extends ShaderProgram{
 			'out highp vec2 texCoord;'+
 			'void main(void){' +
 				'texCoord = a_uv;'+
-				'vNormal = (uMVMatrix * vec4(a_norm, 0.)).xyz;'+
+				'vNormal = mat3(uCameraMatrix) * a_norm;'+
 				'gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.0);'+
 			'}';
 
@@ -40,7 +40,7 @@ class ModelShader extends ShaderProgram{
 			'void main(void) {'+
 				'float lightness = -clamp(dot(normalize(vNormal), normalize(lightDirection)), -1.0, 0.0);'+
 				'lightness = ambientLight + (1.0 - ambientLight) * lightness;'+
-				'finalColor = texture(uMainTexture, texCoord);'+
+				'finalColor = (texture(uMainTexture, texCoord) * lightness);'+
 			'}';												
 
 		super(gl,vertexShader, fragmentShader);

@@ -2,7 +2,7 @@ import { Vector3 } from "./math";
 import ShaderProgram from './shaderProgram';
 
 export default class Light {
-    constructor(x: number, y: number, z: number) {
+    constructor(x: number = 1, y: number = 1, z: number = -1.5) {
         this.lightDirection = new Vector3(x, y, z);
         this.ambientLight = 0.3;
     }
@@ -14,8 +14,8 @@ export default class Light {
     useLight(shaderProgram: ShaderProgram): void {
         const dir = this.lightDirection;
         const gl = shaderProgram.gl;
-        gl?.uniform3f(shaderProgram.lightDirection, dir.x, dir.y, dir.z);
-        gl?.uniform1f(shaderProgram.ambientLight, this.ambientLight);
+        gl?.uniform3f(shaderProgram.lightDirection as WebGLUniformLocation, dir.x, dir.y, dir.z);
+        gl?.uniform1f(shaderProgram.ambientLight as WebGLUniformLocation, this.ambientLight);
     }
 
 }

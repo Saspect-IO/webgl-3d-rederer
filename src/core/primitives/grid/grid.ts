@@ -46,12 +46,12 @@ class GridAxis {
 
   constructor() {}
   
-  static createGeometry(gl:WebGLRenderingContext, shaderProgram:ShaderProgram, enableAxis: boolean){ 
-    return new Geometry(GridAxis.createMesh(gl, shaderProgram, enableAxis)); 
+  static createGeometry(gl:WebGLRenderingContext, enableAxis: boolean){ 
+    return new Geometry(GridAxis.createMesh(gl, enableAxis)); 
   }
 
   //https://github.com/sketchpunk/FunWithWebGL2/tree/master/lesson_006
-  static createMesh(glContext: WebGLRenderingContext, shaderProgram: ShaderProgram, enableAxis: boolean ) {
+  static createMesh(glContext: WebGLRenderingContext, enableAxis: boolean ) {
     //Dynamiclly create a grid
     let gl = glContext as WebGLRenderingContext;
     let verts = [],
