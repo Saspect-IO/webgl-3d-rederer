@@ -7,8 +7,8 @@ export enum ProgramEntrySettings {
     WEBGL_CONTEXT_WEBKIT = 'webkit-3d',
     WEBGL_CONTEXT_MOZ = 'moz-webgl',
     WEBGL_CONTEXT_ERROR_MESSAGE = 'Could not initialise WebGL',
-    PATH_ASSETS_OBJ = '/assets/resources/yoshi/source/yoshi.obj',
-    PATH_ASSETS_TEXTURE = '/assets/resources/yoshi/textures/yoshi.png',
+    PATH_ASSETS_OBJ = '/assets/resources/globe/source/globe.obj',
+    PATH_ASSETS_TEXTURE = '/assets/resources/globe/textures/globe.jpg',
     PATH_SHADE_VERTEX = '/shaders/basic.vert',
     PATH_SHADE_FRAGMENT = '/shaders/basic.frag',
     PRIMITIVE_SHADER_VERTEX = '/shaders/primitive.vert',
@@ -58,11 +58,12 @@ export enum GLSetttings {
     UNI_PERSPECTIV_MAT = 'uPMatrix',
     UNI_CAMERA_MAT = 'uCameraMatrix',
     UNI_TEXTURE_MAT = 'uMainTexture',
-    UNI_LIGHT_AMBIENT = 'ambientLight',
-    UNI_LIGHT_DIRECTION = 'lightDirection',
+    UNI_LIGHT_AMBIENT = 'u_ambientLight',
+    UNI_LIGHT_DIRECTION = 'u_lightDirection',
+    UNI_LIGHT_POSITION = 'u_lightPosition',
 }
 
-export enum ShaderMatrixTypes {
+export enum ShaderProgramMatrixFields {
     CAMERA_MATRIX = 'cameraMatrix',
     MODEL_MATRIX = 'modelViewMatrix',
     PERSPECTIVE_MATRIX = 'perspectiveMatrix'

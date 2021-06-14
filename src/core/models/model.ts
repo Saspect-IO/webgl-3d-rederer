@@ -4,7 +4,7 @@ import Vbuffer from '../vbuffer';
 import ShaderProgram from '../shaderProgram';
 import ObjLoader from '../objLoader';
 import { MeshData } from '@/entities';
-import { GLSetttings, ShaderMatrixTypes } from '@/modules';
+import { GLSetttings, ShaderProgramMatrixFields } from '@/modules';
 
 
 class ModelShader extends ShaderProgram{
@@ -14,38 +14,53 @@ class ModelShader extends ShaderProgram{
 			'in vec3 a_norm;'+
 			'in vec2 a_uv;'+
 
-			'uniform mat4 uMVMatrix;'+
-			'uniform mat4 uCameraMatrix;'+
-			'uniform mat4 uPMatrix;'+
+			'uniform mat4 uMVMatrix;'+			// world View Matrix
+			'uniform mat4 uCameraMatrix;'+ 		// world Inverse Matrix
+			'uniform mat4 uPMatrix;'+			// world Projection Matrix
+			'uniform vec3 u_lightPosition;'+
 
 			'out vec3 vNormal;'+
 			'out highp vec2 texCoord;'+
+			'out vec3 v_surfaceToLight;'+
+
 			'void main(void){' +
 				'texCoord = a_uv;'+
-				'vNormal = mat3(uCameraMatrix) * a_norm;'+
+				'vNormal = (uCameraMatrix * vec4(a_norm, 0.)).xyz;'+
+
+				'vec3 surfaceWorldPosition = (uMVMatrix * vec4(a_position, 1.0)).xyz;'+
+				'v_surfaceToLight = u_lightPosition - surfaceWorldPosition;'+
+
 				'gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.0);'+
 			'}';
 
 		const fragmentShader = '#version 300 es\n' +
 			'precision mediump float;'+
 
-			'uniform vec3 lightDirection;'+
-			'uniform float ambientLight;'+
+			// 'uniform vec3 u_lightDirection;'+
+			// 'uniform float u_ambientLight;'+
 			'uniform sampler2D uMainTexture;'+
 
 			'in vec3 vNormal;'+
+			'in vec3 v_surfaceToLight;'+
 			'in highp vec2 texCoord;'+
+
+
 
 			'out vec4 finalColor;'+
 			'void main(void) {'+
-				'float lightness = -clamp(dot(normalize(vNormal), normalize(lightDirection)), -1.0, 0.0);'+
-				'lightness = ambientLight + (1.0 - ambientLight) * lightness;'+
-				'finalColor = (texture(uMainTexture, texCoord) * lightness);'+
+				// 'float lightness = -clamp(dot(normalize(vNormal), normalize(u_lightDirection)), -1.0, 0.0);'+
+				// 'lightness = u_ambientLight + (1.0 - u_ambientLight) * lightness;'+
+
+				'vec3 normal = normalize(vNormal);'+
+				'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);'+
+
+				'float light = dot(normal, surfaceToLightDirection);'+
+				'finalColor = (texture(uMainTexture, texCoord) * light);'+
 			'}';												
 
 		super(gl,vertexShader, fragmentShader);
 
-		this.updateGPU(projectionMatrix, ShaderMatrixTypes.PERSPECTIVE_MATRIX);
+		this.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX);
 
 		//Cleanup
 		this.deactivateShader();
