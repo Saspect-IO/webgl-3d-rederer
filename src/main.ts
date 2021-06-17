@@ -1,4 +1,4 @@
-import { ProgramEntrySettings, ShaderMatrixTypes } from '@/modules'
+import { ProgramEntrySettings, ShaderProgramMatrixFields } from '@/modules'
 import GLExtend from './core/glContext'
 import {Camera, CameraController }  from './core/camera'
 import { GridAxis, GridAxisShader } from './core/primitives/grid/grid'
@@ -30,14 +30,14 @@ import Light from './core/light'
         glExtend.clear()
         
         gridAxisShader.activateShader()
-            .updateGPU(camera.viewMatrix, ShaderMatrixTypes.CAMERA_MATRIX)
+            .updateGPU(camera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
             .renderModel(gridAxis.preRender())
 
         modelShader.activateShader()
-            .updateGPU(camera.viewMatrix, ShaderMatrixTypes.CAMERA_MATRIX)
+            .updateGPU(camera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
             .renderModel(model.preRender())
             
-        light.useLight(modelShader)
+        light.useLight(modelShader, camera)
 
         requestAnimationFrame(loop)
     }

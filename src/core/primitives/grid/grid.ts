@@ -1,5 +1,5 @@
 import { MeshData } from "@/entities";
-import { GLSetttings, ShaderMatrixTypes } from "@/modules";
+import { GLSetttings, ShaderProgramMatrixFields } from "@/modules";
 import Geometry from "../../geometry";
 import ShaderProgram from "../../shaderProgram";
 import Vbuffer from "../../vbuffer";
@@ -12,15 +12,15 @@ class GridAxisShader extends ShaderProgram{
 			'layout(location=4) in vec3 a_position;' +
 			'layout(location=5) in float a_color;' +
 
-			'uniform mat4 uPMatrix;' +
-			'uniform mat4 uMVMatrix;' +
-			'uniform mat4 uCameraMatrix;' +
-			'uniform vec3 uColor[4];' +
+			'uniform mat4 u_mVMatrix;'+	
+			'uniform mat4 u_cameraMatrix;'+
+			'uniform mat4 u_pMatrix;'+
+			'uniform vec3 u_color[4];' +
 
 			'out lowp vec4 color;' +
 			'void main(void){' +
-				'color = vec4(uColor[ int(a_color) ],1.0);' +
-				'gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.0);' +
+				'color = vec4(u_color[ int(a_color) ],1.0);' +
+				'gl_Position = u_pMatrix * u_cameraMatrix * u_mVMatrix * vec4(a_position, 1.0);' +
 			'}';
 		const fragmentShader = '#version 300 es\n' +
 			'precision mediump float;' +
@@ -32,8 +32,8 @@ class GridAxisShader extends ShaderProgram{
 
 		//Custom Uniforms 
 
-    this.updateGPU(projectionMatrix, ShaderMatrixTypes.PERSPECTIVE_MATRIX);
-		const uColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram ,"uColor");
+    this.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX);
+		const uColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram ,"u_color");
 		gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]));
 
 		//Cleanup

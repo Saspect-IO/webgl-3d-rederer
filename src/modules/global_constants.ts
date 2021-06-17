@@ -54,15 +54,18 @@ export enum GLSetttings {
     GRID_VECTOR_SIZE = 3,
     GRID_COLOR_SIZE = 1,
     GRID_VERTEX_LEN = 4,
-    UNI_MODEL_MAT ='uMVMatrix',
-    UNI_PERSPECTIV_MAT = 'uPMatrix',
-    UNI_CAMERA_MAT = 'uCameraMatrix',
-    UNI_TEXTURE_MAT = 'uMainTexture',
-    UNI_LIGHT_AMBIENT = 'ambientLight',
-    UNI_LIGHT_DIRECTION = 'lightDirection',
+    UNI_MODEL_MAT ='u_mVMatrix',
+    UNI_PERSPECTIV_MAT = 'u_pMatrix',
+    UNI_CAMERA_MAT = 'u_cameraMatrix',
+    UNI_TEXTURE_MAT = 'u_mainTexture',
+    UNI_LIGHT_AMBIENT = 'u_ambientLight',
+    UNI_LIGHT_DIRECTION = 'u_lightDirection',
+    UNI_LIGHT_POSITION = 'u_lightPosition',
+    UNI_CAMERA_POSITION = 'u_cameraPosition',
+    UNI_CAMERA_SHININESS = 'u_shininess',
 }
 
-export enum ShaderMatrixTypes {
+export enum ShaderProgramMatrixFields {
     CAMERA_MATRIX = 'cameraMatrix',
     MODEL_MATRIX = 'modelViewMatrix',
     PERSPECTIVE_MATRIX = 'perspectiveMatrix'

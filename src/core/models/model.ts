@@ -4,7 +4,7 @@ import Vbuffer from '../vbuffer';
 import ShaderProgram from '../shaderProgram';
 import ObjLoader from '../objLoader';
 import { MeshData } from '@/entities';
-import { GLSetttings, ShaderMatrixTypes } from '@/modules';
+import { GLSetttings, ShaderProgramMatrixFields } from '@/modules';
 
 
 class ModelShader extends ShaderProgram{
@@ -14,38 +14,80 @@ class ModelShader extends ShaderProgram{
 			'in vec3 a_norm;'+
 			'in vec2 a_uv;'+
 
-			'uniform mat4 uMVMatrix;'+
-			'uniform mat4 uCameraMatrix;'+
-			'uniform mat4 uPMatrix;'+
+			'uniform vec3 u_lightPosition;'+
+			'uniform vec3 u_cameraPosition;'+
 
-			'out vec3 vNormal;'+
+			'uniform mat4 u_mVMatrix;'+	
+			'uniform mat4 u_cameraMatrix;'+
+			'uniform mat4 u_pMatrix;'+
+
+			'mat4 m_worldMatrix;'+
+			'mat4 m_viewProjectionMatrix;'+
+			'mat4 m_worldViewProjectionMatrix;'+
+			
+			'out vec3 v_normal;'+
+			'out vec3 v_surfaceToLight;'+
+			'out vec3 v_surfaceToCamera;'+
+
 			'out highp vec2 texCoord;'+
+
 			'void main(void){' +
 				'texCoord = a_uv;'+
-				'vNormal = mat3(uCameraMatrix) * a_norm;'+
-				'gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.0);'+
+
+				'm_worldMatrix = u_mVMatrix;'+
+				'm_viewProjectionMatrix = u_pMatrix * u_cameraMatrix;'+
+				'm_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;'+
+
+				'gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);'+
+				
+				'v_normal = (u_cameraMatrix * vec4(a_norm, 0.)).xyz;'+
+
+				'vec3 v_surfaceWorldPosition = (m_worldMatrix * vec4(a_position, 1.0)).xyz;'+
+				'v_surfaceToLight = u_lightPosition - v_surfaceWorldPosition;'+
+				'v_surfaceToCamera = u_cameraPosition - v_surfaceWorldPosition;'+
+
 			'}';
 
 		const fragmentShader = '#version 300 es\n' +
 			'precision mediump float;'+
 
-			'uniform vec3 lightDirection;'+
-			'uniform float ambientLight;'+
-			'uniform sampler2D uMainTexture;'+
+			// 'uniform vec3 u_lightDirection;'+
+			// 'uniform float u_ambientLight;'+
+			'uniform sampler2D u_mainTexture;'+
+			'uniform float u_shininess;'+
 
-			'in vec3 vNormal;'+
+			'in vec3 v_normal;'+
+			'in vec3 v_surfaceToLight;'+
+			'in vec3 v_surfaceToCamera;'+
 			'in highp vec2 texCoord;'+
 
 			'out vec4 finalColor;'+
 			'void main(void) {'+
-				'float lightness = -clamp(dot(normalize(vNormal), normalize(lightDirection)), -1.0, 0.0);'+
-				'lightness = ambientLight + (1.0 - ambientLight) * lightness;'+
-				'finalColor = (texture(uMainTexture, texCoord) * lightness);'+
+				// 'float lightness = -clamp(dot(normalize(v_normal), normalize(u_lightDirection)), -1.0, 0.0);'+
+				// 'lightness = u_ambientLight + (1.0 - u_ambientLight) * lightness;'+
+
+				'vec3 normal = normalize(v_normal);'+
+
+				'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);'+
+				'vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);'+
+				'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);'+
+
+				'float light = dot(normal, surfaceToLightDirection);'+
+				'float specular = 0.0;'+
+
+				'if (light > 0.0) {'+
+					'specular = pow(dot(normal, halfVector), u_shininess);'+
+				'}'+
+
+				'finalColor = texture(u_mainTexture, texCoord);'+
+				'finalColor = finalColor * light;'+
+				'finalColor = finalColor + specular;'+
+				
 			'}';												
 
 		super(gl,vertexShader, fragmentShader);
 
-		this.updateGPU(projectionMatrix, ShaderMatrixTypes.PERSPECTIVE_MATRIX);
+		this.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX);
 
 		//Cleanup
 		this.deactivateShader();
