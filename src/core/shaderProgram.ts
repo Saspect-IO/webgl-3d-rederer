@@ -27,6 +27,8 @@ export default class ShaderProgram {
       // this.ambientLight = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
 		  // this.lightDirection = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_DIRECTION) as WebGLUniformLocation
       this.lightPosition = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
+      this.cameraPosition = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
+      this.shininess = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_CAMERA_SHININESS) as WebGLUniformLocation
     }
   }
 
@@ -43,6 +45,8 @@ export default class ShaderProgram {
   ambientLight: WebGLUniformLocation | null = null
   lightDirection: WebGLUniformLocation | null = null
   lightPosition: WebGLUniformLocation | null = null
+  cameraPosition: WebGLUniformLocation | null = null
+  shininess: WebGLUniformLocation | null = null
 
   vertexShader: WebGLShader | null = null
   fragmentShader: WebGLShader | null = null

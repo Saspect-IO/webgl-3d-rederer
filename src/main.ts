@@ -37,7 +37,7 @@ import Light from './core/light'
             .updateGPU(camera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
             .renderModel(model.preRender())
             
-        light.useLight(modelShader)
+        light.useLight(modelShader, camera)
 
         requestAnimationFrame(loop)
     }
