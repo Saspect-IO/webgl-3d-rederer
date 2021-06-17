@@ -1,3 +1,4 @@
+import { normalizeColor } from "@/modules"
 import { Camera } from "./camera"
 import { Vector3 } from "./math"
 import ShaderProgram from './shaderProgram'
@@ -28,6 +29,8 @@ export default class Light {
         gl?.uniform3fv(shaderProgram.lightPosition, [point.x, point.y, point.z]);
         gl?.uniform3fv(shaderProgram.cameraPosition, camera.transform.position.getFloatArray());
         gl?.uniform1f(shaderProgram.shininess, shininess);
+        gl?.uniform4fv(shaderProgram.lightColorLocation, normalizeColor(195, 210, 190));  // red light
+        gl?.uniform4fv(shaderProgram.specularColorLocation, normalizeColor(195, 210, 190));  // red light
     }
 
 }

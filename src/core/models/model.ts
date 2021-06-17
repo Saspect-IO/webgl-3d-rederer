@@ -55,6 +55,8 @@ class ModelShader extends ShaderProgram{
 			// 'uniform float u_ambientLight;'+
 			'uniform sampler2D u_mainTexture;'+
 			'uniform float u_shininess;'+
+			'uniform vec4 u_lightColor;'+
+			'uniform vec4 u_specularColor;'+
 
 			'in vec3 v_normal;'+
 			'in vec3 v_surfaceToLight;'+
@@ -80,8 +82,8 @@ class ModelShader extends ShaderProgram{
 				'}'+
 
 				'finalColor = texture(u_mainTexture, texCoord);'+
-				'finalColor = finalColor * light;'+
-				'finalColor = finalColor + specular;'+
+				'finalColor *= light * u_lightColor;'+
+				'finalColor += specular * u_specularColor;'+
 				
 			'}';												
 

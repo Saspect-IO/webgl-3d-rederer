@@ -63,6 +63,8 @@ export enum GLSetttings {
     UNI_LIGHT_POSITION = 'u_lightPosition',
     UNI_CAMERA_POSITION = 'u_cameraPosition',
     UNI_CAMERA_SHININESS = 'u_shininess',
+    UNI_LIGHT_COLOR = 'u_lightColor',
+    UNI_SPECULAR_COLOR = 'u_specularColor',
 }
 
 export enum ShaderProgramMatrixFields {

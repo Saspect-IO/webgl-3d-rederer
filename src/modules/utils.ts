@@ -24,4 +24,11 @@ export const loadShaders = async (vsSource: string, fsSource: string) => {
 
 export const mapValues = (x: number, xMin: number, xMax: number, zMin: number, zMax: number) => ( ((x-xMin)/(xMax-xMin)) * ((zMax-zMin)+zMin) )
 
+export const normalizeColor = (red: number, green: number, blue: number)=>{
+    const alpha = 1
+    const rgb_32_bit = 255
 
+    const result=[(red/rgb_32_bit), (green/rgb_32_bit), (blue/rgb_32_bit), alpha]
+    return new Float32Array(result)
+
+}
