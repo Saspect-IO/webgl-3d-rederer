@@ -1,5 +1,5 @@
 import Geometry from '../geometry';
-import Texture from '../Textures/texture';
+import ImageTexture from '../Textures/texture';
 import Vbuffer from '../vbuffer';
 import ShaderProgram from '../shaderProgram';
 import ObjLoader from '../objLoader';
@@ -151,7 +151,7 @@ class Model {
       positions : new Vbuffer(gl, model.vertices.positions(), vertexCount),
       normals: new Vbuffer(gl, model.vertices.normals(), vertexCount),
       uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount),
-      texture: model.texture as Texture,
+      texture: model.texture as ImageTexture,
       drawMode : gl.TRIANGLES,
       vertexCount,
     }
@@ -165,7 +165,7 @@ class Model {
   
   static async loadModel(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
     const objVertices = await ObjLoader.loadOBJ(objSrc);
-    const objTexture = await Texture.loadTexture(gl, textureSrc);
+    const objTexture = await ImageTexture.loadTexture(gl, textureSrc);
     const [vertices, texture] = await Promise.all([objVertices, objTexture]);
     
     return {vertices, texture};

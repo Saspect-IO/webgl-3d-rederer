@@ -1,4 +1,4 @@
-import Texture from "../core/Textures/texture";
+import ImageTexture from "../core/Textures/texture";
 import Vbuffer from "../core/vbuffer";
 
 export interface UV {
@@ -32,7 +32,7 @@ export interface MeshData {
     positions: Vbuffer; 
     normals?: Vbuffer; 
     uvs?: Vbuffer;
-    texture?: Texture;
+    texture?: ImageTexture;
     drawMode: number;
     vertexCount: number;
     noCulling?: boolean;
