@@ -15,16 +15,14 @@ export default class ShaderProgram {
       this.activateShader()
 
       //standard attribute locations
-      this.positionIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_POSITION_NAME)
-      this.normalIndex = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_NORMAL_NAME)
+      this.positionLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_POSITION_NAME)
+      this.normalLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_NORMAL_NAME)
       this.texCoordLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_UV_NAME)
 
       //standard uniform locations
       this.modelViewMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
       this.perspectiveMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
       this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
- 
-		  // this.lightDirection = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_DIRECTION) as WebGLUniformLocation
       this.diffuse = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation
       this.ambientLightColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
       this.lightPosition = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
@@ -38,8 +36,8 @@ export default class ShaderProgram {
 
   gl: WebGLRenderingContext | null = null
   
-  positionIndex: number | null = null
-  normalIndex: number | null = null
+  positionLoc: number | null = null
+  normalLoc: number | null = null
   texCoordLoc: number | null = null
 
   modelViewMatrix: WebGLUniformLocation | null = null

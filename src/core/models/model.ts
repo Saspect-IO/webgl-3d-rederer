@@ -119,26 +119,26 @@ class Model {
 
   static async createMesh(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string) {
     
-    const attrib = await Model.loadAttributes(gl, objSrc, textureSrc);
-    const vertexCount = attrib.vertices.vertexCount();
+    const model = await Model.loadModel(gl, objSrc, textureSrc);
+    const vertexCount = model.vertices.vertexCount();
 
     const mesh: MeshData = {
-      positions : new Vbuffer(gl, attrib.vertices.positions(), vertexCount),
-      normals: new Vbuffer(gl, attrib.vertices.normals(), vertexCount),
-      uvs: new Vbuffer(gl, attrib.vertices.uvs(), vertexCount),
-      texture: attrib.texture as Texture,
+      positions : new Vbuffer(gl, model.vertices.positions(), vertexCount),
+      normals: new Vbuffer(gl, model.vertices.normals(), vertexCount),
+      uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount),
+      texture: model.texture as Texture,
       drawMode : gl.TRIANGLES,
       vertexCount,
     }
 
-    mesh.positions.bindToAttribute(shaderProgram.positionIndex as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
-    mesh.normals?.bindToAttribute(shaderProgram.normalIndex as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
+    mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
+    mesh.normals?.bindToAttribute(shaderProgram.normalLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
     mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
 
     return mesh;
   }
   
-  static async loadAttributes(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
+  static async loadModel(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
     const objVertices = await ObjLoader.loadOBJ(objSrc);
     const objTexture = await Texture.loadTexture(gl, textureSrc);
     const [vertices, texture] = await Promise.all([objVertices, objTexture]);
