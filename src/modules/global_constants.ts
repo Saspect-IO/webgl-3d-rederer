@@ -47,7 +47,7 @@ export enum GLSetttings {
     ATTR_POSITION_LOC = 0,
     ATTR_NORMAL_NAME = "a_norm",
     ATTR_NORMAL_LOC = 1,
-    ATTR_UV_NAME = "a_uv",
+    ATTR_UV_NAME = "a_texCoord",
     ATTR_UV_LOC = 2,
     ATTR_GRID_POSITION_LOC = 4,
     ATTR_GRID_COLOR_LOC = 5,
@@ -57,14 +57,15 @@ export enum GLSetttings {
     UNI_MODEL_MAT ='u_mVMatrix',
     UNI_PERSPECTIV_MAT = 'u_pMatrix',
     UNI_CAMERA_MAT = 'u_cameraMatrix',
-    UNI_TEXTURE_MAT = 'u_mainTexture',
-    UNI_LIGHT_AMBIENT = 'u_ambientLight',
+    UNI_TEXTURE_MAT = 'u_diffuse',
+    UNI_LIGHT_AMBIENT = 'u_ambientLightColor',
     UNI_LIGHT_DIRECTION = 'u_lightDirection',
     UNI_LIGHT_POSITION = 'u_lightPosition',
     UNI_CAMERA_POSITION = 'u_cameraPosition',
     UNI_CAMERA_SHININESS = 'u_shininess',
     UNI_LIGHT_COLOR = 'u_lightColor',
     UNI_SPECULAR_COLOR = 'u_specularColor',
+    UNI_SPECULAR_FACTOR = 'u_specularFactor',
 }
 
 export enum ShaderProgramMatrixFields {

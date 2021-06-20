@@ -7,13 +7,22 @@ export default class Light {
     constructor(x: number = 0, y: number = 3, z: number = 10) {
         this.lightDirection = new Vector3(x, y, z)
         this.lightPosition = new Vector3(x, y, z)
-        this.ambientLight = 0.3
+        this.specularFactor = 1
+        this.lightColor = normalizeColor({red:195, green:210, blue:190})
+        this.ambientLightColor = normalizeColor({red:25.5, green:25.5, blue:25.5})
+        this.specularColor = normalizeColor({red:195, green:210, blue:190})
+        this.shininess = 500
+        this.specularFactor = 1
     }
 
     lightDirection: Vector3
-    ambientLight: number
     lightPosition: Vector3
-
+   
+    lightColor: Float32Array
+    ambientLightColor: Float32Array
+    specularColor: Float32Array
+    shininess: number
+    specularFactor: number
 
     useLight(shaderProgram: ShaderProgram, camera:Camera): void {
         const gl = shaderProgram.gl
@@ -21,16 +30,13 @@ export default class Light {
         // directional light
         const dir = this.lightDirection
         // gl?.uniform3f(shaderProgram.lightDirection as WebGLUniformLocation, dir.x, dir.y, dir.z)
-        // gl?.uniform1f(shaderProgram.ambientLight as WebGLUniformLocation, this.ambientLight)
-
-        // point light
-        const point = this.lightPosition
-        const shininess = 1000
-        gl?.uniform3fv(shaderProgram.lightPosition, [point.x, point.y, point.z]);
+        gl?.uniform4fv(shaderProgram.ambientLightColor, this.ambientLightColor)
+        gl?.uniform3fv(shaderProgram.lightPosition, [this.lightPosition.x, this.lightPosition.y, this.lightPosition.z]);
         gl?.uniform3fv(shaderProgram.cameraPosition, camera.transform.position.getFloatArray());
-        gl?.uniform1f(shaderProgram.shininess, shininess);
-        gl?.uniform4fv(shaderProgram.lightColorLocation, normalizeColor(195, 210, 190));  // red light
-        gl?.uniform4fv(shaderProgram.specularColorLocation, normalizeColor(195, 210, 190));  // red light
+        gl?.uniform1f(shaderProgram.shininessLocation, this.shininess);
+        gl?.uniform4fv(shaderProgram.lightColorLocation, this.lightColor);
+        gl?.uniform4fv(shaderProgram.specularColorLocation, this.specularColor);
+        gl?.uniform1f(shaderProgram.specularFactorLocation, this.specularFactor);
     }
 
 }
