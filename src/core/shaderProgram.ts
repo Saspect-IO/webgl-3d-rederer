@@ -15,22 +15,13 @@ export default class ShaderProgram {
       this.activateShader()
 
       //standard attribute locations
-      this.positionLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_POSITION_NAME)
-      this.normalLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_NORMAL_NAME)
-      this.texCoordLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_UV_NAME)
+      this.positionLoc = gl.getAttribLocation(this.shaderProgram, GLSetttings.ATTR_POSITION_NAME)
 
       //standard uniform locations
       this.modelViewMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-      this.perspectiveMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
+      this.perspectiveMatrix = gl.getUniformLocation(this.shaderProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
       this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-      this.diffuse = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation
-      this.ambientLightColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
-      this.lightPosition = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
-      this.cameraPosition = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
-      this.shininessLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_CAMERA_SHININESS) as WebGLUniformLocation
-      this.lightColorLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
-      this.specularColorLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
-      this.specularFactorLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
+
     }
   }
 
@@ -43,7 +34,10 @@ export default class ShaderProgram {
   modelViewMatrix: WebGLUniformLocation | null = null
   perspectiveMatrix: WebGLUniformLocation | null = null
   cameraMatrix: WebGLUniformLocation | null = null
+  orthoMatrix: WebGLUniformLocation | null = null
+  textureMatrix: WebGLUniformLocation | null = null
   diffuse: WebGLUniformLocation | null = null
+  projectedTexture: WebGLUniformLocation | null = null
   ambientLightColor: WebGLUniformLocation | null = null
   lightDirection: WebGLUniformLocation | null = null
   lightPosition: WebGLUniformLocation | null = null

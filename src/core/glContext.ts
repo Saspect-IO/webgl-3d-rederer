@@ -4,14 +4,7 @@ import { ProgramEntrySettings } from "@/modules";
 export default class GLContext {
     constructor(WEBGL_CANVAS_ID: string) {
         const canvas = document.getElementById(WEBGL_CANVAS_ID) as HTMLCanvasElement;
-        // cycle through and fallback to the first gl context that works 
-        ([
-            ProgramEntrySettings.WEBGL_CONTEXT,
-            ProgramEntrySettings.WEBGL_CONTEXT_EXPERIMENTAL,
-            ProgramEntrySettings.WEBGL_CONTEXT_WEBKIT,
-            ProgramEntrySettings.WEBGL_CONTEXT_MOZ
-        ]).some(option => this.gl = canvas.getContext(option) as WebGLRenderingContext);
-
+        this.gl = canvas.getContext(ProgramEntrySettings.WEBGL_CONTEXT) as WebGLRenderingContext
         this.gl ?? alert(ProgramEntrySettings.WEBGL_CONTEXT_ERROR_MESSAGE); //user if webgl is not available
         this.gl?.cullFace(this.gl.BACK);								    //Back is also default
         this.gl?.frontFace(this.gl.CCW);								    //Dont really need to set it, its ccw by default.
@@ -27,6 +20,13 @@ export default class GLContext {
     rgb_32_bit = 255;
     alpha = 1;
     canvas: HTMLCanvasElement;
+
+
+    setFrambuffer(depthTextureSize: number, depthFramebuffer: WebGLFramebuffer ){
+        this.gl?.viewport(0, 0, depthTextureSize, depthTextureSize);
+        this.gl?.bindFramebuffer(this.gl?.FRAMEBUFFER, depthFramebuffer);
+        return this
+    }
 
     setSize(w: number, h: number) {
         //set the size of the canvas, on chrome we need to set it 3 ways to make it work perfectly.
@@ -50,6 +50,11 @@ export default class GLContext {
     setClearColor(red: number, green: number, blue: number, alpha: number = 1) {
         this.gl?.clearColor(red / this.rgb_32_bit, green / this.rgb_32_bit, blue / this.rgb_32_bit, alpha);
         return this
+    }
+
+    clearFramebuffer(){
+        this.gl?.bindFramebuffer(this.gl?.FRAMEBUFFER, null);
+        return this;
     }
 
     clear() {

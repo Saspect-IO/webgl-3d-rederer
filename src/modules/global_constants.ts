@@ -13,6 +13,7 @@ export enum ProgramEntrySettings {
     PATH_SHADE_FRAGMENT = '/shaders/basic.frag',
     PRIMITIVE_SHADER_VERTEX = '/shaders/primitive.vert',
     PRIMITIVE_SHADER_FRAGMENT = '/shaders/primitive.frag',
+    DEPTH_TEXTURE_SIZE = 512,
 }
 
 export enum CameraSettings {
@@ -56,8 +57,11 @@ export enum GLSetttings {
     GRID_VERTEX_LEN = 4,
     UNI_MODEL_MAT ='u_mVMatrix',
     UNI_PERSPECTIV_MAT = 'u_pMatrix',
+    UNI_ORTHO_MAT = 'u_oMatrix',
     UNI_CAMERA_MAT = 'u_cameraMatrix',
-    UNI_TEXTURE_MAT = 'u_diffuse',
+    UNI_TEXTURE_MAT = 'u_textureMatrix',
+    UNI_DIFFUSE = 'u_diffuse',
+    UNI_PROJECTED_TEXTURE = 'u_projectedTexture',
     UNI_LIGHT_AMBIENT = 'u_ambientLightColor',
     UNI_LIGHT_DIRECTION = 'u_lightDirection',
     UNI_LIGHT_POSITION = 'u_lightPosition',
@@ -71,5 +75,6 @@ export enum GLSetttings {
 export enum ShaderProgramMatrixFields {
     CAMERA_MATRIX = 'cameraMatrix',
     MODEL_MATRIX = 'modelViewMatrix',
-    PERSPECTIVE_MATRIX = 'perspectiveMatrix'
+    PERSPECTIVE_MATRIX = 'perspectiveMatrix',
+    ORTHO_MATRIX = 'orthoMatrix'
 }

@@ -1,4 +1,4 @@
-import Texture from "../core/texture";
+import Texture from "../core/Textures/texture";
 import Vbuffer from "../core/vbuffer";
 
 export interface UV {

@@ -1,5 +1,5 @@
 import Geometry from '../geometry';
-import Texture from '../texture';
+import Texture from '../Textures/texture';
 import Vbuffer from '../vbuffer';
 import ShaderProgram from '../shaderProgram';
 import ObjLoader from '../objLoader';
@@ -20,27 +20,27 @@ class ModelShader extends ShaderProgram{
 			'uniform mat4 u_mVMatrix;'+	
 			'uniform mat4 u_cameraMatrix;'+
 			'uniform mat4 u_pMatrix;'+
+			'uniform mat4 u_textureMatrix;'+
 
 			'mat4 m_worldMatrix;'+
 			'mat4 m_viewProjectionMatrix;'+
 			'mat4 m_worldViewProjectionMatrix;'+
 			
 			'out vec3 v_normal;'+
-			'out vec4 v_position;'+
 			'out vec3 v_surfaceToLight;'+
 			'out vec3 v_surfaceToCamera;'+
 
-			'out highp vec2 v_texCoord;'+
+			'out vec2 v_texCoord;'+
+			'out vec4 v_projectedTexcoord;'+
 
-			'void main(void){' +
-				'v_texCoord = a_texCoord;'+
+			'void main(void){'+
+
 
 				'm_worldMatrix = u_mVMatrix;'+
 				'm_viewProjectionMatrix = u_pMatrix * u_cameraMatrix;'+
 				'm_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;'+
 
-				'v_position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);'+
-				'gl_Position = v_position;'+
+				'gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);'+
 				
 				'v_normal = (u_cameraMatrix * vec4(a_norm, 0.0)).xyz;'+
 
@@ -48,20 +48,24 @@ class ModelShader extends ShaderProgram{
 				'v_surfaceToLight = u_lightPosition - v_surfaceWorldPosition;'+
 				'v_surfaceToCamera = u_cameraPosition - v_surfaceWorldPosition;'+
 
+				'v_texCoord = a_texCoord;'+
+				'v_projectedTexcoord = u_textureMatrix * vec4(v_surfaceWorldPosition, 1.0);'+
+
 			'}';
 
 		const fragmentShader = '#version 300 es\n' +
 			'precision mediump float;'+
 
-			'in vec4 v_position;'+
 			'in vec2 v_texCoord;'+
+			'in vec4 v_projectedTexcoord;'+
 			'in vec3 v_normal;'+
 			'in vec3 v_surfaceToLight;'+
 			'in vec3 v_surfaceToCamera;'+
-
+			
 			'uniform vec4 u_lightColor;'+
 			'uniform vec4 u_ambientLightColor;'+
 			'uniform sampler2D u_diffuse;'+
+			'uniform sampler2D u_projectedTexture;'+
 			'uniform vec4 u_specularColor;'+
 			'uniform float u_shininess;'+
 			'uniform float u_specularFactor;'+
@@ -76,13 +80,22 @@ class ModelShader extends ShaderProgram{
 			'}'+
 
 			'out vec4 finalColor;'+
+
 			'void main(void) {'+
+
+				'vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;'+
+				'bool inRange ='+
+					'projectedTexcoord.x >= 0.0 &&'+
+					'projectedTexcoord.x <= 1.0 &&'+
+					'projectedTexcoord.y >= 0.0 &&'+
+					'projectedTexcoord.y <= 1.0;'+
 
 				'vec3 normal = normalize(v_normal);'+
 				'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);'+
 				'vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);'+
 				'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);'+
 
+				'vec4 projectedTexColor = vec4(texture2D(u_projectedTexture, projectedTexcoord.xy), 1);'+
 				'vec4 diffuseColor = texture(u_diffuse, v_texCoord);'+
 				'vec4 litR = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);'+
 				
@@ -92,12 +105,24 @@ class ModelShader extends ShaderProgram{
 				'vec4 mult4 = u_lightColor * ( mult1 + mult2 + mult3);'+
 
 				'vec4 outColor = mult4 * diffuseColor;'+
-
-				'finalColor = outColor;'+
+				'float projectedAmount = inRange ? 1.0 : 0.0;'+
+				'finalColor = mix(outColor, projectedTexColor, projectedAmount);'+
 				
 			'}';												
 
 		super(gl,vertexShader, fragmentShader);
+
+		this.texCoordLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_UV_NAME)
+		this.normalLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_NORMAL_NAME)
+
+		this.diffuse = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_DIFFUSE) as WebGLUniformLocation
+		this.ambientLightColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
+		this.lightPosition = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
+		this.cameraPosition = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
+		this.shininessLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_CAMERA_SHININESS) as WebGLUniformLocation
+		this.lightColorLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
+		this.specularColorLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
+		this.specularFactorLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
 
 		this.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX);
 
