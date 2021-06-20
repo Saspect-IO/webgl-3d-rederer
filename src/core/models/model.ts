@@ -1,5 +1,5 @@
 import Geometry from '../geometry';
-import ImageTexture from '../Textures/texture';
+import ImageTexture from '../Textures/imageTexture';
 import Vbuffer from '../vbuffer';
 import ShaderProgram from '../shaderProgram';
 import ObjLoader from '../objLoader';
