@@ -1,10 +1,11 @@
 import Geometry from '../geometry';
-import ImageTexture from '../Textures/imageTexture';
+import Texture from '../Textures/texture';
 import Vbuffer from '../vbuffer';
 import ShaderProgram from '../shaderProgram';
 import ObjLoader from '../objLoader';
 import { MeshData } from '@/entities';
 import { GLSetttings, ShaderProgramMatrixFields } from '@/modules';
+import DepthTexture from '../Textures/depthTexture';
 
 
 class ModelShader extends ShaderProgram{
@@ -98,7 +99,7 @@ class ModelShader extends ShaderProgram{
 				'vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);'+
 				'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);'+
 
-				'vec4 projectedTexColor = vec4(texture2D(u_projectedTexture, projectedTexcoord.xy), 1);'+
+				'vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);'+
 				'vec4 diffuseColor = texture(u_diffuse, v_texCoord);'+
 				'vec4 litR = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);'+
 				
@@ -110,6 +111,7 @@ class ModelShader extends ShaderProgram{
 				'vec4 outColor = mult4 * diffuseColor;'+
 				'float projectedAmount = inRange ? 1.0 : 0.0;'+
 				'finalColor = mix(outColor, projectedTexColor, projectedAmount);'+
+				//'finalColor = outColor;'+
 				
 			'}';												
 
@@ -135,8 +137,6 @@ class ModelShader extends ShaderProgram{
 }
 
 
-
-
 class Model {
 
   constructor() {}
@@ -154,21 +154,23 @@ class Model {
       positions : new Vbuffer(gl, model.vertices.positions(), vertexCount),
       normals: new Vbuffer(gl, model.vertices.normals(), vertexCount),
       uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount),
-      texture: model.texture as ImageTexture,
+      texture: model.texture,
       drawMode : gl.TRIANGLES,
       vertexCount,
     }
-
+	// shaderProgram.activateShader();
     mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
     mesh.normals?.bindToAttribute(shaderProgram.normalLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
     mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
 
+	(mesh.texture as Texture)?.useTexture(shaderProgram.diffuse as WebGLUniformLocation , 1)
+	
     return mesh;
   }
   
   static async loadModel(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
     const objVertices = await ObjLoader.loadOBJ(objSrc);
-    const objTexture = await ImageTexture.loadTexture(gl, textureSrc);
+    const objTexture = await Texture.loadTexture(gl, textureSrc);
     const [vertices, texture] = await Promise.all([objVertices, objTexture]);
     
     return {vertices, texture};

@@ -74,7 +74,8 @@ class DirectionalShadow {
 		}
 
 		mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
-
+		(mesh.texture as DepthTexture)?.useDepthTexture(shaderProgram.projectedTexture as WebGLUniformLocation, (mesh.texture as DepthTexture).depthFramebuffer as WebGLFramebuffer , (mesh.texture as DepthTexture).depthTexture as WebGLTexture, 0);
+	
 		return mesh;
 	}
 

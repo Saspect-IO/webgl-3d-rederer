@@ -5,7 +5,6 @@ import { GridAxis, GridAxisShader } from './core/primitives/grid/grid'
 import { Model, ModelShader } from './core/models/model'
 import Light from './core/light'
 import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/directional'
-import DepthTexture from './core/Textures/depthTexture'
 
 
 (async () => {

@@ -1,3 +1,5 @@
+import { TEXTURE } from "@/modules";
+
 export default class DepthTexture {
 
     constructor(gl: WebGLRenderingContext, depthTextureSize: number) {
@@ -57,10 +59,24 @@ export default class DepthTexture {
             0                       // mip level
         );
         this.depthTextureSize = depthTextureSize
+        this.gl = gl
     }
 
     depthTexture: WebGLTexture | null = null;
     depthFramebuffer: WebGLFramebuffer | null = null;
     depthTextureSize:number;
+    gl: WebGLRenderingContext;
+    TEXTURE_KEY = TEXTURE;
+
+
+
+    useDepthTexture(uniform: WebGLUniformLocation, depthFramebuffer: WebGLFramebuffer, depthTexture:WebGLTexture, binding: number): void {
+        const gl = this.gl as WebGLRenderingContext;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, depthFramebuffer);
+        gl.activeTexture((gl as {[key:string]: any})[`${this.TEXTURE_KEY}${binding}`]);
+        gl.bindTexture(gl.TEXTURE_2D, depthTexture);
+        //gl.uniform1i(uniform, binding);
+        gl.bindTexture(gl.TEXTURE_2D, null);
+    }
 
 }

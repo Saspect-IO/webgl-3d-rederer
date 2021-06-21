@@ -1,5 +1,7 @@
 
 import { MeshData } from "@/entities";
+import DepthTexture from "./Textures/depthTexture";
+import Texture from "./Textures/texture";
 import Transformation from "./transformation";
 export default class Geometry {
 
