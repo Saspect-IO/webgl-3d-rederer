@@ -21,6 +21,8 @@ export default class ShaderProgram {
       this.modelViewMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
       this.perspectiveMatrix = gl.getUniformLocation(this.shaderProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
       this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+      this.orthoMatrix = gl.getUniformLocation(this.shaderProgram  as WebGLProgram , GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
+      this.projectedTexture = gl.getUniformLocation(this.shaderProgram  as WebGLProgram , GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
 
     }
   }
@@ -35,7 +37,6 @@ export default class ShaderProgram {
   perspectiveMatrix: WebGLUniformLocation | null = null
   cameraMatrix: WebGLUniformLocation | null = null
   orthoMatrix: WebGLUniformLocation | null = null
-  textureMatrix: WebGLUniformLocation | null = null
   diffuse: WebGLUniformLocation | null = null
   projectedTexture: WebGLUniformLocation | null = null
   ambientLightColor: WebGLUniformLocation | null = null

@@ -20,11 +20,13 @@ class ModelShader extends ShaderProgram{
 			'uniform mat4 u_mVMatrix;'+	
 			'uniform mat4 u_cameraMatrix;'+
 			'uniform mat4 u_pMatrix;'+
-			'uniform mat4 u_textureMatrix;'+
+			'uniform mat4 u_oMatrix;'+
+			
 
 			'mat4 m_worldMatrix;'+
 			'mat4 m_viewProjectionMatrix;'+
 			'mat4 m_worldViewProjectionMatrix;'+
+			'mat4 m_textureMatrix;'+
 			
 			'out vec3 v_normal;'+
 			'out vec3 v_surfaceToLight;'+
@@ -39,6 +41,7 @@ class ModelShader extends ShaderProgram{
 				'm_worldMatrix = u_mVMatrix;'+
 				'm_viewProjectionMatrix = u_pMatrix * u_cameraMatrix;'+
 				'm_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;'+
+				'm_textureMatrix = u_oMatrix * u_cameraMatrix * m_worldMatrix;'+
 
 				'gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);'+
 				
@@ -49,7 +52,7 @@ class ModelShader extends ShaderProgram{
 				'v_surfaceToCamera = u_cameraPosition - v_surfaceWorldPosition;'+
 
 				'v_texCoord = a_texCoord;'+
-				'v_projectedTexcoord = u_textureMatrix * vec4(v_surfaceWorldPosition, 1.0);'+
+				'v_projectedTexcoord = m_textureMatrix * vec4(v_surfaceWorldPosition, 1.0);'+
 
 			'}';
 

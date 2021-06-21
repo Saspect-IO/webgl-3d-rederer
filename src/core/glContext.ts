@@ -22,11 +22,12 @@ export default class GLContext {
     canvas: HTMLCanvasElement;
 
 
-    setFrambuffer(depthTextureSize: number, depthFramebuffer: WebGLFramebuffer ){
-        this.gl?.viewport(0, 0, depthTextureSize, depthTextureSize);
-        this.gl?.bindFramebuffer(this.gl?.FRAMEBUFFER, depthFramebuffer);
-        return this
-    }
+    // setFrambuffer(depthTextureSize: number, depthFramebuffer: WebGLFramebuffer ){
+    //     this.gl?.viewport(0, 0, depthTextureSize, depthTextureSize);
+    //     this.gl?.bindFramebuffer(this.gl?.FRAMEBUFFER, depthFramebuffer);
+    //     gl.bindTexture(gl.TEXTURE_2D, texture);
+    //     return this
+    // }
 
     setSize(w: number, h: number) {
         //set the size of the canvas, on chrome we need to set it 3 ways to make it work perfectly.

@@ -59,7 +59,6 @@ export enum GLSetttings {
     UNI_PERSPECTIV_MAT = 'u_pMatrix',
     UNI_ORTHO_MAT = 'u_oMatrix',
     UNI_CAMERA_MAT = 'u_cameraMatrix',
-    UNI_TEXTURE_MAT = 'u_textureMatrix',
     UNI_DIFFUSE = 'u_diffuse',
     UNI_PROJECTED_TEXTURE = 'u_projectedTexture',
     UNI_LIGHT_AMBIENT = 'u_ambientLightColor',

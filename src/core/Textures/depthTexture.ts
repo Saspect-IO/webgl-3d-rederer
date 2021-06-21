@@ -1,8 +1,8 @@
 export default class DepthTexture {
 
     constructor(gl: WebGLRenderingContext, depthTextureSize: number) {
-        this.createdTexture = gl.createTexture() as WebGLTexture;
-
+        this.depthTexture = gl.createTexture() as WebGLTexture;
+        gl.bindTexture(gl.TEXTURE_2D, this.depthTexture)
         gl.texImage2D(
             gl.TEXTURE_2D,      // target
             0,                  // mip level
@@ -25,7 +25,7 @@ export default class DepthTexture {
             gl.FRAMEBUFFER,         // target
             gl.DEPTH_ATTACHMENT,    // attachment point
             gl.TEXTURE_2D,          // texture target
-            this.createdTexture,    // texture
+            this.depthTexture,    // texture
             0                       // mip level
         );
         
@@ -59,7 +59,7 @@ export default class DepthTexture {
         this.depthTextureSize = depthTextureSize
     }
 
-    createdTexture: WebGLTexture | null = null;
+    depthTexture: WebGLTexture | null = null;
     depthFramebuffer: WebGLFramebuffer | null = null;
     depthTextureSize:number;
 
