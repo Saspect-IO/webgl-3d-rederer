@@ -1,4 +1,5 @@
 import { ProgramEntrySettings } from "@/modules";
+import DepthTexture from "./Textures/depthTexture";
 
 
 export default class GLContext {
@@ -12,7 +13,6 @@ export default class GLContext {
         this.gl?.enable(this.gl.CULL_FACE);							        //Cull back face, so only show triangles that are created clockwise
         this.gl?.depthFunc(this.gl.LEQUAL);							        //Near things obscure far things
         this.gl?.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE_MINUS_SRC_ALPHA);	//Setup default alpha blending
-
         this.canvas = canvas;
     }
 
@@ -33,6 +33,12 @@ export default class GLContext {
         this.gl?.viewport(0, 0, w, h);
         
         return this;
+    }
+
+    depthRender(depthTexture:DepthTexture){
+        this.gl?.bindFramebuffer(this.gl?.FRAMEBUFFER, depthTexture.depthFramebuffer);
+        this.gl?.viewport(0, 0, depthTexture.depthTextureSize, depthTexture.depthTextureSize);
+        return this
     }
 
     //Set the size of the canvas to fill a % of the total screen.

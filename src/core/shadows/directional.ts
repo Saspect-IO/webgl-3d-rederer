@@ -68,14 +68,13 @@ class DirectionalShadow {
 
 		const mesh: MeshData = {
 			positions: new Vbuffer(gl, model.vertices.positions(), vertexCount),
-			texture: model.texture as DepthTexture,
+			depth: model.texture as DepthTexture,
 			drawMode: gl.TRIANGLES,
 			vertexCount,
 		}
 
 		mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
-		(mesh.texture as DepthTexture)?.useDepthTexture(shaderProgram.projectedTexture as WebGLUniformLocation, (mesh.texture as DepthTexture).depthFramebuffer as WebGLFramebuffer , (mesh.texture as DepthTexture).depthTexture as WebGLTexture, 0);
-	
+
 		return mesh;
 	}
 

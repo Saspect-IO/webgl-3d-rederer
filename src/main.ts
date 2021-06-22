@@ -5,6 +5,8 @@ import { GridAxis, GridAxisShader } from './core/primitives/grid/grid'
 import { Model, ModelShader } from './core/models/model'
 import Light from './core/light'
 import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/directional'
+import DepthTexture from './core/Textures/depthTexture'
+import { Quad, QuadShader } from './core/primitives/quads/quad'
 
 
 (async () => {
@@ -13,14 +15,18 @@ import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/direc
     const gl = glContext.getContext() as WebGLRenderingContext
 
     const lightView = new Camera(gl as WebGLRenderingContext)
-    lightView.transform.position.set(50, 50, 50)
+    lightView.transform.position.set(0, 5, 5)
     
     const camera = new Camera(gl as WebGLRenderingContext)
     camera.transform.position.set(0, 1, 3)
     new CameraController(gl as WebGLRenderingContext, camera)
 
+
     const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection)
     const gridAxis = GridAxis.createGeometry(gl, false)
+
+    const quadShader = new QuadShader(gl as WebGLRenderingContext, camera.projection)
+    const quad = Quad.createGeometry(gl, false)
 
     const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightView.orthoProjection)
     const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
@@ -33,21 +39,21 @@ import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/direc
 
     const loop = () => {
         
+        glContext.depthRender(directionalShadow.mesh.depth as DepthTexture).clear()
         lightView.updateViewMatrix()
-        glContext.clear()
-        
         directionalShadowShader.activateShader()
             .updateGPU(lightView.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
             .renderModel(directionalShadow.preRender())
 
-        glContext.clearFramebuffer().clear()
-
+        glContext.clearFramebuffer().fitScreen(0.95, 0.90).clear()
         camera.updateViewMatrix()
-        glContext.clear()
-
         gridAxisShader.activateShader()
             .updateGPU(camera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
             .renderModel(gridAxis.preRender())
+
+        quadShader.activateShader()
+            .updateGPU(camera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
+            .renderModel(quad.preRender())
 
         modelShader.activateShader()
             .updateGPU(camera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)

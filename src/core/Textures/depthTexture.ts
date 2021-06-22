@@ -1,19 +1,17 @@
-import { TEXTURE } from "@/modules";
-
 export default class DepthTexture {
 
     constructor(gl: WebGLRenderingContext, depthTextureSize: number) {
         this.depthTexture = gl.createTexture() as WebGLTexture;
         gl.bindTexture(gl.TEXTURE_2D, this.depthTexture)
         gl.texImage2D(
-            gl.TEXTURE_2D,      // target
-            0,                  // mip level
-            gl.DEPTH_COMPONENT, // internal format
-            depthTextureSize,   // width
-            depthTextureSize,   // height
-            0,                  // border
-            gl.DEPTH_COMPONENT, // format
-            gl.UNSIGNED_INT,    // type
+            gl.TEXTURE_2D,              // target
+            0,                          // mip level
+            gl.DEPTH_COMPONENT16,       // internal format
+            depthTextureSize,           // width
+            depthTextureSize,           // height
+            0,                          // border
+            gl.DEPTH_COMPONENT,         // format
+            gl.UNSIGNED_INT,            // type
             null
         );
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -27,7 +25,7 @@ export default class DepthTexture {
             gl.FRAMEBUFFER,         // target
             gl.DEPTH_ATTACHMENT,    // attachment point
             gl.TEXTURE_2D,          // texture target
-            this.depthTexture,    // texture
+            this.depthTexture,      // texture
             0                       // mip level
         );
         
@@ -66,17 +64,5 @@ export default class DepthTexture {
     depthFramebuffer: WebGLFramebuffer | null = null;
     depthTextureSize:number;
     gl: WebGLRenderingContext;
-    TEXTURE_KEY = TEXTURE;
-
-
-
-    useDepthTexture(uniform: WebGLUniformLocation, depthFramebuffer: WebGLFramebuffer, depthTexture:WebGLTexture, binding: number): void {
-        const gl = this.gl as WebGLRenderingContext;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, depthFramebuffer);
-        gl.activeTexture((gl as {[key:string]: any})[`${this.TEXTURE_KEY}${binding}`]);
-        gl.bindTexture(gl.TEXTURE_2D, depthTexture);
-        //gl.uniform1i(uniform, binding);
-        gl.bindTexture(gl.TEXTURE_2D, null);
-    }
 
 }

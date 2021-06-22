@@ -33,7 +33,8 @@ export interface MeshData {
     positions: Vbuffer; 
     normals?: Vbuffer; 
     uvs?: Vbuffer;
-    texture?: Texture | DepthTexture;
+    texture?: Texture;
+    depth?:DepthTexture
     drawMode: number;
     vertexCount: number;
     noCulling?: boolean;

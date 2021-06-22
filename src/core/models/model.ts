@@ -4,7 +4,7 @@ import Vbuffer from '../vbuffer';
 import ShaderProgram from '../shaderProgram';
 import ObjLoader from '../objLoader';
 import { MeshData } from '@/entities';
-import { GLSetttings, ShaderProgramMatrixFields } from '@/modules';
+import { GLSetttings, ProgramEntrySettings, ShaderProgramMatrixFields } from '@/modules';
 import DepthTexture from '../Textures/depthTexture';
 
 
@@ -155,6 +155,7 @@ class Model {
       normals: new Vbuffer(gl, model.vertices.normals(), vertexCount),
       uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount),
       texture: model.texture,
+
       drawMode : gl.TRIANGLES,
       vertexCount,
     }
@@ -163,8 +164,6 @@ class Model {
     mesh.normals?.bindToAttribute(shaderProgram.normalLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
     mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
 
-	(mesh.texture as Texture)?.useTexture(shaderProgram.diffuse as WebGLUniformLocation , 1)
-	
     return mesh;
   }
   
