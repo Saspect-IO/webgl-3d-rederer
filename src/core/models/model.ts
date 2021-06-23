@@ -151,15 +151,15 @@ class Model {
     const vertexCount = model.vertices.vertexCount();
 
     const mesh: MeshData = {
-      positions : new Vbuffer(gl, model.vertices.positions(), vertexCount),
-      normals: new Vbuffer(gl, model.vertices.normals(), vertexCount),
-      uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount),
+      positions : new Vbuffer(gl, model.vertices.positions(), vertexCount).storeVertices(),
+      normals: new Vbuffer(gl, model.vertices.normals(), vertexCount).storeVertices(),
+      uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount).storeVertices(),
       texture: model.texture,
 
       drawMode : gl.TRIANGLES,
       vertexCount,
     }
-	// shaderProgram.activateShader();
+
     mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
     mesh.normals?.bindToAttribute(shaderProgram.normalLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
     mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);

@@ -126,7 +126,7 @@ class GridAxis {
     const vertexCount = verts.length / GLSetttings.GRID_VERTEX_LEN;
 
     const mesh: MeshData = {
-      positions : new Vbuffer(gl, verts, vertexCount),
+      positions : new Vbuffer(gl, verts, vertexCount).storeVertices(),
       drawMode : gl.LINES,
       vertexCount,
     }

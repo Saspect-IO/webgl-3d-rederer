@@ -1,19 +1,33 @@
 export default class Vbuffer {
 
-  constructor(gl: WebGLRenderingContext, vertexAttribute: number[], count: number) {
+  constructor(gl: WebGLRenderingContext, data: number[], count: number) {
     this.buffer = gl.createBuffer() as WebGLBuffer;
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexAttribute), gl.STATIC_DRAW);
     this.gl = gl;
-    this.size = vertexAttribute.length / count;
+    this.size = data.length / count;
+    this.data = data
   }
 
   buffer: WebGLBuffer;
   gl: WebGLRenderingContext;
   size: number;
+  data: number[];
 
   destroy() {
     this.gl.deleteBuffer(this.buffer);
+  }
+
+  storeVertices(){
+    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(this.data), this.gl.STATIC_DRAW);
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
+    return this
+  }
+
+  storeIndices(){
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.buffer);
+    this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.data), this.gl.STATIC_DRAW);
+    this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
+    return this
   }
 
   bindToAttribute(vertexAttributeIndex: number, stride: number, offset: number, size: number = this.size) {
