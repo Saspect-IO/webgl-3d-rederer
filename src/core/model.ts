@@ -1,14 +1,12 @@
-import Geometry from '../geometry';
-import Texture from '../Textures/texture';
-import Vbuffer from '../vbuffer';
-import ShaderProgram from '../shaderProgram';
-import ObjLoader from '../objLoader';
+import Geometry from './geometry';
+import Texture from './Textures/texture';
+import Vbuffer from './vbuffer';
+import ShaderProgram from './shaderProgram';
+import ObjLoader from './objLoader';
 import { MeshData } from '@/entities';
-import { GLSetttings, ProgramEntrySettings, ShaderProgramMatrixFields } from '@/modules';
-import DepthTexture from '../Textures/depthTexture';
+import { GLSetttings, ShaderProgramMatrixFields } from '@/modules';
 
-
-class ModelShader extends ShaderProgram{
+class ModelShader{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){	
 		const vertexShader = '#version 300 es\n' +
 			'in vec3 a_position;'+
@@ -111,29 +109,54 @@ class ModelShader extends ShaderProgram{
 				'vec4 outColor = mult4 * diffuseColor;'+
 				'float projectedAmount = inRange ? 1.0 : 0.0;'+
 				'finalColor = mix(outColor, projectedTexColor, projectedAmount);'+
-				//'finalColor = outColor;'+
-				
 			'}';												
 
-		super(gl,vertexShader, fragmentShader);
+		const program = new ShaderProgram(gl,vertexShader, fragmentShader);
 
-		this.texCoordLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_UV_NAME)
-		this.normalLoc = gl.getAttribLocation(this.shaderProgram as WebGLProgram , GLSetttings.ATTR_NORMAL_NAME)
+		program.activateShader()
 
-		this.diffuse = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_DIFFUSE) as WebGLUniformLocation
-		this.ambientLightColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
-		this.lightPosition = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
-		this.cameraPosition = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
-		this.shininessLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_CAMERA_SHININESS) as WebGLUniformLocation
-		this.lightColorLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
-		this.specularColorLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
-		this.specularFactorLocation = gl.getUniformLocation(this.shaderProgram as WebGLProgram , GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
+		this.positionLoc = gl.getAttribLocation(program, GLSetttings.ATTR_POSITION_NAME)
+		this.texCoordLoc = gl.getAttribLocation(program as WebGLProgram , GLSetttings.ATTR_UV_NAME)
+		this.normalLoc = gl.getAttribLocation(program as WebGLProgram , GLSetttings.ATTR_NORMAL_NAME)
 
-		this.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX);
+		this.modelViewMatrix = gl.getUniformLocation(program , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
+		this.perspectiveMatrix = gl.getUniformLocation(program, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
+		this.cameraMatrix = gl.getUniformLocation(program , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+		this.orthoMatrix = gl.getUniformLocation(program  as WebGLProgram , GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
+		this.projectedTexture = gl.getUniformLocation(program  as WebGLProgram , GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
 
+		this.diffuse = gl.getUniformLocation(program as WebGLProgram , GLSetttings.UNI_DIFFUSE) as WebGLUniformLocation
+		this.ambientLightColor = gl.getUniformLocation(program as WebGLProgram , GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
+		this.lightPosition = gl.getUniformLocation(program as WebGLProgram , GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
+		this.cameraPosition = gl.getUniformLocation(program as WebGLProgram , GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
+		this.shininessLocation = gl.getUniformLocation(program as WebGLProgram , GLSetttings.UNI_CAMERA_SHININESS) as WebGLUniformLocation
+		this.lightColorLocation = gl.getUniformLocation(program as WebGLProgram , GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
+		this.specularColorLocation = gl.getUniformLocation(program as WebGLProgram , GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
+		this.specularFactorLocation = gl.getUniformLocation(program as WebGLProgram , GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
+
+		program.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX)
 		//Cleanup
-		this.deactivateShader();
+		program.deactivateShader()
 	}
+
+	positionLoc: number
+	normalLoc: number
+	texCoordLoc: number
+  
+	modelViewMatrix: WebGLUniformLocation
+	perspectiveMatrix: WebGLUniformLocation
+	cameraMatrix: WebGLUniformLocation
+	orthoMatrix: WebGLUniformLocation
+
+	diffuse: WebGLUniformLocation
+	projectedTexture: WebGLUniformLocation
+	ambientLightColor: WebGLUniformLocation
+	lightPosition: WebGLUniformLocation
+	cameraPosition: WebGLUniformLocation
+	shininessLocation: WebGLUniformLocation
+	lightColorLocation: WebGLUniformLocation 
+	specularColorLocation: WebGLUniformLocation
+	specularFactorLocation: WebGLUniformLocation 
 }
 
 
@@ -141,11 +164,11 @@ class Model {
 
   constructor() {}
 
-  static async createGeometry(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string){ 
+  static async createGeometry(gl: WebGLRenderingContext, shaderProgram: ModelShader, objSrc: string, textureSrc: string){ 
     return  new Geometry(await Model.createMesh(gl, shaderProgram, objSrc, textureSrc)); 
   }
 
-  static async createMesh(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string, textureSrc: string) {
+  static async createMesh(gl: WebGLRenderingContext, shaderProgram: ModelShader, objSrc: string, textureSrc: string) {
     
     const model = await Model.loadModel(gl, objSrc, textureSrc);
     const vertexCount = model.vertices.vertexCount();

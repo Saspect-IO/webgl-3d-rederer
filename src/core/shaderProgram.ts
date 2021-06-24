@@ -9,45 +9,9 @@ export default class ShaderProgram {
     this.createShaderProgram(gl, fragmentShader, vertexShader)
 
     this.gl = gl
-
-    if (this.shaderProgram ) {
-
-      this.activateShader()
-
-      //standard attribute locations
-      this.positionLoc = gl.getAttribLocation(this.shaderProgram, GLSetttings.ATTR_POSITION_NAME)
-
-      //standard uniform locations
-      this.modelViewMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-      this.perspectiveMatrix = gl.getUniformLocation(this.shaderProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
-      this.cameraMatrix = gl.getUniformLocation(this.shaderProgram , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-      this.orthoMatrix = gl.getUniformLocation(this.shaderProgram  as WebGLProgram , GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
-      this.projectedTexture = gl.getUniformLocation(this.shaderProgram  as WebGLProgram , GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
-
-    }
   }
 
   gl: WebGLRenderingContext | null = null
-  
-  positionLoc: number | null = null
-  normalLoc: number | null = null
-  texCoordLoc: number | null = null
-
-  modelViewMatrix: WebGLUniformLocation | null = null
-  perspectiveMatrix: WebGLUniformLocation | null = null
-  cameraMatrix: WebGLUniformLocation | null = null
-  orthoMatrix: WebGLUniformLocation | null = null
-  diffuse: WebGLUniformLocation | null = null
-  projectedTexture: WebGLUniformLocation | null = null
-  ambientLightColor: WebGLUniformLocation | null = null
-  lightDirection: WebGLUniformLocation | null = null
-  lightPosition: WebGLUniformLocation | null = null
-  cameraPosition: WebGLUniformLocation | null = null
-  shininessLocation: WebGLUniformLocation | null = null
-  lightColorLocation: WebGLUniformLocation | null = null 
-  specularColorLocation: WebGLUniformLocation | null = null
-  specularFactorLocation: WebGLUniformLocation | null = null 
-
   vertexShader: WebGLShader | null = null
   fragmentShader: WebGLShader | null = null
   shaderProgram: WebGLProgram | null = null

@@ -5,12 +5,12 @@ import ShaderProgram from "../../shaderProgram";
 import Vbuffer from "../../vbuffer";
 
 
-class GridAxisShader extends ShaderProgram{
+class GridAxisShader{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){
 			
 		const vertexShader  = '#version 300 es\n' +
-			'layout(location=4) in vec3 a_position;' +
-			'layout(location=5) in float a_color;' +
+			'in vec3 a_position;' +
+			'in float a_color;' +
 
 			'uniform mat4 u_mVMatrix;'+	
 			'uniform mat4 u_cameraMatrix;'+
@@ -22,36 +22,54 @@ class GridAxisShader extends ShaderProgram{
 				'color = vec4(u_color[ int(a_color) ],1.0);' +
 				'gl_Position = u_pMatrix * u_cameraMatrix * u_mVMatrix * vec4(a_position, 1.0);' +
 			'}';
+
 		const fragmentShader = '#version 300 es\n' +
 			'precision mediump float;' +
 			'in vec4 color;' +
 			'out vec4 finalColor;' +
-			'void main(void){ finalColor = color; }';
+			'void main(void){'+
+        'finalColor = color;'+ 
+      '}';
 
-		super(gl, vertexShader, fragmentShader);
 
-		//Custom Uniforms 
+    const program = new ShaderProgram(gl,vertexShader, fragmentShader)
 
-    this.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX);
-		const uColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram ,"u_color");
-		gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]));
+		program.activateShader()
+
+		this.positionLoc = gl.getAttribLocation(program, GLSetttings.ATTR_POSITION_NAME)
+		this.texCoordLoc = gl.getAttribLocation(program as WebGLProgram , GLSetttings.ATTR_UV_NAME)
+
+    this.modelViewMatrix = gl.getUniformLocation(program , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
+		this.perspectiveMatrix = gl.getUniformLocation(program, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
+		this.cameraMatrix = gl.getUniformLocation(program , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+
+    program.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX)
+		const uColor = gl.getUniformLocation(program as WebGLProgram ,GLSetttings.UNI_COLOR)
+		gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
 
 		//Cleanup
-		this.deactivateShader();
+		program.deactivateShader()
 
 	}
+
+  positionLoc: number
+	texCoordLoc: number
+
+  modelViewMatrix: WebGLUniformLocation
+	perspectiveMatrix: WebGLUniformLocation
+	cameraMatrix: WebGLUniformLocation
 }
 
 class GridAxis {
 
   constructor() {}
   
-  static createGeometry(gl:WebGLRenderingContext, enableAxis: boolean){ 
-    return new Geometry(GridAxis.createMesh(gl, enableAxis)); 
+  static createGeometry(gl:WebGLRenderingContext,shaderProgram: GridAxisShader, enableAxis: boolean){ 
+    return new Geometry(GridAxis.createMesh(gl, shaderProgram, enableAxis)); 
   }
 
-  //https://github.com/sketchpunk/FunWithWebGL2/tree/master/lesson_006
-  static createMesh(glContext: WebGLRenderingContext, enableAxis: boolean ) {
+
+  static createMesh(glContext: WebGLRenderingContext, shaderProgram: GridAxisShader, enableAxis: boolean ) {
     //Dynamiclly create a grid
     let gl = glContext as WebGLRenderingContext;
     let verts = [],
@@ -131,8 +149,8 @@ class GridAxis {
       vertexCount,
     }
 
-    mesh.positions.bindToAttribute(GLSetttings.ATTR_GRID_POSITION_LOC as number, strideLen, GLSetttings.DEFAULT_OFFSET, GLSetttings.GRID_VECTOR_SIZE);
-    mesh.positions.bindToAttribute(GLSetttings.ATTR_GRID_COLOR_LOC as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE);
+    mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, strideLen, GLSetttings.DEFAULT_OFFSET, GLSetttings.GRID_VECTOR_SIZE)
+    mesh.positions.bindToAttribute(shaderProgram.texCoordLoc as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE)
 
     return mesh;
   }
