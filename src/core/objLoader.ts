@@ -1,10 +1,4 @@
-import {
-    Normal,
-    Vector,
-    Surface,
-    UV,
-    Vertex
-} from "@/entities";
+import { Normal, Vector, Surface, UV, Vertex } from "@/entities";
 import { SurfaceStruct, Vec2Struct, Vec3Struct, VertexStruct } from "@/modules";
 
 export default class ObjLoader {
@@ -14,13 +8,6 @@ export default class ObjLoader {
     }
 
     surfaces: Surface[] = [];
-    vertices: Vertex[] = [];
-    position: Vector | null = null;
-    normal: Normal | null = null;
-    uv: UV | null = null;
-    x: number = 0;
-    y: number = 0;
-    z: number = 0;
 
     static parseOBJ(src: string) {
 
@@ -65,7 +52,6 @@ export default class ObjLoader {
         return new ObjLoader(surfaces);
     }
 
-    // Loads an OBJ file from the given URL, and returns it as a promise
     static async loadOBJ(url: string) {
         const response = await fetch(url);
         const data = ObjLoader.parseOBJ(await response.text());
@@ -84,6 +70,7 @@ export default class ObjLoader {
                 result.push(v.x, v.y, v.z);
             })
         })
+
         return result;
     }
 
@@ -95,6 +82,7 @@ export default class ObjLoader {
                 result.push(v.x, v.y, v.z);
             })
         })
+
         return result;
     }
 
@@ -106,6 +94,7 @@ export default class ObjLoader {
                 result.push(v.x, v.y);
             })
         })
+
         return result;
     }
 

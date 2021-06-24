@@ -9,9 +9,9 @@ class QuadShader{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){
 			
 		const vertexShader  = '#version 300 es\n' +
-			'in vec3 a_position;' +
-			'in float a_color;' +
-      'in vec2 a_texCoord;'+
+			'layout(location=6) in vec3 a_position;' +
+			'layout(location=7) in float a_color;' +
+      'layout(location=8) in vec2 a_texCoord;'+
 
 			'uniform mat4 u_mVMatrix;'+	
 			'uniform mat4 u_cameraMatrix;'+
@@ -31,33 +31,40 @@ class QuadShader{
           'finalColor = color;'+ 
         '}';
 
-      const program = new ShaderProgram(gl,vertexShader, fragmentShader)
+      const shaderProgram = new ShaderProgram(gl, vertexShader, fragmentShader)
 
-      program.activateShader()
+      if (shaderProgram) {
+        shaderProgram.activateShader()
   
-      this.positionLoc = gl.getAttribLocation(program, GLSetttings.ATTR_POSITION_NAME)
-      this.texCoordLoc = gl.getAttribLocation(program as WebGLProgram , GLSetttings.ATTR_UV_NAME)
+        this.positionLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
+        this.texCoordLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_UV_NAME)
+  
+        this.modelViewMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
+        this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
+        this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+    
+        shaderProgram.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX)
+        const uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram ,GLSetttings.UNI_COLOR)
+        gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
+    
+        this.shaderProgram = shaderProgram
+
+        //Cleanup
+        shaderProgram.deactivateShader()
+      }
 
 
-      this.modelViewMatrix = gl.getUniformLocation(program , GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-      this.perspectiveMatrix = gl.getUniformLocation(program, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
-      this.cameraMatrix = gl.getUniformLocation(program , GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-  
-      program.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX)
-      const uColor = gl.getUniformLocation(program as WebGLProgram ,GLSetttings.UNI_COLOR)
-      gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
-  
-      //Cleanup
-      program.deactivateShader()
 
 	}
 
-  positionLoc: number
-  texCoordLoc: number
+  positionLoc: number | null = null
+  texCoordLoc: number | null = null
 
-  modelViewMatrix: WebGLUniformLocation
-	perspectiveMatrix: WebGLUniformLocation
-	cameraMatrix: WebGLUniformLocation
+  modelViewMatrix: WebGLUniformLocation | null = null
+	perspectiveMatrix: WebGLUniformLocation | null = null
+	cameraMatrix: WebGLUniformLocation | null = null
+
+  shaderProgram: ShaderProgram | null = null
 }
 
 class Quad {
@@ -80,18 +87,19 @@ class Quad {
     const vertexCount = verts.length / GLSetttings.GRID_VERTEX_LEN;
 
     const mesh: MeshData = {
-      positions: new Vbuffer(gl, verts, vertexCount).storeVertices(),
+      positions: new Vbuffer(gl, verts, vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
       drawMode: gl.TRIANGLES,
-      uvs: new Vbuffer(gl, uvs, vertexCount).storeVertices(),
-      indices: new Vbuffer(gl, indices, vertexCount).storeIndices(),
+      uvs: new Vbuffer(gl, uvs, vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
+      indices: new Vbuffer(gl, indices, vertexCount, GLSetttings.BUFFER_TYPE_INDICES),
       vertexCount,
       noCulling: true,
       doBlending: true,
     }
     
+    console.log(shaderProgram.positionLoc as number);
     
-    mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET)
-    mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET)
+    mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, strideLen, GLSetttings.DEFAULT_OFFSET, GLSetttings.GRID_VECTOR_SIZE)
+    mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE)
 
 
     return mesh;

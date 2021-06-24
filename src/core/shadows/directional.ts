@@ -7,7 +7,7 @@ import { MeshData } from '@/entities';
 import Vbuffer from '../vbuffer';
 
 
-class DirectionalShadowShader extends ShaderProgram {
+class DirectionalShadowShader {
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array) {
 		const vertexShader = '#version 300 es\n' +
 			'in vec3 a_position;' +
@@ -42,14 +42,25 @@ class DirectionalShadowShader extends ShaderProgram {
 
 			'}';
 
-		super(gl, vertexShader, fragmentShader)
-		this.updateGPU(projectionMatrix, ShaderProgramMatrixFields.ORTHO_MATRIX)
-		const uColor = gl.getUniformLocation(this.shaderProgram as WebGLProgram, "u_color")
+		
+		const program = new ShaderProgram(gl,vertexShader, fragmentShader)
+
+		program.activateShader()
+
+		this.positionLoc = gl.getAttribLocation(program.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
+
+		program.updateGPU(projectionMatrix, ShaderProgramMatrixFields.ORTHO_MATRIX)
+		const uColor = gl.getUniformLocation(program.program as WebGLProgram, GLSetttings.UNI_COLOR)
 		gl.uniform4fv(uColor, new Float32Array([0.0, 0.0, 0.0, 1.0]))
 
+		this.shaderProgram = program
+
 		//Cleanup
-		this.deactivateShader()
+		program.deactivateShader()
 	}
+
+	positionLoc: number
+	shaderProgram: ShaderProgram
 }
 
 
@@ -57,17 +68,17 @@ class DirectionalShadow {
 
 	constructor() {}
 
-	static async createGeometry(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string) {
+	static async createGeometry(gl: WebGLRenderingContext, shaderProgram: DirectionalShadowShader, objSrc: string) {
 		return new Geometry(await DirectionalShadow.createMesh(gl, shaderProgram, objSrc));
 	}
 
-	static async createMesh(gl: WebGLRenderingContext, shaderProgram: ShaderProgram, objSrc: string,) {
+	static async createMesh(gl: WebGLRenderingContext, shaderProgram: DirectionalShadowShader, objSrc: string,) {
 
 		const model = await DirectionalShadow.loadModel(gl, objSrc);
 		const vertexCount = model.vertices.vertexCount();
 
 		const mesh: MeshData = {
-			positions: new Vbuffer(gl, model.vertices.positions(), vertexCount),
+			positions: new Vbuffer(gl, model.vertices.positions(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
 			depth: model.texture as DepthTexture,
 			drawMode: gl.TRIANGLES,
 			vertexCount,

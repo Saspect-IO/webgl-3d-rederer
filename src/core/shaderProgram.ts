@@ -1,4 +1,4 @@
-import { GLSetttings, ShaderProgramMatrixFields } from "@/modules"
+import { ShaderProgramMatrixFields } from "@/modules"
 import Geometry from "./geometry"
 
 export default class ShaderProgram {
@@ -6,15 +6,15 @@ export default class ShaderProgram {
 
     const vertexShader = this.createShader(gl, gl.VERTEX_SHADER, vsSource) as WebGLShader
     const fragmentShader = this.createShader(gl, gl.FRAGMENT_SHADER, fsSource) as WebGLShader
-    this.createShaderProgram(gl, fragmentShader, vertexShader)
-
+    const shaderProgram = this.createShaderProgram(gl, fragmentShader, vertexShader)
+    this.program = shaderProgram
     this.gl = gl
   }
 
   gl: WebGLRenderingContext | null = null
   vertexShader: WebGLShader | null = null
   fragmentShader: WebGLShader | null = null
-  shaderProgram: WebGLProgram | null = null
+  program: WebGLProgram
 
 
   createShader(gl: WebGLRenderingContext, type: number, source: string) {
@@ -36,7 +36,7 @@ export default class ShaderProgram {
     return shader
   }
 
-  createShaderProgram(gl: WebGLRenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader): void {
+  createShaderProgram(gl: WebGLRenderingContext, vertexShader: WebGLShader, fragmentShader: WebGLShader): WebGLProgram {
 
     const program = gl.createProgram() as WebGLProgram
 
@@ -52,16 +52,18 @@ export default class ShaderProgram {
 
     this.vertexShader = vertexShader
     this.fragmentShader = fragmentShader
-    this.shaderProgram = program
+
 
     gl.detachShader(program, vertexShader)
     gl.detachShader(program, fragmentShader)
     gl.deleteShader(fragmentShader)
     gl.deleteShader(vertexShader)
+
+    return program
   }
 
   activateShader() {
-    (this.gl as WebGLRenderingContext).useProgram(this.shaderProgram)
+    (this.gl as WebGLRenderingContext).useProgram(this.program)
     return this
   }
 
@@ -77,14 +79,12 @@ export default class ShaderProgram {
 
   dispose() {
     //unbind the program if its currently active
-    if ((this.gl as WebGLRenderingContext).getParameter((this.gl as WebGLRenderingContext).CURRENT_PROGRAM) === this.shaderProgram) {
+    if ((this.gl as WebGLRenderingContext).getParameter((this.gl as WebGLRenderingContext).CURRENT_PROGRAM) === this.program) {
       this.deactivateShader()
     }
-    (this.gl as WebGLRenderingContext).deleteProgram(this.shaderProgram)
+    (this.gl as WebGLRenderingContext).deleteProgram(this.program)
   }
 
-
-  // //Handle rendering a grid
   renderModel(model: Geometry) {
     const gl = this.gl as WebGLRenderingContext
 		this.updateGPU(model.transform.getModelMatrix(), ShaderProgramMatrixFields.MODEL_MATRIX)	//Set the transform, so the shader knows where the model exists in 3d space

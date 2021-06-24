@@ -68,6 +68,9 @@ export enum GLSetttings {
     UNI_LIGHT_COLOR = 'u_lightColor',
     UNI_SPECULAR_COLOR = 'u_specularColor',
     UNI_SPECULAR_FACTOR = 'u_specularFactor',
+    BUFFER_TYPE_INDICES = 'indices',
+    BUFFER_TYPE_VERTICES = 'vertices',
+
 }
 
 export enum ShaderProgramMatrixFields {
