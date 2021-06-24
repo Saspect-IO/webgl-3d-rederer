@@ -32,26 +32,25 @@ class GridAxisShader{
       '}';
 
 
-      const shaderProgram = {name:'grid', data: new ShaderProgram(gl, vertexShader, fragmentShader)} 
+    const shaderProgram = new ShaderProgram(gl,vertexShader, fragmentShader)
 
+    shaderProgram.activateShader()
 
-    shaderProgram.data.activateShader()
+    this.positionLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
+    this.texCoordLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_UV_NAME)
 
-    this.positionLoc = gl.getAttribLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
-    this.texCoordLoc = gl.getAttribLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.ATTR_UV_NAME)
+    this.modelViewMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
+    this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
+    this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
 
-    this.modelViewMatrix = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-    this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
-    this.cameraMatrix = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-
-    shaderProgram.data.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX)
-    const uColor = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_COLOR)
+    shaderProgram.updateGPU(projectionMatrix, this.perspectiveMatrix)
+    const uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR)
     gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
     
     this.shaderProgram = shaderProgram
 
     //Cleanup
-    shaderProgram.data.deactivateShader()
+    shaderProgram.deactivateShader()
 
 	}
 
@@ -62,7 +61,7 @@ class GridAxisShader{
 	perspectiveMatrix: WebGLUniformLocation | null = null
 	cameraMatrix: WebGLUniformLocation | null = null
 
-  shaderProgram: {name:string; data:ShaderProgram;}
+  shaderProgram: ShaderProgram | null = null
 }
 
 class GridAxis {

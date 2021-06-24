@@ -1,4 +1,7 @@
 import { ProgramEntrySettings } from "@/modules";
+import DepthTexture from "./Textures/depthTexture";
+
+
 export default class GLContext {
     constructor(WEBGL_CANVAS_ID: string) {
         const canvas = document.getElementById(WEBGL_CANVAS_ID) as HTMLCanvasElement;
@@ -32,6 +35,12 @@ export default class GLContext {
         return this;
     }
 
+    depthRender(depthTexture:DepthTexture){
+        this.gl?.bindFramebuffer(this.gl?.FRAMEBUFFER, depthTexture.depthFramebuffer);
+        this.gl?.viewport(0, 0, depthTexture.depthTextureSize, depthTexture.depthTextureSize);
+        return this
+    }
+
     //Set the size of the canvas to fill a % of the total screen.
     fitScreen(wp: number, hp: number) {
         return this.setSize(window.innerWidth * (wp || 1), window.innerHeight * (hp || 1));
@@ -40,6 +49,11 @@ export default class GLContext {
     setClearColor(red: number, green: number, blue: number, alpha: number = 1) {
         this.gl?.clearColor(red / this.rgb_32_bit, green / this.rgb_32_bit, blue / this.rgb_32_bit, alpha);
         return this
+    }
+
+    clearFramebuffer(){
+        this.gl?.bindFramebuffer(this.gl?.FRAMEBUFFER, null);
+        return this;
     }
 
     clear() {

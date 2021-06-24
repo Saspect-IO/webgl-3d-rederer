@@ -43,24 +43,31 @@ class DirectionalShadowShader {
 			'}';
 
 		
-		const program = new ShaderProgram(gl,vertexShader, fragmentShader)
+		const shaderProgram = new ShaderProgram(gl,vertexShader, fragmentShader)
 
-		program.activateShader()
+		shaderProgram.activateShader()
 
-		this.positionLoc = gl.getAttribLocation(program.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
+		this.positionLoc = gl.getAttribLocation(shaderProgram.program  as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
+		this.orthoMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
+        this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+    
 
-		program.updateGPU(projectionMatrix, ShaderProgramMatrixFields.ORTHO_MATRIX)
-		const uColor = gl.getUniformLocation(program.program as WebGLProgram, GLSetttings.UNI_COLOR)
+		shaderProgram.updateGPU(projectionMatrix, this.orthoMatrix)
+		const uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR)
 		gl.uniform4fv(uColor, new Float32Array([0.0, 0.0, 0.0, 1.0]))
 
-		this.shaderProgram = program
+		this.shaderProgram = shaderProgram
 
 		//Cleanup
-		program.deactivateShader()
+		shaderProgram.deactivateShader()
 	}
 
 	positionLoc: number
 	shaderProgram: ShaderProgram
+
+	modelViewMatrix: WebGLUniformLocation | null = null
+	orthoMatrix: WebGLUniformLocation | null = null
+	cameraMatrix: WebGLUniformLocation | null = null
 }
 
 

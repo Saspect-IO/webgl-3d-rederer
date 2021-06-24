@@ -1,4 +1,4 @@
-import { ProgramEntrySettings, ShaderProgramMatrixFields } from '@/modules'
+import { ProgramEntrySettings } from '@/modules'
 import GLContext from './core/glContext'
 import { Camera, CameraController }  from './core/camera'
 import { GridAxis, GridAxisShader } from './core/primitives/grid/grid'
@@ -7,7 +7,6 @@ import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/direc
 import { Quad, QuadShader } from './core/primitives/quads/quad'
 import Light from './core/light'
 import DepthTexture from './core/Textures/depthTexture'
-import ShaderProgram from './core/shaderProgram'
 
 
 (async () => {
@@ -15,8 +14,8 @@ import ShaderProgram from './core/shaderProgram'
     glContext.fitScreen(0.95, 0.90).setClearColor(0, 0, 0, 1.0).clear()
     const gl = glContext.getContext() as WebGLRenderingContext
 
-    // const lightViewCamera = new Camera(gl as WebGLRenderingContext)
-    // lightViewCamera.transform.position.set(0, 5, 5)
+    const lightViewCamera = new Camera(gl as WebGLRenderingContext)
+    lightViewCamera.transform.position.set(0, 5, 5)
     
     const camera = new Camera(gl as WebGLRenderingContext)
     camera.transform.position.set(0, 1, 3)
@@ -25,11 +24,11 @@ import ShaderProgram from './core/shaderProgram'
     const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection)
     const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false)
 
-    // const quadShader = new QuadShader(gl as WebGLRenderingContext, camera.projection)
-    // const quad = Quad.createGeometry(gl, quadShader, false)
+    const quadShader = new QuadShader(gl as WebGLRenderingContext, camera.projection)
+    const quad = Quad.createGeometry(gl, quadShader, false)
 
-    // const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightViewCamera.orthoProjection)
-    // const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
+    const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightViewCamera.orthoProjection)
+    const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
@@ -39,26 +38,29 @@ import ShaderProgram from './core/shaderProgram'
 
     const loop = () => {
         
-        // glContext.depthRender(directionalShadow.mesh.depth as DepthTexture).clear()
-        // lightViewCamera.updateViewMatrix()
+        glContext.depthRender(directionalShadow.mesh.depth as DepthTexture).clear()
+        lightViewCamera.updateViewMatrix()
 
-        // directionalShadowShader.shaderProgram.activateShader()
-        //     .updateGPU(lightViewCamera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
-        //     .renderModel(directionalShadow.preRender())
+        directionalShadowShader.shaderProgram.activateShader()
+            .updateGPU(lightViewCamera.viewMatrix, directionalShadowShader.cameraMatrix as WebGLUniformLocation )
+            .renderModel(directionalShadow.preRender(), directionalShadowShader.modelViewMatrix as WebGLUniformLocation )
+
+        glContext.clearFramebuffer().fitScreen(0.95, 0.90).clear()
+
         camera.updateViewMatrix()
         glContext.clear()
 
-        gridAxisShader.shaderProgram.data.activateShader()
-            .updateGPU(camera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
-            .renderModel(gridAxis.preRender())
+        gridAxisShader.shaderProgram?.activateShader()
+            .updateGPU(camera.viewMatrix, gridAxisShader.cameraMatrix as WebGLUniformLocation )
+            .renderModel(gridAxis.preRender(), gridAxisShader.modelViewMatrix as WebGLUniformLocation )
 
-        // quadShader.shaderProgram.activateShader()
-        //     .updateGPU(camera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
-        //     .renderModel(quad.preRender())
+        quadShader.shaderProgram?.activateShader()
+            .updateGPU(camera.viewMatrix, quadShader.cameraMatrix as WebGLUniformLocation )
+            .renderModel(quad.preRender(), quadShader.modelViewMatrix as WebGLUniformLocation )
 
-        modelShader.shaderProgram.data.activateShader()
-            .updateGPU(camera.viewMatrix, ShaderProgramMatrixFields.CAMERA_MATRIX)
-            .renderModel(model.preRender())
+        modelShader.shaderProgram?.activateShader()
+            .updateGPU(camera.viewMatrix, modelShader.cameraMatrix as WebGLUniformLocation )
+            .renderModel(model.preRender(), modelShader.modelViewMatrix as WebGLUniformLocation )
             
         light.useLight(gl, modelShader, camera)
 

@@ -43,7 +43,7 @@ class QuadShader{
         this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
         this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
     
-        shaderProgram.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX)
+        shaderProgram.updateGPU(projectionMatrix, this.perspectiveMatrix)
         const uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram ,GLSetttings.UNI_COLOR)
         gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
     
@@ -95,8 +95,6 @@ class Quad {
       noCulling: true,
       doBlending: true,
     }
-    
-    console.log(shaderProgram.positionLoc as number);
     
     mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, strideLen, GLSetttings.DEFAULT_OFFSET, GLSetttings.GRID_VECTOR_SIZE)
     mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE)

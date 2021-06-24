@@ -59,7 +59,7 @@ class ModelShader{
 			'precision mediump float;'+
 
 			'in vec2 v_texCoord;'+
-			// 'in vec4 v_projectedTexcoord;'+
+			'in vec4 v_projectedTexcoord;'+
 			'in vec3 v_normal;'+
 			'in vec3 v_surfaceToLight;'+
 			'in vec3 v_surfaceToCamera;'+
@@ -67,7 +67,7 @@ class ModelShader{
 			'uniform vec4 u_lightColor;'+
 			'uniform vec4 u_ambientLightColor;'+
 			'uniform sampler2D u_diffuse;'+
-			// 'uniform sampler2D u_projectedTexture;'+
+			'uniform sampler2D u_projectedTexture;'+
 			'uniform vec4 u_specularColor;'+
 			'uniform float u_shininess;'+
 			'uniform float u_specularFactor;'+
@@ -85,19 +85,19 @@ class ModelShader{
 
 			'void main(void) {'+
 
-				// 'vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;'+
-				// 'bool inRange ='+
-				// 	'projectedTexcoord.x >= 0.0 &&'+
-				// 	'projectedTexcoord.x <= 1.0 &&'+
-				// 	'projectedTexcoord.y >= 0.0 &&'+
-				// 	'projectedTexcoord.y <= 1.0;'+
+				'vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;'+
+				'bool inRange ='+
+					'projectedTexcoord.x >= 0.0 &&'+
+					'projectedTexcoord.x <= 1.0 &&'+
+					'projectedTexcoord.y >= 0.0 &&'+
+					'projectedTexcoord.y <= 1.0;'+
 
 				'vec3 normal = normalize(v_normal);'+
 				'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);'+
 				'vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);'+
 				'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);'+
 
-				// 'vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);'+
+				'vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);'+
 				'vec4 diffuseColor = texture(u_diffuse, v_texCoord);'+
 				'vec4 litR = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);'+
 				
@@ -107,38 +107,38 @@ class ModelShader{
 				'vec4 mult4 = u_lightColor * ( mult1 + mult2 + mult3);'+
 
 				'vec4 outColor = mult4 * diffuseColor;'+
-				// 'float projectedAmount = inRange ? 1.0 : 0.0;'+
-				// 'finalColor = mix(outColor, projectedTexColor, projectedAmount);'+
-				'finalColor = outColor;'+
+				'float projectedAmount = inRange ? 1.0 : 0.0;'+
+				'finalColor = mix(outColor, projectedTexColor, projectedAmount);'+
+				// 'finalColor = outColor;'+
 			'}';												
 
-		const shaderProgram = {name:'model', data: new ShaderProgram(gl, vertexShader, fragmentShader)} 
+		const shaderProgram = new ShaderProgram(gl, vertexShader, fragmentShader);
 
-		shaderProgram.data.activateShader()
+		shaderProgram.activateShader()
 
-		this.positionLoc = gl.getAttribLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
-		this.texCoordLoc = gl.getAttribLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.ATTR_UV_NAME)
-		this.normalLoc = gl.getAttribLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.ATTR_NORMAL_NAME)
+		this.positionLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
+		this.texCoordLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_UV_NAME)
+		this.normalLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_NORMAL_NAME)
 
-		this.modelViewMatrix = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-		this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
-		this.cameraMatrix = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-		// this.orthoMatrix = gl.getUniformLocation(program.shaderProgram as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
-		// this.projectedTexture = gl.getUniformLocation(program.shaderProgram as WebGLProgram, GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
+		this.modelViewMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
+		this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
+		this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+		this.orthoMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
+		this.projectedTexture = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
 
-		this.diffuse = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_DIFFUSE) as WebGLUniformLocation
-		this.ambientLightColor = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
-		this.lightPosition = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
-		this.cameraPosition = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
-		this.shininessLocation = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_CAMERA_SHININESS) as WebGLUniformLocation
-		this.lightColorLocation = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
-		this.specularColorLocation = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
-		this.specularFactorLocation = gl.getUniformLocation(shaderProgram.data.program as WebGLProgram, GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
+		this.diffuse = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_DIFFUSE) as WebGLUniformLocation
+		this.ambientLightColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
+		this.lightPosition = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
+		this.cameraPosition = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
+		this.shininessLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_SHININESS) as WebGLUniformLocation
+		this.lightColorLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
+		this.specularColorLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
+		this.specularFactorLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
 
-		shaderProgram.data.updateGPU(projectionMatrix, ShaderProgramMatrixFields.PERSPECTIVE_MATRIX)	
+		shaderProgram.updateGPU(projectionMatrix, this.perspectiveMatrix)	
 
 		//Cleanup
-		shaderProgram.data.deactivateShader()
+		shaderProgram.deactivateShader()
 
 		this.shaderProgram = shaderProgram
 
@@ -163,7 +163,7 @@ class ModelShader{
 	specularColorLocation: WebGLUniformLocation | null = null
 	specularFactorLocation: WebGLUniformLocation | null = null
 
-	shaderProgram: {name:string; data:ShaderProgram;}
+	shaderProgram: ShaderProgram
 }
 
 
