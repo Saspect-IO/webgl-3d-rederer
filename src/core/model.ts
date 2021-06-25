@@ -54,7 +54,7 @@ class ModelShader{
 			}`;
 
 		const fragmentShader = `#version 300 es
-			precision mediump float;
+			precision highp float;
 
 			in vec2 v_texCoord;
 			in vec4 v_projectedTexcoord;
