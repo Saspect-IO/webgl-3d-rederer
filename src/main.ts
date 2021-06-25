@@ -4,7 +4,6 @@ import { Camera, CameraController }  from './core/camera'
 import { GridAxis, GridAxisShader } from './core/primitives/grid/grid'
 import { Model, ModelShader } from './core/model'
 import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/directional'
-import { Quad } from './core/primitives/quads/quad'
 import Light from './core/light'
 import DepthTexture from './core/Textures/depthTexture'
 
@@ -31,7 +30,6 @@ import DepthTexture from './core/Textures/depthTexture'
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
 
     model.setScale(0.15,0.15,0.15)
-    const quad = Quad.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
 
     const light = new Light()
 
@@ -56,6 +54,7 @@ import DepthTexture from './core/Textures/depthTexture'
             .updateGPU(camera.viewMatrix, modelShader.cameraMatrix as WebGLUniformLocation )
             .updateGPU(lightViewCamera.orthoProjection, modelShader.orthoMatrix as WebGLUniformLocation )
             .renderModel(model.preRender(), modelShader.modelViewMatrix as WebGLUniformLocation )
+ 
             
         light.useLight(gl, modelShader, camera)
 
