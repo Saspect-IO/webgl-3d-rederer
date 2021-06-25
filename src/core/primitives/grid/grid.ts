@@ -8,28 +8,30 @@ import Vbuffer from "../../vbuffer";
 class GridAxisShader{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){
 			
-		const vertexShader  = '#version 300 es\n' +
-			'layout(location=3) in vec3 a_position;' +
-			'layout(location=4) in float a_color;' +
+		const vertexShader  = `#version 300 es
+			layout(location=3) in vec3 a_position;
+			layout(location=4) in float a_color;
 
-			'uniform mat4 u_mVMatrix;'+	
-			'uniform mat4 u_cameraMatrix;'+
-			'uniform mat4 u_pMatrix;'+
-			'uniform vec3 u_color[4];' +
+			uniform mat4 u_mVMatrix;
+			uniform mat4 u_cameraMatrix;
+			uniform mat4 u_pMatrix;
+			uniform vec3 u_color[4];
 
-			'out lowp vec4 color;' +
-			'void main(void){' +
-				'color = vec4(u_color[ int(a_color) ],1.0);' +
-				'gl_Position = u_pMatrix * u_cameraMatrix * u_mVMatrix * vec4(a_position, 1.0);' +
-			'}';
+			out lowp vec4 color;
 
-		const fragmentShader = '#version 300 es\n' +
-			'precision mediump float;' +
-			'in vec4 color;' +
-			'out vec4 finalColor;' +
-			'void main(void){'+
-        'finalColor = color;'+ 
-      '}';
+			void main(void){
+				color = vec4(u_color[ int(a_color) ],1.0);
+				gl_Position = u_pMatrix * u_cameraMatrix * u_mVMatrix * vec4(a_position, 1.0);
+			}`;
+
+		const fragmentShader = `#version 300 es
+			precision mediump float;
+			in vec4 color;
+			out vec4 finalColor;
+
+			void main(void){
+        finalColor = color; 
+      }`;
 
 
     const shaderProgram = new ShaderProgram(gl,vertexShader, fragmentShader)

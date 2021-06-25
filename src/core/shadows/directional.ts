@@ -9,38 +9,35 @@ import Vbuffer from '../vbuffer';
 
 class DirectionalShadowShader {
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array) {
-		const vertexShader = '#version 300 es\n' +
-			'layout(location=8) in vec3 a_position;' +
+		const vertexShader = `#version 300 es
+			layout(location=8) in vec3 a_position;
 
-			'uniform mat4 u_mVMatrix;' +
-			'uniform mat4 u_cameraMatrix;' +
-			'uniform mat4 u_oMatrix;' +
+			uniform mat4 u_mVMatrix;
+			uniform mat4 u_cameraMatrix;
+			uniform mat4 u_oMatrix;
 
-			'mat4 m_worldMatrix;' +
-			'mat4 m_viewProjectionMatrix;' +
-			'mat4 m_worldViewProjectionMatrix;' +
+			mat4 m_worldMatrix;
+			mat4 m_viewProjectionMatrix;
+			mat4 m_worldViewProjectionMatrix;
 
-			'void main(void){' +
+			void main(void){
 
-				'm_worldMatrix = u_mVMatrix;' +
-				'm_viewProjectionMatrix = u_oMatrix * u_cameraMatrix;' +
-				'm_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;' +
+				m_worldMatrix = u_mVMatrix;
+				m_viewProjectionMatrix = u_oMatrix * u_cameraMatrix;
+				m_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;
 
-				'gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);' +
-			'}';
+				gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);
+			}`;
 
-		const fragmentShader = '#version 300 es\n' +
-			'precision mediump float;' +
+		const fragmentShader = `#version 300 es
+			precision mediump float;
+			uniform vec4 u_color;
 
-			'uniform vec4 u_color;' +
+			out vec4 finalColor;
 
-			'out vec4 finalColor;' +
-
-			'void main(void) {' +
-
-				'finalColor = u_color;' +
-
-			'}';
+			void main(void) {
+				finalColor = u_color;
+			}`;
 
 		
 		const shaderProgram = new ShaderProgram(gl,vertexShader, fragmentShader)

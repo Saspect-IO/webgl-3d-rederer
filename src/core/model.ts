@@ -8,109 +8,106 @@ import { GLSetttings } from '@/modules';
 
 class ModelShader{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){	
-		const vertexShader = '#version 300 es\n' +
-			'in vec3 a_position;'+
-			'in vec3 a_norm;'+
-			'in vec2 a_texCoord;'+
+		const vertexShader = `#version 300 es
+			in vec3 a_position;
+			in vec3 a_norm;
+			in vec2 a_texCoord;
 
-			'uniform vec3 u_lightPosition;'+
-			'uniform vec3 u_cameraPosition;'+
+			uniform vec3 u_lightPosition;
+			uniform vec3 u_cameraPosition;
 
-			'uniform mat4 u_mVMatrix;'+	
-			'uniform mat4 u_cameraMatrix;'+
-			'uniform mat4 u_pMatrix;'+
-			'uniform mat4 u_oMatrix;'+
+			uniform mat4 u_mVMatrix;
+			uniform mat4 u_cameraMatrix;
+			uniform mat4 u_pMatrix;
+			uniform mat4 u_oMatrix;
+
+			mat4 m_worldMatrix;
+			mat4 m_viewProjectionMatrix;
+			mat4 m_worldViewProjectionMatrix;
+			mat4 m_textureMatrix;
 			
+			out vec3 v_normal;
+			out vec3 v_surfaceToLight;
+			out vec3 v_surfaceToCamera;
 
-			'mat4 m_worldMatrix;'+
-			'mat4 m_viewProjectionMatrix;'+
-			'mat4 m_worldViewProjectionMatrix;'+
-			'mat4 m_textureMatrix;'+
-			
-			'out vec3 v_normal;'+
-			'out vec3 v_surfaceToLight;'+
-			'out vec3 v_surfaceToCamera;'+
+			out vec2 v_texCoord;
+			out vec4 v_projectedTexcoord;
 
-			'out vec2 v_texCoord;'+
-			'out vec4 v_projectedTexcoord;'+
-
-			'void main(void){'+
+			void main(void){
 
 
-				'm_worldMatrix = u_mVMatrix;'+
-				'm_viewProjectionMatrix = u_pMatrix * u_cameraMatrix;'+
-				'm_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;'+
-				'm_textureMatrix = u_oMatrix * u_cameraMatrix * m_worldMatrix;'+
+				m_worldMatrix = u_mVMatrix;
+				m_viewProjectionMatrix = u_pMatrix * u_cameraMatrix;
+				m_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;
+				m_textureMatrix = u_oMatrix * u_cameraMatrix * m_worldMatrix;
 
-				'gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);'+
+				gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);
 				
-				'v_normal = (u_cameraMatrix * vec4(a_norm, 0.0)).xyz;'+
+				v_normal = (u_cameraMatrix * vec4(a_norm, 0.0)).xyz;
 
-				'vec3 v_surfaceWorldPosition = (m_worldMatrix * vec4(a_position, 1.0)).xyz;'+
-				'v_surfaceToLight = u_lightPosition - v_surfaceWorldPosition;'+
-				'v_surfaceToCamera = u_cameraPosition - v_surfaceWorldPosition;'+
+				vec3 v_surfaceWorldPosition = (m_worldMatrix * vec4(a_position, 1.0)).xyz;
+				v_surfaceToLight = u_lightPosition - v_surfaceWorldPosition;
+				v_surfaceToCamera = u_cameraPosition - v_surfaceWorldPosition;
 
-				'v_texCoord = a_texCoord;'+
-				'v_projectedTexcoord = m_textureMatrix * vec4(v_surfaceWorldPosition, 1.0);'+
+				v_texCoord = a_texCoord;
+				v_projectedTexcoord = m_textureMatrix * vec4(v_surfaceWorldPosition, 1.0);
+			}`;
 
-			'}';
+		const fragmentShader = `#version 300 es
+			precision mediump float;
 
-		const fragmentShader = '#version 300 es\n' +
-			'precision mediump float;'+
-
-			'in vec2 v_texCoord;'+
-			'in vec4 v_projectedTexcoord;'+
-			'in vec3 v_normal;'+
-			'in vec3 v_surfaceToLight;'+
-			'in vec3 v_surfaceToCamera;'+
+			in vec2 v_texCoord;
+			in vec4 v_projectedTexcoord;
+			in vec3 v_normal;
+			in vec3 v_surfaceToLight;
+			in vec3 v_surfaceToCamera;
 			
-			'uniform vec4 u_lightColor;'+
-			'uniform vec4 u_ambientLightColor;'+
-			'uniform sampler2D u_diffuse;'+
-			'uniform sampler2D u_projectedTexture;'+
-			'uniform vec4 u_specularColor;'+
-			'uniform float u_shininess;'+
-			'uniform float u_specularFactor;'+
+			uniform vec4 u_lightColor;
+			uniform vec4 u_ambientLightColor;
+			uniform sampler2D u_diffuse;
+			uniform sampler2D u_projectedTexture;
+			uniform vec4 u_specularColor;
+			uniform float u_shininess;
+			uniform float u_specularFactor;
 
-			'vec4 lit(float l ,float h, float m) {'+
-				'return vec4('+
-					'1.0,'+
-					'abs(l),'+
-					'(l > 0.0) ? pow(max(0.0, h), m) : 0.0,'+
-					'1.0'+
-				');'+
-			'}'+
+			vec4 lit(float l ,float h, float m) {
+				return vec4(
+					1.0,
+					abs(l),
+					(l > 0.0) ? pow(max(0.0, h), m) : 0.0,
+					1.0
+				);
+			}
 
-			'out vec4 finalColor;'+
+			out vec4 finalColor;
 
-			'void main(void) {'+
+			void main(void) {
 
-				'vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;'+
-				'bool inRange ='+
-					'projectedTexcoord.x >= 0.0 &&'+
-					'projectedTexcoord.x <= 1.0 &&'+
-					'projectedTexcoord.y >= 0.0 &&'+
-					'projectedTexcoord.y <= 1.0;'+
+				vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
+				bool inRange =+
+					projectedTexcoord.x >= 0.0 &&+
+					projectedTexcoord.x <= 1.0 &&+
+					projectedTexcoord.y >= 0.0 &&+
+					projectedTexcoord.y <= 1.0;
 
-				'vec3 normal = normalize(v_normal);'+
-				'vec3 surfaceToLightDirection = normalize(v_surfaceToLight);'+
-				'vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);'+
-				'vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);'+
+				vec3 normal = normalize(v_normal);
+				vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
+				vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);
+				vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);
 
-				'vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);'+
-				'vec4 diffuseColor = texture(u_diffuse, v_texCoord);'+
-				'vec4 litR = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);'+
+				vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
+				vec4 diffuseColor = texture(u_diffuse, v_texCoord);
+				vec4 litR = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);
 				
-				'vec4 mult1 = diffuseColor * litR.y;'+
-				'vec4 mult2 = diffuseColor * u_ambientLightColor;'+
-				'vec4 mult3 = u_specularColor * litR.z * u_specularFactor;'+
-				'vec4 mult4 = u_lightColor * ( mult1 + mult2 + mult3);'+
+				vec4 mult1 = diffuseColor * litR.y;
+				vec4 mult2 = diffuseColor * u_ambientLightColor;
+				vec4 mult3 = u_specularColor * litR.z * u_specularFactor;
+				vec4 mult4 = u_lightColor * ( mult1 + mult2 + mult3);
 
-				'vec4 outColor = mult4 * diffuseColor;'+
-				'float projectedAmount = inRange ? 1.0 : 0.0;'+
-				'finalColor = mix(outColor, projectedTexColor, projectedAmount);'+
-				// 'finalColor = outColor;'+
-			'}';												
+				vec4 outColor = mult4 * diffuseColor;
+				float projectedAmount = inRange ? 1.0 : 0.0;
+				finalColor = mix(outColor, projectedTexColor, projectedAmount);
+			}`;											
 
 		const shaderProgram = new ShaderProgram(gl, vertexShader, fragmentShader);
 

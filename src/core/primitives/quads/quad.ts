@@ -8,30 +8,32 @@ import Vbuffer from "../../vbuffer";
 class QuadShader{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){
 			
-		const vertexShader  = '#version 300 es\n' +
-			'layout(location=5) in vec3 a_position;' +
-      'layout(location=6) in vec2 a_texCoord;'+
+		const vertexShader  = `#version 300 es
+			layout(location=5) in vec3 a_position;
+      layout(location=6) in vec2 a_texCoord;
 
-			'uniform mat4 u_mVMatrix;'+	
-			'uniform mat4 u_cameraMatrix;'+
-			'uniform mat4 u_pMatrix;'+
+			uniform mat4 u_mVMatrix;
+			uniform mat4 u_cameraMatrix;
+			uniform mat4 u_pMatrix;
 
+      out vec2 v_texCoord;
 
-      'out vec2 v_texCoord;'+
-			'void main(void){' +
-        'v_texCoord = a_texCoord;'+
-				'gl_Position = u_pMatrix * u_cameraMatrix * u_mVMatrix * vec4(a_position, 1.0);' +
-			'}';
-      const fragmentShader = '#version 300 es\n' +
-        'precision mediump float;' +
-        'in vec2 v_texCoord;'+
+			void main(void){ 
+        v_texCoord = a_texCoord;
+				gl_Position = u_pMatrix * u_cameraMatrix * u_mVMatrix * vec4(a_position, 1.0);
+			}`;
 
-        'out vec4 finalColor;' +
-        'void main(void){'+
+      const fragmentShader = `#version 300 es
+        precision mediump float;
+        in vec2 v_texCoord;
 
-          'float outColor = (v_texCoord.x <= 0.1 || v_texCoord.x >=0.9 || v_texCoord.y <= 0.1 || v_texCoord.y >= 0.9)? 0.0 : 1.0;'+
-          'finalColor = vec4(outColor);'+ 
-        '}';
+        out vec4 finalColor;
+        void main(void){
+
+          float outColor = (v_texCoord.x <= 0.1 || v_texCoord.x >=0.9 || v_texCoord.y <= 0.1 || v_texCoord.y >= 0.9)? 0.0 : 1.0;
+          finalColor = vec4(outColor);
+
+        }`;
 
       const shaderProgram = new ShaderProgram(gl, vertexShader, fragmentShader)
 
