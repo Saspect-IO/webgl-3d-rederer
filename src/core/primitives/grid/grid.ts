@@ -1,5 +1,5 @@
 import { MeshData } from "@/entities";
-import { GLSetttings, ShaderProgramMatrixFields } from "@/modules";
+import { GLSetttings } from "@/modules";
 import Geometry from "../../geometry";
 import ShaderProgram from "../../shaderProgram";
 import Vbuffer from "../../vbuffer";
@@ -9,8 +9,8 @@ class GridAxisShader{
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){
 			
 		const vertexShader  = '#version 300 es\n' +
-			'layout(location=4) in vec3 a_position;' +
-			'layout(location=5) in float a_color;' +
+			'layout(location=3) in vec3 a_position;' +
+			'layout(location=4) in float a_color;' +
 
 			'uniform mat4 u_mVMatrix;'+	
 			'uniform mat4 u_cameraMatrix;'+
@@ -37,7 +37,6 @@ class GridAxisShader{
     shaderProgram.activateShader()
 
     this.positionLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
-    this.texCoordLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_UV_NAME)
 
     this.modelViewMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
     this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
@@ -144,7 +143,6 @@ class GridAxis {
       verts.push(3); //c2
     }
     const strideLen = Float32Array.BYTES_PER_ELEMENT * GLSetttings.GRID_VERTEX_LEN; //Stride Length is the Vertex Size for the buffer in Bytes
-    const offset = Float32Array.BYTES_PER_ELEMENT * GLSetttings.GRID_VECTOR_SIZE;
     const vertexCount = verts.length / GLSetttings.GRID_VERTEX_LEN;
 
     const mesh: MeshData = {
@@ -154,7 +152,6 @@ class GridAxis {
     }
 
     mesh.positions.bindToAttribute(shaderProgram.positionLoc as number, strideLen, GLSetttings.DEFAULT_OFFSET, GLSetttings.GRID_VECTOR_SIZE)
-    mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, strideLen, offset, GLSetttings.GRID_COLOR_SIZE)
 
     return mesh;
   }

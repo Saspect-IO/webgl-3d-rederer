@@ -25,7 +25,7 @@ import DepthTexture from './core/Textures/depthTexture'
     const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false)
 
     const quadShader = new QuadShader(gl as WebGLRenderingContext, camera.projection)
-    const quad = Quad.createGeometry(gl, quadShader, false)
+    const quad = Quad.createGeometry(gl, quadShader)
 
     const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightViewCamera.orthoProjection)
     const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
@@ -45,10 +45,9 @@ import DepthTexture from './core/Textures/depthTexture'
             .updateGPU(lightViewCamera.viewMatrix, directionalShadowShader.cameraMatrix as WebGLUniformLocation )
             .renderModel(directionalShadow.preRender(), directionalShadowShader.modelViewMatrix as WebGLUniformLocation )
 
-        glContext.clearFramebuffer().fitScreen(0.95, 0.90).clear()
-
         camera.updateViewMatrix()
-        glContext.clear()
+
+        glContext.clearFramebuffer().fitScreen(0.95, 0.90).clear()
 
         gridAxisShader.shaderProgram?.activateShader()
             .updateGPU(camera.viewMatrix, gridAxisShader.cameraMatrix as WebGLUniformLocation )
@@ -60,6 +59,7 @@ import DepthTexture from './core/Textures/depthTexture'
 
         modelShader.shaderProgram?.activateShader()
             .updateGPU(camera.viewMatrix, modelShader.cameraMatrix as WebGLUniformLocation )
+            .updateGPU(lightViewCamera.orthoProjection, modelShader.orthoMatrix as WebGLUniformLocation )
             .renderModel(model.preRender(), modelShader.modelViewMatrix as WebGLUniformLocation )
             
         light.useLight(gl, modelShader, camera)

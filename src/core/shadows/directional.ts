@@ -10,7 +10,7 @@ import Vbuffer from '../vbuffer';
 class DirectionalShadowShader {
 	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array) {
 		const vertexShader = '#version 300 es\n' +
-			'in vec3 a_position;' +
+			'layout(location=8) in vec3 a_position;' +
 
 			'uniform mat4 u_mVMatrix;' +
 			'uniform mat4 u_cameraMatrix;' +
