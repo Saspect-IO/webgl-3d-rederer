@@ -16,7 +16,7 @@ import DepthTexture from './core/Textures/depthTexture'
     const lightViewCamera = new Camera(gl as WebGLRenderingContext)
     lightViewCamera.transform.position.set(0, 1, 3)
 
-    const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightViewCamera.orthoProjection)
+    const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightViewCamera)
     const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
     
     const camera = new Camera(gl as WebGLRenderingContext)
@@ -37,19 +37,17 @@ import DepthTexture from './core/Textures/depthTexture'
         glContext.depthRender(directionalShadow.mesh.depth as DepthTexture)
         lightViewCamera.updateViewMatrix()
 
-        directionalShadowShader.shaderProgram.activateShader()
-            .setUniforms(lightViewCamera.viewMatrix, directionalShadowShader.cameraMatrix as WebGLUniformLocation )
-            .renderModel(directionalShadow.preRender(), directionalShadowShader.modelViewMatrix as WebGLUniformLocation )
-
+        directionalShadowShader.setUniforms(gl, directionalShadow.preRender()).shaderProgram
+            .renderModel(directionalShadow.preRender() )
     
         glContext.clearFramebuffer().fitScreen(0.95, 0.90).clear()
 
         camera.updateViewMatrix()
-        gridAxisShader.setUniforms(gl).shaderProgram
-            .renderModel(gridAxis.preRender(), gridAxisShader.modelViewMatrix as WebGLUniformLocation )
+        gridAxisShader.setUniforms(gl, gridAxis.preRender()).shaderProgram
+            .renderModel(gridAxis.preRender() )
 
-        modelShader.setUniforms(gl).shaderProgram
-            .renderModel(model.preRender(), modelShader.modelViewMatrix as WebGLUniformLocation )
+        modelShader.setUniforms(gl, model.preRender()).shaderProgram
+            .renderModel(model.preRender())
 
         light.setUniforms(gl, modelShader, camera)
 

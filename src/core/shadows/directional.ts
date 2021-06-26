@@ -8,7 +8,7 @@ import Vbuffer from '../vbuffer';
 
 
 class DirectionalShadowShader {
-	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array) {
+	constructor(gl: WebGLRenderingContext, camera: Camera) {
 		const vertexShader = `#version 300 es
 			layout(location=8) in vec3 a_position;
 
@@ -45,14 +45,17 @@ class DirectionalShadowShader {
 		shaderProgram.activateShader()
 
 		this.positionLoc = gl.getAttribLocation(shaderProgram.program  as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
+		
+		this.modelViewMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
 		this.orthoMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
         this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-    
+		
+		this.uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
 
-		shaderProgram.setUniforms(projectionMatrix, this.orthoMatrix)
-		const uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR)
-		gl.uniform4fv(uColor, new Float32Array([0.0, 0.0, 0.0, 1.0]))
+		this.shaderProgram = shaderProgram
 
+		this.orthoProjectionMatrix = camera.orthoProjection
+		this.viewModelMatrix = camera.viewMatrix
 		this.shaderProgram = shaderProgram
 
 		//Cleanup
@@ -62,9 +65,22 @@ class DirectionalShadowShader {
 	positionLoc: number
 	shaderProgram: ShaderProgram
 
-	modelViewMatrix: WebGLUniformLocation | null = null
-	orthoMatrix: WebGLUniformLocation | null = null
-	cameraMatrix: WebGLUniformLocation | null = null
+	modelViewMatrix: WebGLUniformLocation
+	orthoMatrix: WebGLUniformLocation
+	cameraMatrix: WebGLUniformLocation
+	uColor: WebGLUniformLocation
+
+	orthoProjectionMatrix:Float32Array
+	viewModelMatrix:Float32Array
+
+	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
+		gl.useProgram(this.shaderProgram.program)
+        gl.uniformMatrix4fv(this.orthoMatrix , false, this.orthoProjectionMatrix)
+		gl.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix)
+		gl.uniform4fv(this.uColor, new Float32Array([0.0, 0.0, 0.0, 1.0]))
+		gl.uniformMatrix4fv(this.modelViewMatrix, false, model.transform.getModelMatrix())
+		return this
+    }
 }
 
 

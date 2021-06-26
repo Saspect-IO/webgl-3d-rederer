@@ -72,11 +72,6 @@ export default class ShaderProgram {
     return this
   }
 
-  setUniforms(matrixData: Float32Array, uniformMatrix:WebGLUniformLocation) {
-    (this.gl as WebGLRenderingContext).uniformMatrix4fv(uniformMatrix, false, matrixData)
-    return this
-  }
-
   dispose() {
     //unbind the program if its currently active
     if ((this.gl as WebGLRenderingContext).getParameter((this.gl as WebGLRenderingContext).CURRENT_PROGRAM) === this.program) {
@@ -85,10 +80,9 @@ export default class ShaderProgram {
     (this.gl as WebGLRenderingContext).deleteProgram(this.program)
   }
 
-  renderModel(model: Geometry, uniformMatrix:WebGLUniformLocation) {
+  renderModel(model: Geometry) {
     const gl = this.gl as WebGLRenderingContext
-		this.setUniforms(model.transform.getModelMatrix(), uniformMatrix)	//Set the transform, so the shader knows where the model exists in 3d space
-
+    
 		if(model.mesh.noCulling) gl.disable(gl.CULL_FACE)
 		if(model.mesh.doBlending) gl.enable(gl.BLEND)
 

@@ -167,11 +167,13 @@ class ModelShader{
 	shaderProgram: ShaderProgram
 
 
-	setUniforms(gl:WebGLRenderingContext) {
-		gl?.useProgram(this.shaderProgram.program)
-		gl?.uniformMatrix4fv(this.perspectiveMatrix, false, this.perspectiveProjectionMatrix)
-        gl?.uniformMatrix4fv(this.orthoMatrix , false, this.orthoProjectionMatrix)
-		gl?.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix )
+	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
+		gl.useProgram(this.shaderProgram.program)
+		gl.uniformMatrix4fv(this.perspectiveMatrix, false, this.perspectiveProjectionMatrix)
+        gl.uniformMatrix4fv(this.orthoMatrix , false, this.orthoProjectionMatrix)
+		gl.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix)
+		gl.uniformMatrix4fv(this.modelViewMatrix, false, model.transform.getModelMatrix())	//Set the transform, so the shader knows where the model exists in 3d space
+
 		return this
     }
 }

@@ -71,11 +71,12 @@ class GridAxisShader{
 	shaderProgram: ShaderProgram
 
 
-  setUniforms(gl:WebGLRenderingContext) {
-		gl?.useProgram(this.shaderProgram.program)
-		gl?.uniformMatrix4fv(this.perspectiveMatrix, false, this.perspectiveProjectionMatrix)
-		gl?.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix )
+  setUniforms(gl:WebGLRenderingContext, model: Geometry) {
+		gl.useProgram(this.shaderProgram.program)
+		gl.uniformMatrix4fv(this.perspectiveMatrix, false, this.perspectiveProjectionMatrix)
+		gl.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix )
     gl.uniform3fv(this.uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
+    gl.uniformMatrix4fv(this.modelViewMatrix, false, model.transform.getModelMatrix())
 		return this
   }
 }
