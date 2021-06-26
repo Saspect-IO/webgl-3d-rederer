@@ -82,8 +82,7 @@
       "comment-format": [
         true,
         "check-space",
-        "check-uppercase",
-        "allow-trailing-lowercase"
+        "check-uppercase"
       ],
       "curly": true,
       "cyclomatic-complexity": true,

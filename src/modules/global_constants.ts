@@ -6,13 +6,16 @@ export enum ProgramEntrySettings {
     WEBGL_CONTEXT_EXPERIMENTAL = 'experimental-webgl',
     WEBGL_CONTEXT_WEBKIT = 'webkit-3d',
     WEBGL_CONTEXT_MOZ = 'moz-webgl',
+    WEBGL_DEPTH_TEXTURE = 'WEBGL_depth_texture',
     WEBGL_CONTEXT_ERROR_MESSAGE = 'Could not initialise WebGL',
+    WEBGL_DEPTH_TEXTUR_ERROR_MESSAGE = 'need WEBGL_depth_texture',
     PATH_ASSETS_OBJ = '/assets/resources/yoshi/source/yoshi.obj',
     PATH_ASSETS_TEXTURE = '/assets/resources/yoshi/textures/yoshi.png',
     PATH_SHADE_VERTEX = '/shaders/basic.vert',
     PATH_SHADE_FRAGMENT = '/shaders/basic.frag',
     PRIMITIVE_SHADER_VERTEX = '/shaders/primitive.vert',
     PRIMITIVE_SHADER_FRAGMENT = '/shaders/primitive.frag',
+    DEPTH_TEXTURE_SIZE = 512,
 }
 
 export enum CameraSettings {
@@ -44,20 +47,22 @@ export enum GLSetttings {
     DEFAULT_OFFSET = 0,
     DEFAULT_STRIDE = 0,
     ATTR_POSITION_NAME = "a_position",
-    ATTR_POSITION_LOC = 0,
     ATTR_NORMAL_NAME = "a_norm",
-    ATTR_NORMAL_LOC = 1,
     ATTR_UV_NAME = "a_texCoord",
+    UNI_COLOR = 'u_color',
     ATTR_UV_LOC = 2,
-    ATTR_GRID_POSITION_LOC = 4,
-    ATTR_GRID_COLOR_LOC = 5,
     GRID_VECTOR_SIZE = 3,
     GRID_COLOR_SIZE = 1,
     GRID_VERTEX_LEN = 4,
     UNI_MODEL_MAT ='u_mVMatrix',
     UNI_PERSPECTIV_MAT = 'u_pMatrix',
+    UNI_ORTHO_MAT = 'u_oMatrix',
     UNI_CAMERA_MAT = 'u_cameraMatrix',
-    UNI_TEXTURE_MAT = 'u_diffuse',
+    UNI_LIGHT_VIEW_CAMERA_MAT = 'u_lightViewCameraMatrix',
+    UNI_REVERSE_LIGHT_DIRECTION_MAT = 'u_reverseLightDirection',
+    UNI_TEXTURE_MAT = 'u_textureMatrix',
+    UNI_DIFFUSE = 'u_diffuse',
+    UNI_PROJECTED_TEXTURE = 'u_projectedTexture',
     UNI_LIGHT_AMBIENT = 'u_ambientLightColor',
     UNI_LIGHT_DIRECTION = 'u_lightDirection',
     UNI_LIGHT_POSITION = 'u_lightPosition',
@@ -66,10 +71,14 @@ export enum GLSetttings {
     UNI_LIGHT_COLOR = 'u_lightColor',
     UNI_SPECULAR_COLOR = 'u_specularColor',
     UNI_SPECULAR_FACTOR = 'u_specularFactor',
+    BUFFER_TYPE_INDICES = 'indices',
+    BUFFER_TYPE_VERTICES = 'vertices',
+
 }
 
 export enum ShaderProgramMatrixFields {
     CAMERA_MATRIX = 'cameraMatrix',
     MODEL_MATRIX = 'modelViewMatrix',
-    PERSPECTIVE_MATRIX = 'perspectiveMatrix'
+    PERSPECTIVE_MATRIX = 'perspectiveMatrix',
+    ORTHO_MATRIX = 'orthoMatrix'
 }
