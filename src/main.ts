@@ -23,10 +23,10 @@ import DepthTexture from './core/Textures/depthTexture'
     camera.transform.position.set(0, 1, 3)
     new CameraController(gl as WebGLRenderingContext, camera)
 
-    const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection)
+    const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera)
     const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false)
 
-    const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightViewCamera.orthoProjection, directionalShadow.mesh.depth as DepthTexture)
+    const modelShader = new ModelShader(gl as WebGLRenderingContext, camera)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
     model.setScale(0.15,0.15,0.15)
 
@@ -45,15 +45,12 @@ import DepthTexture from './core/Textures/depthTexture'
         glContext.clearFramebuffer().fitScreen(0.95, 0.90).clear()
 
         camera.updateViewMatrix()
-        gridAxisShader.shaderProgram?.activateShader()
-            .setUniforms(camera.viewMatrix, gridAxisShader.cameraMatrix as WebGLUniformLocation )
+        gridAxisShader.setUniforms(gl).shaderProgram
             .renderModel(gridAxis.preRender(), gridAxisShader.modelViewMatrix as WebGLUniformLocation )
 
         modelShader.setUniforms(gl).shaderProgram
             .renderModel(model.preRender(), modelShader.modelViewMatrix as WebGLUniformLocation )
 
- 
-            
         light.setUniforms(gl, modelShader, camera)
 
         requestAnimationFrame(loop)

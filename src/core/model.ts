@@ -5,11 +5,10 @@ import ShaderProgram from './shaderProgram';
 import ObjLoader from './objLoader';
 import { MeshData } from '@/entities';
 import { GLSetttings } from '@/modules';
-import DepthTexture from './Textures/depthTexture';
 import { Camera } from './camera';
 
 class ModelShader{
-	constructor(gl: WebGLRenderingContext, camera:Camera, depthTexture :DepthTexture ){	
+	constructor(gl: WebGLRenderingContext, camera:Camera){	
 		const vertexShader = `#version 300 es
 			in vec3 a_position;
 			in vec3 a_norm;

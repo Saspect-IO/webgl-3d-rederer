@@ -1,3 +1,4 @@
+import { Camera } from "@/core/camera";
 import { MeshData } from "@/entities";
 import { GLSetttings } from "@/modules";
 import Geometry from "../../geometry";
@@ -6,7 +7,7 @@ import Vbuffer from "../../vbuffer";
 
 
 class GridAxisShader{
-	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){
+	constructor(gl: WebGLRenderingContext, camera: Camera){
 			
 		const vertexShader  = `#version 300 es
 			layout(location=3) in vec3 a_position;
@@ -43,26 +44,40 @@ class GridAxisShader{
     this.modelViewMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
     this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
     this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-
-    shaderProgram.setUniforms(projectionMatrix, this.perspectiveMatrix)
-    const uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR)
-    gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
+    this.uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
     
-    this.shaderProgram = shaderProgram
-
     //Cleanup
     shaderProgram.deactivateShader()
 
+    this.perspectiveProjectionMatrix = camera.projection
+		this.orthoProjectionMatrix = camera.orthoProjection
+		this.viewModelMatrix = camera.viewMatrix
+		this.shaderProgram = shaderProgram
+
 	}
 
-  positionLoc: number | null = null
-	texCoordLoc: number | null = null
+  positionLoc: number
 
-  modelViewMatrix: WebGLUniformLocation | null = null
-	perspectiveMatrix: WebGLUniformLocation | null = null
-	cameraMatrix: WebGLUniformLocation | null = null
 
-  shaderProgram: ShaderProgram | null = null
+  modelViewMatrix: WebGLUniformLocation
+	perspectiveMatrix: WebGLUniformLocation
+	cameraMatrix: WebGLUniformLocation
+  uColor: WebGLUniformLocation
+
+  perspectiveProjectionMatrix: Float32Array
+	orthoProjectionMatrix:Float32Array
+	viewModelMatrix:Float32Array
+
+	shaderProgram: ShaderProgram
+
+
+  setUniforms(gl:WebGLRenderingContext) {
+		gl?.useProgram(this.shaderProgram.program)
+		gl?.uniformMatrix4fv(this.perspectiveMatrix, false, this.perspectiveProjectionMatrix)
+		gl?.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix )
+    gl.uniform3fv(this.uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
+		return this
+  }
 }
 
 class GridAxis {
