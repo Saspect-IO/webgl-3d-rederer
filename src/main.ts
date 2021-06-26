@@ -6,6 +6,7 @@ import { Model, ModelShader } from './core/model'
 import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/directional'
 import Light from './core/light'
 import DepthTexture from './core/Textures/depthTexture'
+import { InfiniteGridShader } from './core/primitives/grid/infinite'
 
 
 (async () => {
@@ -15,6 +16,9 @@ import DepthTexture from './core/Textures/depthTexture'
 
     const lightViewCamera = new Camera(gl as WebGLRenderingContext)
     lightViewCamera.transform.position.set(0, 5, 5)
+
+    const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightViewCamera.orthoProjection)
+    const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
     
     const camera = new Camera(gl as WebGLRenderingContext)
     camera.transform.position.set(0, 1, 3)
@@ -23,8 +27,7 @@ import DepthTexture from './core/Textures/depthTexture'
     const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection)
     const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false)
 
-    const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightViewCamera.orthoProjection)
-    const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
+    const infiniteGridShader = new InfiniteGridShader(gl as WebGLRenderingContext, camera.projection)
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
@@ -49,6 +52,9 @@ import DepthTexture from './core/Textures/depthTexture'
         gridAxisShader.shaderProgram?.activateShader()
             .updateGPU(camera.viewMatrix, gridAxisShader.cameraMatrix as WebGLUniformLocation )
             .renderModel(gridAxis.preRender(), gridAxisShader.modelViewMatrix as WebGLUniformLocation )
+
+        infiniteGridShader.shaderProgram?.activateShader()
+            .updateGPU(camera.viewMatrix, infiniteGridShader.cameraMatrix as WebGLUniformLocation )
 
         modelShader.shaderProgram?.activateShader()
             .updateGPU(camera.viewMatrix, modelShader.cameraMatrix as WebGLUniformLocation )
