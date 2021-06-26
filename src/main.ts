@@ -14,7 +14,7 @@ import DepthTexture from './core/Textures/depthTexture'
     const gl = glContext.getContext() as WebGLRenderingContext
 
     const lightViewCamera = new Camera(gl as WebGLRenderingContext)
-    lightViewCamera.transform.position.set(0, 5, 5)
+    lightViewCamera.transform.position.set(0, 1, 3)
 
     const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightViewCamera.orthoProjection)
     const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
@@ -26,37 +26,35 @@ import DepthTexture from './core/Textures/depthTexture'
     const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection)
     const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false)
 
-    const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection)
+    const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightViewCamera.orthoProjection, directionalShadow.mesh.depth as DepthTexture)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
-
     model.setScale(0.15,0.15,0.15)
 
     const light = new Light()
 
     const loop = () => {
         
-        glContext.depthRender(directionalShadow.mesh.depth as DepthTexture).clear()
+        glContext.depthRender(directionalShadow.mesh.depth as DepthTexture)
         lightViewCamera.updateViewMatrix()
 
         directionalShadowShader.shaderProgram.activateShader()
-            .updateGPU(lightViewCamera.viewMatrix, directionalShadowShader.cameraMatrix as WebGLUniformLocation )
+            .setUniforms(lightViewCamera.viewMatrix, directionalShadowShader.cameraMatrix as WebGLUniformLocation )
             .renderModel(directionalShadow.preRender(), directionalShadowShader.modelViewMatrix as WebGLUniformLocation )
 
-        camera.updateViewMatrix()
-
+    
         glContext.clearFramebuffer().fitScreen(0.95, 0.90).clear()
 
+        camera.updateViewMatrix()
         gridAxisShader.shaderProgram?.activateShader()
-            .updateGPU(camera.viewMatrix, gridAxisShader.cameraMatrix as WebGLUniformLocation )
+            .setUniforms(camera.viewMatrix, gridAxisShader.cameraMatrix as WebGLUniformLocation )
             .renderModel(gridAxis.preRender(), gridAxisShader.modelViewMatrix as WebGLUniformLocation )
 
-        modelShader.shaderProgram?.activateShader()
-            .updateGPU(camera.viewMatrix, modelShader.cameraMatrix as WebGLUniformLocation )
-            .updateGPU(lightViewCamera.orthoProjection, modelShader.orthoMatrix as WebGLUniformLocation )
+        modelShader.setUniforms(gl).shaderProgram
             .renderModel(model.preRender(), modelShader.modelViewMatrix as WebGLUniformLocation )
+
  
             
-        light.useLight(gl, modelShader, camera)
+        light.setUniforms(gl, modelShader, camera)
 
         requestAnimationFrame(loop)
     }

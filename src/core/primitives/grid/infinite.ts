@@ -92,7 +92,7 @@ class InfiniteGridShader{
     this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
     this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
 
-    shaderProgram.updateGPU(projectionMatrix, this.perspectiveMatrix)
+    shaderProgram.setUniforms(projectionMatrix, this.perspectiveMatrix)
     this.shaderProgram = shaderProgram
 
     //Cleanup

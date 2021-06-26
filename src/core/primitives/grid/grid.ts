@@ -44,7 +44,7 @@ class GridAxisShader{
     this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
     this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
 
-    shaderProgram.updateGPU(projectionMatrix, this.perspectiveMatrix)
+    shaderProgram.setUniforms(projectionMatrix, this.perspectiveMatrix)
     const uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR)
     gl.uniform3fv(uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
     

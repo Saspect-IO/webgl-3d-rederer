@@ -49,7 +49,7 @@ class DirectionalShadowShader {
         this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
     
 
-		shaderProgram.updateGPU(projectionMatrix, this.orthoMatrix)
+		shaderProgram.setUniforms(projectionMatrix, this.orthoMatrix)
 		const uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR)
 		gl.uniform4fv(uColor, new Float32Array([0.0, 0.0, 0.0, 1.0]))
 

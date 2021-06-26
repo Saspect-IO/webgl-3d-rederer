@@ -2,7 +2,6 @@ import { normalizeColor } from "@/modules"
 import { Camera } from "./camera"
 import { Vector3 } from "./math"
 import { ModelShader } from "./model"
-import ShaderProgram from './shaderProgram'
 
 export default class Light {
     constructor(x: number = 0, y: number = 3, z: number = 10) {
@@ -22,14 +21,13 @@ export default class Light {
     shininess: number
     specularFactor: number
 
-    useLight(gl:WebGLRenderingContext, program:ModelShader, camera:Camera): void {
-
-        gl?.uniform4fv(program.ambientLightColor, this.ambientLightColor)
+    setUniforms(gl:WebGLRenderingContext, program:ModelShader, camera:Camera): void {
         gl?.uniform3fv(program.lightPosition, [this.lightPosition.x, this.lightPosition.y, this.lightPosition.z]);
+        gl?.uniform4fv(program.lightColorLocation, this.lightColor);
+        gl?.uniform4fv(program.ambientLightColor, this.ambientLightColor)
+        gl?.uniform4fv(program.specularColorLocation, this.specularColor);
         gl?.uniform3fv(program.cameraPosition, camera.transform.position.getFloatArray());
         gl?.uniform1f(program.shininessLocation, this.shininess);
-        gl?.uniform4fv(program.lightColorLocation, this.lightColor);
-        gl?.uniform4fv(program.specularColorLocation, this.specularColor);
         gl?.uniform1f(program.specularFactorLocation, this.specularFactor);
     }
 

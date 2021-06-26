@@ -72,7 +72,7 @@ export default class ShaderProgram {
     return this
   }
 
-  updateGPU(matrixData: Float32Array, uniformMatrix:WebGLUniformLocation) {
+  setUniforms(matrixData: Float32Array, uniformMatrix:WebGLUniformLocation) {
     (this.gl as WebGLRenderingContext).uniformMatrix4fv(uniformMatrix, false, matrixData)
     return this
   }
@@ -87,7 +87,7 @@ export default class ShaderProgram {
 
   renderModel(model: Geometry, uniformMatrix:WebGLUniformLocation) {
     const gl = this.gl as WebGLRenderingContext
-		this.updateGPU(model.transform.getModelMatrix(), uniformMatrix)	//Set the transform, so the shader knows where the model exists in 3d space
+		this.setUniforms(model.transform.getModelMatrix(), uniformMatrix)	//Set the transform, so the shader knows where the model exists in 3d space
 
 		if(model.mesh.noCulling) gl.disable(gl.CULL_FACE)
 		if(model.mesh.doBlending) gl.enable(gl.BLEND)

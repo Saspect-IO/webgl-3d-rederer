@@ -5,9 +5,11 @@ import ShaderProgram from './shaderProgram';
 import ObjLoader from './objLoader';
 import { MeshData } from '@/entities';
 import { GLSetttings } from '@/modules';
+import DepthTexture from './Textures/depthTexture';
+import { Camera } from './camera';
 
 class ModelShader{
-	constructor(gl: WebGLRenderingContext, projectionMatrix: Float32Array){	
+	constructor(gl: WebGLRenderingContext, camera:Camera, depthTexture :DepthTexture ){	
 		const vertexShader = `#version 300 es
 			in vec3 a_position;
 			in vec3 a_norm;
@@ -34,7 +36,6 @@ class ModelShader{
 			out vec4 v_projectedTexcoord;
 
 			void main(void){
-
 
 				m_worldMatrix = u_mVMatrix;
 				m_viewProjectionMatrix = u_pMatrix * u_cameraMatrix;
@@ -131,36 +132,49 @@ class ModelShader{
 		this.lightColorLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
 		this.specularColorLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
 		this.specularFactorLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
-
-		shaderProgram.updateGPU(projectionMatrix, this.perspectiveMatrix)	
-
 		//Cleanup
 		shaderProgram.deactivateShader()
 
+		this.perspectiveProjectionMatrix = camera.projection
+		this.orthoProjectionMatrix = camera.orthoProjection
+		this.viewModelMatrix = camera.viewMatrix
 		this.shaderProgram = shaderProgram
 
 	}
 
-	positionLoc: number | null = null
-	normalLoc: number | null = null
-	texCoordLoc: number | null = null
+	positionLoc: number
+	normalLoc: number
+	texCoordLoc: number
   
-	modelViewMatrix: WebGLUniformLocation | null = null
-	perspectiveMatrix: WebGLUniformLocation | null = null
-	cameraMatrix: WebGLUniformLocation | null = null
-	orthoMatrix: WebGLUniformLocation | null = null
+	modelViewMatrix: WebGLUniformLocation
+	perspectiveMatrix: WebGLUniformLocation
+	cameraMatrix: WebGLUniformLocation
+	orthoMatrix: WebGLUniformLocation
 
-	diffuse: WebGLUniformLocation | null = null
-	projectedTexture: WebGLUniformLocation | null = null
-	ambientLightColor: WebGLUniformLocation | null = null
-	lightPosition: WebGLUniformLocation | null = null
-	cameraPosition: WebGLUniformLocation | null = null
-	shininessLocation: WebGLUniformLocation | null = null
-	lightColorLocation: WebGLUniformLocation | null = null
-	specularColorLocation: WebGLUniformLocation | null = null
-	specularFactorLocation: WebGLUniformLocation | null = null
+	diffuse: WebGLUniformLocation
+	projectedTexture: WebGLUniformLocation
+	ambientLightColor: WebGLUniformLocation
+	lightPosition: WebGLUniformLocation
+	cameraPosition: WebGLUniformLocation
+	shininessLocation: WebGLUniformLocation
+	lightColorLocation: WebGLUniformLocation
+	specularColorLocation: WebGLUniformLocation
+	specularFactorLocation: WebGLUniformLocation
+
+	perspectiveProjectionMatrix: Float32Array
+	orthoProjectionMatrix:Float32Array
+	viewModelMatrix:Float32Array
 
 	shaderProgram: ShaderProgram
+
+
+	setUniforms(gl:WebGLRenderingContext) {
+		gl?.useProgram(this.shaderProgram.program)
+		gl?.uniformMatrix4fv(this.perspectiveMatrix, false, this.perspectiveProjectionMatrix)
+        gl?.uniformMatrix4fv(this.orthoMatrix , false, this.orthoProjectionMatrix)
+		gl?.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix )
+		return this
+    }
 }
 
 
