@@ -48,7 +48,7 @@ class GridAxisShader{
     //Cleanup
     shaderProgram.deactivateShader()
 
-    this.perspectiveProjectionMatrix = camera.projection
+    this.perspectiveProjectionMatrix = camera.perspectiveProjection
 		this.orthoProjectionMatrix = camera.orthoProjection
 		this.viewModelMatrix = camera.viewMatrix
 		this.shaderProgram = shaderProgram

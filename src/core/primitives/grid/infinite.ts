@@ -91,7 +91,7 @@ class InfiniteGridShader{
         //Cleanup
         shaderProgram.deactivateShader()
 
-		this.perspectiveProjectionMatrix = camera.projection
+		this.perspectiveProjectionMatrix = camera.perspectiveProjection
 		this.viewModelMatrix = camera.viewMatrix
 		this.shaderProgram = shaderProgram
 	}

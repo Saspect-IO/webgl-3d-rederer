@@ -7,7 +7,7 @@ import Transformation from "./transformation";
 class Camera {
   constructor(gl: WebGLRenderingContext, fov: number = CameraSettings.FIELD_OF_VIEW, near: number = CameraSettings.NEAR_PLANE, far: number = CameraSettings.FAR_PLANE) {
 
-    this.projection = new Float32Array(16);
+    this.perspectiveProjection = new Float32Array(16);
     this.orthoProjection = new Float32Array(16);
 
     const ratio = gl.canvas.width / gl.canvas.height;
@@ -16,8 +16,8 @@ class Camera {
     const top = gl.canvas.height / 2
     const bottom = - gl.canvas.height / 2
     
-    Matrix4.perspective(this.projection, fov, ratio, near, far);
-    Matrix4.ortho(this.orthoProjection, left, right, bottom, top, near, far)
+    Matrix4.perspective(this.perspectiveProjection, fov, ratio, near, far);
+    Matrix4.ortho(this.orthoProjection, left, right, bottom, top, 1, 10)
 
     this.transform = new Transformation(); //Setup transform to control the position of the camera
     this.viewMatrix = new Float32Array(16); //Cache the matrix that will hold the inverse of the transform.
@@ -26,7 +26,7 @@ class Camera {
   }
 
   transform: Transformation;
-  projection: Float32Array;
+  perspectiveProjection: Float32Array;
   orthoProjection: Float32Array;
   viewMatrix: Float32Array;
   mode: number;

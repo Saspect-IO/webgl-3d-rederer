@@ -1,10 +1,11 @@
 import ShaderProgram from '../shaderProgram';
-import { GLSetttings, ProgramEntrySettings, ShaderProgramMatrixFields } from "@/modules";
+import { GLSetttings, ProgramEntrySettings } from "@/modules";
 import Geometry from '../geometry';
 import DepthTexture from '../Textures/depthTexture';
 import ObjLoader from '../objLoader';
 import { MeshData } from '@/entities';
 import Vbuffer from '../vbuffer';
+import { Camera } from '../camera';
 
 
 class DirectionalShadowShader {

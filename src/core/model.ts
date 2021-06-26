@@ -6,9 +6,10 @@ import ObjLoader from './objLoader';
 import { MeshData } from '@/entities';
 import { GLSetttings } from '@/modules';
 import { Camera } from './camera';
+import { Matrix4 } from './math';
 
 class ModelShader{
-	constructor(gl: WebGLRenderingContext, camera:Camera){	
+	constructor(gl: WebGLRenderingContext, camera:Camera, lightViewCamera:Camera){	
 		const vertexShader = `#version 300 es
 			in vec3 a_position;
 			in vec3 a_norm;
@@ -19,8 +20,10 @@ class ModelShader{
 
 			uniform mat4 u_mVMatrix;
 			uniform mat4 u_cameraMatrix;
+			uniform mat4 u_lightViewCameraMatrix;
 			uniform mat4 u_pMatrix;
 			uniform mat4 u_oMatrix;
+			uniform mat4 u_textureMatrix;
 
 			mat4 m_worldMatrix;
 			mat4 m_viewProjectionMatrix;
@@ -39,7 +42,7 @@ class ModelShader{
 				m_worldMatrix = u_mVMatrix;
 				m_viewProjectionMatrix = u_pMatrix * u_cameraMatrix;
 				m_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;
-				m_textureMatrix = u_oMatrix * u_cameraMatrix * m_worldMatrix;
+				m_textureMatrix = u_textureMatrix;
 
 				gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);
 				
@@ -69,6 +72,8 @@ class ModelShader{
 			uniform vec4 u_specularColor;
 			uniform float u_shininess;
 			uniform float u_specularFactor;
+			uniform float u_bias;
+			uniform vec3 u_reverseLightDirection;
 
 			vec4 lit(float l ,float h, float m) {
 				return vec4(
@@ -83,19 +88,27 @@ class ModelShader{
 
 			void main(void) {
 
+				vec3 normal = normalize(v_normal);
+
+				float light = dot(normal, u_reverseLightDirection);
+
 				vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
+				float currentDepth = projectedTexcoord.z + u_bias;
+
 				bool inRange =+
 					projectedTexcoord.x >= 0.0 &&+
 					projectedTexcoord.x <= 1.0 &&+
 					projectedTexcoord.y >= 0.0 &&+
 					projectedTexcoord.y <= 1.0;
 
-				vec3 normal = normalize(v_normal);
+				float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
+				float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;
+
 				vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
 				vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);
 				vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);
 
-				vec4 projectedTexColor = texture(u_projectedTexture, projectedTexcoord.xy);
+
 				vec4 diffuseColor = texture(u_diffuse, v_texCoord);
 				vec4 litR = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);
 				
@@ -104,9 +117,12 @@ class ModelShader{
 				vec4 mult3 = u_specularColor * litR.z * u_specularFactor;
 				vec4 mult4 = u_lightColor * ( mult1 + mult2 + mult3);
 
-				vec4 outColor = mult4 * diffuseColor;
-				float projectedAmount = inRange ? 1.0 : 0.0;
-				finalColor = mix(outColor, projectedTexColor, projectedAmount);
+				vec4 outColor = mult4 * vec4(
+					diffuseColor.rgb * light * shadowLight,
+					diffuseColor.a);
+
+
+				finalColor = outColor;
 			}`;											
 
 		const shaderProgram = new ShaderProgram(gl, vertexShader, fragmentShader);
@@ -120,8 +136,11 @@ class ModelShader{
 		this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
 		this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
 		this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+		this.lightViewCameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_VIEW_CAMERA_MAT) as WebGLUniformLocation
 		this.orthoMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
 		this.projectedTextureLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
+		this.textureMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation
+		this.reverseLightDirectionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_REVERSE_LIGHT_DIRECTION_MAT) as WebGLUniformLocation
 
 		this.diffuseLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_DIFFUSE) as WebGLUniformLocation
 		this.ambientLightColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
@@ -134,9 +153,10 @@ class ModelShader{
 		//Cleanup
 		shaderProgram.deactivateShader()
 
-		this.perspectiveProjectionMatrix = camera.projection
+		this.perspectiveProjectionMatrix = camera.perspectiveProjection
 		this.orthoProjectionMatrix = camera.orthoProjection
 		this.viewModelMatrix = camera.viewMatrix
+		this.lightViewModelMatrix = lightViewCamera.viewMatrix
 		this.shaderProgram = shaderProgram
 	}
 
@@ -147,7 +167,9 @@ class ModelShader{
 	modelViewMatrixLoc: WebGLUniformLocation
 	perspectiveMatrixLoc: WebGLUniformLocation
 	cameraMatrixLoc: WebGLUniformLocation
+	lightViewCameraMatrixLoc: WebGLUniformLocation
 	orthoMatrixLoc: WebGLUniformLocation
+	textureMatrixLoc: WebGLUniformLocation
 
 	diffuseLoc: WebGLUniformLocation
 	projectedTextureLoc: WebGLUniformLocation
@@ -158,10 +180,12 @@ class ModelShader{
 	lightColorLoc: WebGLUniformLocation
 	specularColorLoc: WebGLUniformLocation
 	specularFactorLoc: WebGLUniformLocation
+	reverseLightDirectionLoc: WebGLUniformLocation
 
 	perspectiveProjectionMatrix: Float32Array
 	orthoProjectionMatrix:Float32Array
 	viewModelMatrix:Float32Array
+	lightViewModelMatrix:Float32Array
 
 	shaderProgram: ShaderProgram
 
@@ -171,10 +195,25 @@ class ModelShader{
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
         gl.uniformMatrix4fv(this.orthoMatrixLoc , false, this.orthoProjectionMatrix)
 		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
+		gl.uniformMatrix4fv(this.lightViewCameraMatrixLoc , false, this.lightViewModelMatrix)
+		gl.uniform3fv(this.reverseLightDirectionLoc , this.lightViewModelMatrix.slice(8, 11))
+		gl.uniformMatrix4fv(this.textureMatrixLoc , false, this.getTextureMatrix())
 		gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())	//Set the transform, so the shader knows where the model exists in 3d space
 
 		return this
     }
+
+	getTextureMatrix(){
+		let textureMatrix = Matrix4.identity();
+		Matrix4.translate(textureMatrix, 0.5, 0.5, 0.5);
+		Matrix4.scale(textureMatrix, 0.5, 0.5, 0.5);
+		Matrix4.mult(textureMatrix, textureMatrix, this.orthoProjectionMatrix)
+		let inverted:any = []
+		Matrix4.invert(inverted, this.lightViewModelMatrix)
+		Matrix4.mult(textureMatrix, textureMatrix, inverted)
+		return textureMatrix
+	}
+
 }
 
 
