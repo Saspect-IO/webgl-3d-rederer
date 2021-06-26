@@ -117,20 +117,20 @@ class ModelShader{
 		this.texCoordLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_UV_NAME)
 		this.normalLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_NORMAL_NAME)
 
-		this.modelViewMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-		this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
-		this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-		this.orthoMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
-		this.projectedTexture = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
+		this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
+		this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
+		this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+		this.orthoMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
+		this.projectedTextureLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
 
-		this.diffuse = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_DIFFUSE) as WebGLUniformLocation
-		this.ambientLightColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
-		this.lightPosition = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
-		this.cameraPosition = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
-		this.shininessLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_SHININESS) as WebGLUniformLocation
-		this.lightColorLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
-		this.specularColorLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
-		this.specularFactorLocation = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
+		this.diffuseLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_DIFFUSE) as WebGLUniformLocation
+		this.ambientLightColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
+		this.lightPositionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
+		this.cameraPositionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
+		this.shininessLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_SHININESS) as WebGLUniformLocation
+		this.lightColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
+		this.specularColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
+		this.specularFactorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
 		//Cleanup
 		shaderProgram.deactivateShader()
 
@@ -138,27 +138,26 @@ class ModelShader{
 		this.orthoProjectionMatrix = camera.orthoProjection
 		this.viewModelMatrix = camera.viewMatrix
 		this.shaderProgram = shaderProgram
-
 	}
 
 	positionLoc: number
 	normalLoc: number
 	texCoordLoc: number
   
-	modelViewMatrix: WebGLUniformLocation
-	perspectiveMatrix: WebGLUniformLocation
-	cameraMatrix: WebGLUniformLocation
-	orthoMatrix: WebGLUniformLocation
+	modelViewMatrixLoc: WebGLUniformLocation
+	perspectiveMatrixLoc: WebGLUniformLocation
+	cameraMatrixLoc: WebGLUniformLocation
+	orthoMatrixLoc: WebGLUniformLocation
 
-	diffuse: WebGLUniformLocation
-	projectedTexture: WebGLUniformLocation
-	ambientLightColor: WebGLUniformLocation
-	lightPosition: WebGLUniformLocation
-	cameraPosition: WebGLUniformLocation
-	shininessLocation: WebGLUniformLocation
-	lightColorLocation: WebGLUniformLocation
-	specularColorLocation: WebGLUniformLocation
-	specularFactorLocation: WebGLUniformLocation
+	diffuseLoc: WebGLUniformLocation
+	projectedTextureLoc: WebGLUniformLocation
+	ambientLightColorLoc: WebGLUniformLocation
+	lightPositionLoc: WebGLUniformLocation
+	cameraPositionLoc: WebGLUniformLocation
+	shininessLoc: WebGLUniformLocation
+	lightColorLoc: WebGLUniformLocation
+	specularColorLoc: WebGLUniformLocation
+	specularFactorLoc: WebGLUniformLocation
 
 	perspectiveProjectionMatrix: Float32Array
 	orthoProjectionMatrix:Float32Array
@@ -169,10 +168,10 @@ class ModelShader{
 
 	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
 		gl.useProgram(this.shaderProgram.program)
-		gl.uniformMatrix4fv(this.perspectiveMatrix, false, this.perspectiveProjectionMatrix)
-        gl.uniformMatrix4fv(this.orthoMatrix , false, this.orthoProjectionMatrix)
-		gl.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix)
-		gl.uniformMatrix4fv(this.modelViewMatrix, false, model.transform.getModelMatrix())	//Set the transform, so the shader knows where the model exists in 3d space
+		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
+        gl.uniformMatrix4fv(this.orthoMatrixLoc , false, this.orthoProjectionMatrix)
+		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
+		gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())	//Set the transform, so the shader knows where the model exists in 3d space
 
 		return this
     }

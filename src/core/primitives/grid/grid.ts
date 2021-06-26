@@ -41,11 +41,10 @@ class GridAxisShader{
 
     this.positionLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
 
-    this.modelViewMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-    this.perspectiveMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
-    this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-    this.uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
-    
+    this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
+    this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
+    this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+    this.uColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
     //Cleanup
     shaderProgram.deactivateShader()
 
@@ -59,10 +58,10 @@ class GridAxisShader{
   positionLoc: number
 
 
-  modelViewMatrix: WebGLUniformLocation
-	perspectiveMatrix: WebGLUniformLocation
-	cameraMatrix: WebGLUniformLocation
-  uColor: WebGLUniformLocation
+  modelViewMatrixLoc: WebGLUniformLocation
+	perspectiveMatrixLoc: WebGLUniformLocation
+	cameraMatrixLoc: WebGLUniformLocation
+  uColorLoc: WebGLUniformLocation
 
   perspectiveProjectionMatrix: Float32Array
 	orthoProjectionMatrix:Float32Array
@@ -73,10 +72,10 @@ class GridAxisShader{
 
   setUniforms(gl:WebGLRenderingContext, model: Geometry) {
 		gl.useProgram(this.shaderProgram.program)
-		gl.uniformMatrix4fv(this.perspectiveMatrix, false, this.perspectiveProjectionMatrix)
-		gl.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix )
-    gl.uniform3fv(this.uColor, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
-    gl.uniformMatrix4fv(this.modelViewMatrix, false, model.transform.getModelMatrix())
+		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
+		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix )
+    gl.uniform3fv(this.uColorLoc, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
+    gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())
 		return this
   }
 }

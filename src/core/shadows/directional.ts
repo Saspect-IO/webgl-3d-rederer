@@ -46,13 +46,10 @@ class DirectionalShadowShader {
 
 		this.positionLoc = gl.getAttribLocation(shaderProgram.program  as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
 		
-		this.modelViewMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-		this.orthoMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
-        this.cameraMatrix = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
-		
-		this.uColor = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
-
-		this.shaderProgram = shaderProgram
+		this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
+		this.orthoMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
+        this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+		this.uColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
 
 		this.orthoProjectionMatrix = camera.orthoProjection
 		this.viewModelMatrix = camera.viewMatrix
@@ -65,20 +62,21 @@ class DirectionalShadowShader {
 	positionLoc: number
 	shaderProgram: ShaderProgram
 
-	modelViewMatrix: WebGLUniformLocation
-	orthoMatrix: WebGLUniformLocation
-	cameraMatrix: WebGLUniformLocation
-	uColor: WebGLUniformLocation
+	modelViewMatrixLoc: WebGLUniformLocation
+	orthoMatrixLoc: WebGLUniformLocation
+	cameraMatrixLoc: WebGLUniformLocation
+	uColorLoc: WebGLUniformLocation
 
 	orthoProjectionMatrix:Float32Array
 	viewModelMatrix:Float32Array
 
 	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
 		gl.useProgram(this.shaderProgram.program)
-        gl.uniformMatrix4fv(this.orthoMatrix , false, this.orthoProjectionMatrix)
-		gl.uniformMatrix4fv(this.cameraMatrix , false, this.viewModelMatrix)
-		gl.uniform4fv(this.uColor, new Float32Array([0.0, 0.0, 0.0, 1.0]))
-		gl.uniformMatrix4fv(this.modelViewMatrix, false, model.transform.getModelMatrix())
+        gl.uniformMatrix4fv(this.orthoMatrixLoc , false, this.orthoProjectionMatrix)
+		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
+		gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())
+		gl.uniform4fv(this.uColorLoc, new Float32Array([0.0, 0.0, 0.0, 1.0]))
+
 		return this
     }
 }
