@@ -167,7 +167,7 @@ class ModelShader{
 
 
 	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
-		gl.useProgram(this.shaderProgram.program)
+		this.shaderProgram.activateShader()
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
         gl.uniformMatrix4fv(this.orthoMatrixLoc , false, this.orthoProjectionMatrix)
 		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)

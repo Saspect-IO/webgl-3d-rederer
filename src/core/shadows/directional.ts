@@ -71,7 +71,7 @@ class DirectionalShadowShader {
 	viewModelMatrix:Float32Array
 
 	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
-		gl.useProgram(this.shaderProgram.program)
+		this.shaderProgram.activateShader()
         gl.uniformMatrix4fv(this.orthoMatrixLoc , false, this.orthoProjectionMatrix)
 		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
 		gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())

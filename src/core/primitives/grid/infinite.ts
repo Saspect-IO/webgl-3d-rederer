@@ -106,7 +106,7 @@ class InfiniteGridShader{
 
 
     setUniforms(gl:WebGLRenderingContext) {
-		gl.useProgram(this.shaderProgram.program)
+		this.shaderProgram.activateShader()
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
 		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix )
 
