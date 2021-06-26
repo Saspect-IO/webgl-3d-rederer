@@ -49,7 +49,6 @@ class GridAxisShader{
     shaderProgram.deactivateShader()
 
     this.perspectiveProjectionMatrix = camera.perspectiveProjection
-		this.orthoProjectionMatrix = camera.orthoProjection
 		this.viewModelMatrix = camera.viewMatrix
 		this.shaderProgram = shaderProgram
 
@@ -64,7 +63,6 @@ class GridAxisShader{
   uColorLoc: WebGLUniformLocation
 
   perspectiveProjectionMatrix: Float32Array
-	orthoProjectionMatrix:Float32Array
 	viewModelMatrix:Float32Array
 
 	shaderProgram: ShaderProgram
