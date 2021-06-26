@@ -6,7 +6,6 @@ import { Model, ModelShader } from './core/model'
 import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/directional'
 import Light from './core/light'
 import DepthTexture from './core/Textures/depthTexture'
-import { InfiniteGridShader } from './core/primitives/grid/infinite'
 
 
 (async () => {
@@ -26,8 +25,6 @@ import { InfiniteGridShader } from './core/primitives/grid/infinite'
 
     const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera.projection)
     const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false)
-
-    const infiniteGridShader = new InfiniteGridShader(gl as WebGLRenderingContext, camera.projection)
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera.projection)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
@@ -52,9 +49,6 @@ import { InfiniteGridShader } from './core/primitives/grid/infinite'
         gridAxisShader.shaderProgram?.activateShader()
             .updateGPU(camera.viewMatrix, gridAxisShader.cameraMatrix as WebGLUniformLocation )
             .renderModel(gridAxis.preRender(), gridAxisShader.modelViewMatrix as WebGLUniformLocation )
-
-        infiniteGridShader.shaderProgram?.activateShader()
-            .updateGPU(camera.viewMatrix, infiniteGridShader.cameraMatrix as WebGLUniformLocation )
 
         modelShader.shaderProgram?.activateShader()
             .updateGPU(camera.viewMatrix, modelShader.cameraMatrix as WebGLUniformLocation )
