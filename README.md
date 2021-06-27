@@ -22,6 +22,6 @@ Utilizes Webpack for deployment builds.
 
 ## Resource links for learning
 
-- [WebGL Fundamentals](https://webglfundamentals.org)
+- [WebGL Fundamentals](https://webgl2fundamentals.org/)
 - [3D Graphics: A WebGL Tutorial](https://www.toptal.com/javascript/3d-graphics-a-webgl-tutorial)
 
