@@ -1,19 +1,19 @@
-import Geometry from './geometry';
-import Texture from './Textures/texture';
-import Vbuffer from './vbuffer';
-import ShaderProgram from './shaderProgram';
-import ObjLoader from './objLoader';
+import Geometry from '../../geometry';
+import Texture from '../../Textures/texture';
+import Vbuffer from '../../vbuffer';
+import ShaderProgram from '../../shaderProgram';
+import ObjLoader from '../../objLoader';
 import { MeshData } from '@/entities';
 import { GLSetttings } from '@/modules';
-import { Camera } from './camera';
-import { Matrix4 } from './math';
+import { Camera } from '../../camera';
+import { Matrix4 } from '../../math';
 
-class ModelShader{
+class FloorQuadShader{
 	constructor(gl: WebGLRenderingContext, camera:Camera, lightViewCamera:Camera){	
 		const vertexShader = `#version 300 es
-			in vec3 a_position;
-			in vec3 a_norm;
-			in vec2 a_texCoord;
+            layout(location=5) in vec3 a_position;
+			layout(location=6) in vec3 a_norm;
+			layout(location=7) in vec2 a_texCoord;
 
 			uniform vec3 u_lightPosition;
 			uniform vec3 u_cameraPosition;
@@ -102,7 +102,7 @@ class ModelShader{
 					projectedTexcoord.y <= 1.0;
 
 				float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
-				float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;
+				float shadowLight = (inRange && projectedDepth <= currentDepth) ? 1.0 : 1.0;
 
 				vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
 				vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);
@@ -217,24 +217,42 @@ class ModelShader{
 }
 
 
-class Model {
+class FloorQuad {
 
   constructor() {}
 
-  static async createGeometry(gl: WebGLRenderingContext, shaderProgram: ModelShader, objSrc: string, textureSrc: string){ 
-    return  new Geometry(await Model.createMesh(gl, shaderProgram, objSrc, textureSrc)); 
+   static async createGeometry(gl: WebGLRenderingContext, shaderProgram: FloorQuadShader){ 
+    return  new Geometry( await FloorQuad.createMesh(gl, shaderProgram)); 
   }
 
-  static async createMesh(gl: WebGLRenderingContext, shaderProgram: ModelShader, objSrc: string, textureSrc: string) {
+   static async createMesh(gl: WebGLRenderingContext, shaderProgram: FloorQuadShader) {
+
+    const verts = [
+        -1,0.002,-1,
+        1,0.002,-1,
+        -1,0.002,1,
+        1,0.002,-1,
+        1,0.002,1,
+        -1,0.002,1,
+    ]
+    const norms = [
+        0.180,0.180,0.180,
+        0.180,0.180,0.180,
+        0.180,0.180,0.180,
+        0.180,0.180,0.180,
+        0.180,0.180,0.180,
+        0.180,0.180,0.180,
+    ]
+    const uvs =  [ 0,0, 0,1, 1,1, 1,0 ]
     
-    const model = await Model.loadModel(gl, objSrc, textureSrc);
-    const vertexCount = model.vertices.vertexCount();
+    const texture = await Texture.loadTexture(gl, '/assets/resources/yoshi/textures/yoshi.png');
+    const vertexCount = verts.length/3;
 
     const mesh: MeshData = {
-      positions : new Vbuffer(gl, model.vertices.positions(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
-      normals: new Vbuffer(gl, model.vertices.normals(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
-      uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
-      texture: model.texture,
+      positions : new Vbuffer(gl, verts, vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
+      normals: new Vbuffer(gl, norms, vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
+      uvs: new Vbuffer(gl, uvs, vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
+      texture: texture,
       drawMode : gl.TRIANGLES,
       vertexCount,
     }
@@ -257,6 +275,6 @@ class Model {
 }
 
 export {
-	ModelShader,
-	Model
+	FloorQuadShader,
+	FloorQuad
 }

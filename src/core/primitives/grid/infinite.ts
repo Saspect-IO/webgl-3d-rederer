@@ -1,4 +1,6 @@
 import { Camera } from "@/core/camera";
+import Geometry from "@/core/geometry";
+import { MeshData } from "@/entities";
 import { GLSetttings } from "@/modules";
 import ShaderProgram from "../../shaderProgram";
 
@@ -88,6 +90,7 @@ class InfiniteGridShader{
 
         this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
         this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+        this.uColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
         //Cleanup
         shaderProgram.deactivateShader()
 
@@ -98,6 +101,7 @@ class InfiniteGridShader{
 
 	perspectiveMatrixLoc: WebGLUniformLocation
 	cameraMatrixLoc: WebGLUniformLocation
+    uColorLoc: WebGLUniformLocation
 
     perspectiveProjectionMatrix: Float32Array
 	viewModelMatrix:Float32Array
@@ -108,12 +112,37 @@ class InfiniteGridShader{
     setUniforms(gl:WebGLRenderingContext) {
 		this.shaderProgram.activateShader()
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
-		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix )
+		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
+        gl.uniform3fv(this.uColorLoc, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
 
 		return this
   }
 }
 
+class InfiniteGrid {
+
+    constructor() {}
+    
+    static createGeometry(gl:WebGLRenderingContext){ 
+      return new Geometry(InfiniteGrid.createMesh(gl)); 
+    }
+  
+    static createMesh(glContext: WebGLRenderingContext) {
+      //Dynamiclly create a grid
+      let gl = glContext as WebGLRenderingContext;
+      
+     
+      const vertexCount = 1;
+  
+      const mesh: MeshData = {
+        drawMode : gl.LINES,
+        vertexCount,
+      }
+
+      return mesh;
+    }
+  }
 export {
-    InfiniteGridShader
+    InfiniteGridShader,
+    InfiniteGrid
 }

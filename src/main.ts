@@ -6,6 +6,7 @@ import { Model, ModelShader } from './core/model'
 import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/directional'
 import Light from './core/light'
 import DepthTexture from './core/Textures/depthTexture'
+import { FloorQuad, FloorQuadShader } from './core/primitives/grid/FloorQuad'
 
 
 (async () => {
@@ -26,6 +27,9 @@ import DepthTexture from './core/Textures/depthTexture'
     const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera)
     const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false)
 
+    const floorQuadShader = new FloorQuadShader(gl as WebGLRenderingContext, camera, lightViewCamera)
+    const floorQuad = await FloorQuad.createGeometry(gl, floorQuadShader)
+
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightViewCamera)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
     model.setScale(0.15,0.15,0.15)
@@ -45,6 +49,9 @@ import DepthTexture from './core/Textures/depthTexture'
         camera.updateViewMatrix()
         gridAxisShader.setUniforms(gl, gridAxis.preRender()).shaderProgram
             .renderModel(gridAxis.preRender())
+
+        floorQuadShader.setUniforms(gl, floorQuad.preRender()).shaderProgram
+            .renderModel(floorQuad.preRender())
 
         modelShader.setUniforms(gl, model.preRender()).shaderProgram
             .renderModel(model.preRender())

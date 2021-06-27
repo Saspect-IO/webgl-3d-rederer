@@ -30,7 +30,7 @@ export interface Surface {
 }
 
 export interface MeshData {
-    positions: Vbuffer; 
+    positions?: Vbuffer; 
     normals?: Vbuffer; 
     uvs?: Vbuffer;
     indices?: Vbuffer;
