@@ -56,7 +56,6 @@ class GridAxisShader{
 
   positionLoc: number
 
-
   modelViewMatrixLoc: WebGLUniformLocation
 	perspectiveMatrixLoc: WebGLUniformLocation
 	cameraMatrixLoc: WebGLUniformLocation
@@ -74,7 +73,8 @@ class GridAxisShader{
 		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix )
     gl.uniform3fv(this.uColorLoc, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
     gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())
-		return this
+		
+    return this
   }
 }
 

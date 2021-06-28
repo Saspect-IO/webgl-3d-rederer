@@ -6,7 +6,7 @@ import { Model, ModelShader } from './core/model'
 import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/directional'
 import Light from './core/light'
 import DepthTexture from './core/Textures/depthTexture'
-import { FloorQuad, FloorQuadShader } from './core/primitives/grid/FloorQuad'
+import { FloorQuad, FloorQuadShader } from './core/primitives/grid/floorQuad'
 
 
 (async () => {
