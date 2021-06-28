@@ -30,8 +30,8 @@ import { Vector3 } from './core/math'
     const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera)
     const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false)
 
-    const floorQuadShader = new FloorQuadShader(gl as WebGLRenderingContext, camera, lightViewCamera)
-    const floorQuad = await FloorQuad.createGeometry(gl, floorQuadShader)
+    // const floorQuadShader = new FloorQuadShader(gl as WebGLRenderingContext, camera, lightViewCamera)
+    // const floorQuad = await FloorQuad.createGeometry(gl, floorQuadShader)
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightViewCamera)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
