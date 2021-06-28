@@ -53,8 +53,8 @@ import { Vector3 } from './core/math'
         gridAxisShader.setUniforms(gl, gridAxis.preRender()).shaderProgram
             .renderModel(gridAxis.preRender())
 
-        floorQuadShader.setUniforms(gl, floorQuad.preRender()).shaderProgram
-            .renderModel(floorQuad.preRender())
+        // floorQuadShader.setUniforms(gl, floorQuad.preRender()).shaderProgram
+        //     .renderModel(floorQuad.preRender())
 
         modelShader.setUniforms(gl, model.preRender()).shaderProgram
             .renderModel(model.preRender())
