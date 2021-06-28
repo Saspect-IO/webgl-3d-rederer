@@ -4,8 +4,8 @@ import { Vector3 } from "./math"
 import { ModelShader } from "./model"
 
 export default class Light {
-    constructor(x: number = 0, y: number = 3, z: number = 10) {
-        this.lightPosition = new Vector3(x, y, z)
+    constructor(p:Vector3) {
+        this.lightPosition = p
         this.specularFactor = 1
         this.lightColor = normalizeColor({red:195, green:210, blue:190})
         this.ambientLightColor = normalizeColor({red:25.5, green:25.5, blue:25.5})

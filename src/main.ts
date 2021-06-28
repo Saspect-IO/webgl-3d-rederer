@@ -7,15 +7,18 @@ import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/direc
 import Light from './core/light'
 import DepthTexture from './core/Textures/depthTexture'
 import { FloorQuad, FloorQuadShader } from './core/primitives/grid/floorQuad'
+import { Vector3 } from './core/math'
 
 
 (async () => {
     const glContext = new GLContext(ProgramEntrySettings.WEBGL_CANVAS_ID)
-    glContext.fitScreen(0.95, 0.90).setClearColor(0, 0, 0, 1.0).clear()
+    glContext.fitScreen(0.95, 0.90).setClearColor(20, 21, 24, 1.0).clear()
     const gl = glContext.getContext() as WebGLRenderingContext
 
+    const lightPosition = new Vector3(3, 2, 3)
+    const light = new Light(lightPosition)
     const lightViewCamera = new Camera(gl as WebGLRenderingContext)
-    lightViewCamera.transform.position.set(0, 1, 3)
+    lightViewCamera.transform.position.set(lightPosition.x, lightPosition.y, lightPosition.z)
 
     const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightViewCamera)
     const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
@@ -34,7 +37,7 @@ import { FloorQuad, FloorQuadShader } from './core/primitives/grid/floorQuad'
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
     model.setScale(0.15,0.15,0.15)
 
-    const light = new Light()
+  
 
     const loop = () => {
         
