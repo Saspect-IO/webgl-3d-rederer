@@ -184,6 +184,73 @@ class Matrix4 {
     };
 
 
+     /**
+   * Creates a lookAt matrix.
+   * This is a world matrix for a camera. In other words it will transform
+   * from the origin to a place and orientation in the world. For a view
+   * matrix take the inverse of this.
+   * @param {Float32Array} cameraPosition position of the camera
+   * @param {Vector3} target position of the target
+   * @param {Vector3} up direction
+   * @param {Float32Array} [dst] optional matrix to store result
+   * @return {Float32Array} dst or a new matrix if none provided
+   * @memberOf module:webgl-3d-math
+   */
+    static lookAt(cameraPosition: any, target:any, up:any, dst:any=null) {
+        dst = dst || new Float32Array(16);
+        var zAxis = Matrix4.normalize(Matrix4.subtractVectors(cameraPosition, target));
+        var xAxis = Matrix4.normalize(Matrix4.cross(up, zAxis));
+        var yAxis = Matrix4.normalize(Matrix4.cross(zAxis, xAxis));
+
+        dst[ 0] = xAxis[0];
+        dst[ 1] = xAxis[1];
+        dst[ 2] = xAxis[2];
+        dst[ 3] = 0;
+        dst[ 4] = yAxis[0];
+        dst[ 5] = yAxis[1];
+        dst[ 6] = yAxis[2];
+        dst[ 7] = 0;
+        dst[ 8] = zAxis[0];
+        dst[ 9] = zAxis[1];
+        dst[10] = zAxis[2];
+        dst[11] = 0;
+        dst[12] = cameraPosition[0];
+        dst[13] = cameraPosition[1];
+        dst[14] = cameraPosition[2];
+        dst[15] = 1;
+
+        return dst;
+    }
+
+    static subtractVectors(a:any, b:any, dst:any=null) {
+        dst = dst || new Float32Array(3);
+        dst[0] = a[0] - b[0];
+        dst[1] = a[1] - b[1];
+        dst[2] = a[2] - b[2];
+        return dst;
+    }
+
+    static cross(a:any, b:any, dst:any=null) {
+        dst = dst || new Float32Array(3);
+        dst[0] = a[1] * b[2] - a[2] * b[1];
+        dst[1] = a[2] * b[0] - a[0] * b[2];
+        dst[2] = a[0] * b[1] - a[1] * b[0];
+        return dst;
+    }
+
+    static normalize(v:any, dst:any=null) {
+        dst = dst || new Float32Array(3);
+        var length = Math.sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+        // make sure we don't divide by 0.
+        if (length > 0.00001) {
+            dst[0] = v[0] / length;
+            dst[1] = v[1] / length;
+            dst[2] = v[2] / length;
+        }
+        return dst;
+    }
+
+
     //https://github.com/toji/gl-matrix/blob/master/src/gl-matrix/mat4.js
     //make the rows into the columns
     static transpose(out: Float32Array, a: Float32Array) {
