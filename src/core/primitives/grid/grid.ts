@@ -14,7 +14,7 @@ class GridAxisShader{
 			layout(location=4) in float a_color;
 
 			uniform mat4 u_mVMatrix;
-			uniform mat4 u_cameraMatrix;
+			uniform mat4 u_cameraViewMatrix;
 			uniform mat4 u_pMatrix;
 			uniform vec3 u_color[4];
 
@@ -22,7 +22,7 @@ class GridAxisShader{
 
 			void main(void){
 				color = vec4(u_color[ int(a_color) ],1.0);
-				gl_Position = u_pMatrix * u_cameraMatrix * u_mVMatrix * vec4(a_position, 1.0);
+				gl_Position = u_pMatrix * u_cameraViewMatrix * u_mVMatrix * vec4(a_position, 1.0);
 			}`;
 
 		const fragmentShader = `#version 300 es

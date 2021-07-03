@@ -19,7 +19,7 @@ class FloorQuadShader{
 			uniform vec3 u_cameraPosition;
 
 			uniform mat4 u_mVMatrix;
-			uniform mat4 u_cameraMatrix;
+			uniform mat4 u_cameraViewMatrix;
 			uniform mat4 u_lightViewCameraMatrix;
 			uniform mat4 u_pMatrix;
 			uniform mat4 u_oMatrix;
@@ -40,13 +40,13 @@ class FloorQuadShader{
 			void main(void){
 
 				m_worldMatrix = u_mVMatrix;
-				m_viewProjectionMatrix = u_pMatrix * u_cameraMatrix;
+				m_viewProjectionMatrix = u_pMatrix * u_cameraViewMatrix;
 				m_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;
 				m_textureMatrix = u_textureMatrix;
 
 				gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);
 				
-				v_normal = (u_cameraMatrix * vec4(a_norm, 0.0)).xyz;
+				v_normal = (u_cameraViewMatrix * vec4(a_norm, 0.0)).xyz;
 
 				vec3 v_surfaceWorldPosition = (m_worldMatrix * vec4(a_position, 1.0)).xyz;
 				v_surfaceToLight = u_lightPosition - v_surfaceWorldPosition;

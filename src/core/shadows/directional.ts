@@ -14,7 +14,7 @@ class DirectionalShadowShader {
 			layout(location=8) in vec3 a_position;
 
 			uniform mat4 u_mVMatrix;
-			uniform mat4 u_cameraMatrix;
+			uniform mat4 u_cameraViewMatrix;
 			uniform mat4 u_oMatrix;
 
 			mat4 m_worldMatrix;
@@ -24,7 +24,7 @@ class DirectionalShadowShader {
 			void main(void){
 
 				m_worldMatrix = u_mVMatrix;
-				m_viewProjectionMatrix = u_oMatrix * u_cameraMatrix;
+				m_viewProjectionMatrix = u_oMatrix * u_cameraViewMatrix;
 				m_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;
 
 				gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);
