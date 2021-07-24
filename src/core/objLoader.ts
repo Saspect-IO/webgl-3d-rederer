@@ -40,17 +40,44 @@ export default class ObjLoader {
                 // Add new texture mapping point
                 uvs.push(Vec2Struct(parseFloat(lineItems[1]), 1 - parseFloat(lineItems[2])))
             } else if (SURFACE === type) {
+                let isQuad = false
+                let shouldExit = false
+                let size = 4
                 // Add new face
                 const vertices: Vertex[] = [];
-                // Create three vertices from the passed one-indexed indices
-                for (let i = 1; i < 4; i ++) {
+
+                // conditionally detect and parse quads to triangle
+                for (let i = 1; i < size; i ++) {
+                    if (lineItems.length>size && !shouldExit) {
+                        size+=1
+                    }else if (i===4 && !isQuad) {
+                        i = 3
+                        size+=1
+                        isQuad = true
+                    }else if (i===5 && isQuad) {
+                        i=1
+                        isQuad = false
+                        shouldExit = true
+                    } else if(i===2 && shouldExit){
+                        break
+                    }
                     const part = lineItems[i].split(BACKSLASH)
                     const position = positions[parseInt(part[0]) - 1]
                     const uv = uvs[parseInt(part[1]) - 1]
                     const normal = normals[parseInt(part[2]) - 1]
                     vertices.push(VertexStruct(position, normal, uv))
                 }
-                surfaces.push(SurfaceStruct(vertices))
+                
+                // split tesselated quads as individual surfaces
+                if (vertices.length>3) {
+                    const triagle1 = vertices.slice(0,3)
+                    const triangle2 = vertices.slice(3)
+                    surfaces.push(SurfaceStruct(triagle1))
+                    surfaces.push(SurfaceStruct(triangle2))
+                }else{
+                    surfaces.push(SurfaceStruct(vertices))
+                }
+                
             }
         })
 
