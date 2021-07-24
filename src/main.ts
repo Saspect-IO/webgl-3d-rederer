@@ -6,7 +6,7 @@ import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/direc
 import Light from './core/light'
 import DepthTexture from './core/Textures/depthTexture'
 import { Vector3 } from './core/math'
-import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinite'
+import { GridAxis, GridAxisShader } from './core/primitives/grid/grid'
 
 
 (async()=>{
@@ -23,15 +23,15 @@ import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinit
     const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
     
     const camera = new Camera(gl as WebGLRenderingContext)
-    camera.transform.position.set(0, 2, 5)
+    camera.transform.position.set(0, 1, 3)
     new CameraController(gl as WebGLRenderingContext, camera)
 
-    const infiniteGridShader = new InfiniteGridShader(gl as WebGLRenderingContext, camera, lightView)
-    const infiniteGrid = await InfiniteGrid.createGeometry(gl, infiniteGridShader)
+    const gridAxisShader = new GridAxisShader(gl as WebGLRenderingContext, camera)
+    const gridAxis = GridAxis.createGeometry(gl, gridAxisShader, false)
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightView)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
-    model.setScale(0.01,0.01,0.01)
+    model.setScale(0.0035,0.0035,0.0035)
 
     const loop = () => {
         
@@ -45,8 +45,8 @@ import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinit
 
         camera.updateViewMatrix()
 
-         infiniteGridShader.setUniforms(gl, infiniteGrid.preRender()).shaderProgram
-            .renderModel(infiniteGrid.preRender())
+        gridAxisShader.setUniforms(gl, gridAxis.preRender()).shaderProgram
+            .renderModel(gridAxis.preRender())
 
         modelShader.setUniforms(gl, model.preRender())
             .shaderProgram.renderModel(model.preRender())
