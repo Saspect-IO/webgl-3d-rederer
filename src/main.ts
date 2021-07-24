@@ -23,7 +23,7 @@ import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinit
     const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
     
     const camera = new Camera(gl as WebGLRenderingContext)
-    camera.transform.position.set(0, 0.5, 1.5)
+    camera.transform.position.set(0, 2, 5)
     new CameraController(gl as WebGLRenderingContext, camera)
 
     const infiniteGridShader = new InfiniteGridShader(gl as WebGLRenderingContext, camera, lightView)
@@ -31,7 +31,7 @@ import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinit
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightView)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
-    model.setScale(0.0035,0.0035,0.0035).setRotation(0,30,0)
+    model.setScale(0.15,0.15,0.15)
 
     const loop = () => {
         
@@ -45,7 +45,7 @@ import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinit
 
         camera.updateViewMatrix()
 
-        infiniteGridShader.setUniforms(gl, infiniteGrid.preRender()).shaderProgram
+         infiniteGridShader.setUniforms(gl, infiniteGrid.preRender()).shaderProgram
             .renderModel(infiniteGrid.preRender())
 
         modelShader.setUniforms(gl, model.preRender())
