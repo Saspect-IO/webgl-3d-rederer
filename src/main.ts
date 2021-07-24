@@ -31,7 +31,7 @@ import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinit
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightView)
     const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
-    model.setScale(0.15,0.15,0.15)
+    model.setScale(0.01,0.01,0.01)
 
     const loop = () => {
         

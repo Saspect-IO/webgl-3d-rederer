@@ -56,7 +56,6 @@ class DirectionalShadowShader {
 		this.viewModelMatrix = camera.viewMatrix
 		this.shaderProgram = shaderProgram
 
-		//Cleanup
 		shaderProgram.deactivateShader()
 	}
 

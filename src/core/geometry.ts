@@ -1,7 +1,5 @@
 
 import { MeshData } from "@/entities";
-import DepthTexture from "./Textures/depthTexture";
-import Texture from "./Textures/texture";
 import Transformation from "./transformation";
 export default class Geometry {
 
@@ -14,8 +12,7 @@ export default class Geometry {
     mesh: MeshData;
     transform: Transformation;
 
-    //--------------------------------------------------------------------------
-    //Getters/Setters
+
     setScale(x: number, y: number, z: number) {
         this.transform.scale.set(x, y, z);
         return this;
@@ -52,8 +49,6 @@ export default class Geometry {
         return this;
     }
 
-    //--------------------------------------------------------------------------
-    //Things to do before its time to render
     preRender() {
         this.transform.updateMatrix();
         return this;
