@@ -87,8 +87,8 @@ export default class ObjLoader {
     static async loadOBJ(url: string) {
         const response = await fetch(url);
         const data = await response.text()
-        const result = await ObjLoader.parseOBJ(data);
-        return result;
+        const [surfaces] = await Promise.all([ObjLoader.parseOBJ(data)]);
+        return surfaces;
     }
 
     vertexCount() {
