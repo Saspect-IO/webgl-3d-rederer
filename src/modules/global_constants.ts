@@ -78,3 +78,15 @@ export enum ShaderProgramMatrixFields {
     PERSPECTIVE_MATRIX = 'perspectiveMatrix',
     ORTHO_MATRIX = 'orthoMatrix'
 }
+
+export enum ObjTypes {
+    V = 'v',
+    VN = 'vn',
+    VT = 'vt',
+    F = 'f',
+}
+
+export const NEW_LINE = '\n'
+export const END_OF_LINE = '\r'
+export const BACKSLASH = '/'
+export const SPACE = /\s+/
