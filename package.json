@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
-  "dependencies": {},
+  "dependencies": {
+    "express": "^4.17.1"
+  },
   "devDependencies": {
     "html-webpack-plugin": "^5.3.1",
     "ts-loader": "^8.0.17",
@@ -13,6 +15,7 @@
     "webpack-dev-server": "^3.11.2"
   },
   "scripts": {
+    "start": "node server.js",
     "dev": "webpack serve --mode development --env development",
     "build": "webpack --mode production",
     "test": "echo \"Error: no test specified\" && exit 1"
