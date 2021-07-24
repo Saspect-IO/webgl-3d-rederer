@@ -9,12 +9,8 @@ export enum ProgramEntrySettings {
     WEBGL_DEPTH_TEXTURE = 'WEBGL_depth_texture',
     WEBGL_CONTEXT_ERROR_MESSAGE = 'Could not initialise WebGL',
     WEBGL_DEPTH_TEXTUR_ERROR_MESSAGE = 'need WEBGL_depth_texture',
-    PATH_ASSETS_OBJ = '/public/resources/formula_1/source/formula_1.obj',
-    PATH_ASSETS_TEXTURE = '/public/resources/formula_1/textures/formula_1.png',
-    PATH_SHADE_VERTEX = '/shaders/basic.vert',
-    PATH_SHADE_FRAGMENT = '/shaders/basic.frag',
-    PRIMITIVE_SHADER_VERTEX = '/shaders/primitive.vert',
-    PRIMITIVE_SHADER_FRAGMENT = '/shaders/primitive.frag',
+    PATH_ASSETS_OBJ = '/formula_1.obj',
+    PATH_ASSETS_TEXTURE = '/formula_1.png',
     DEPTH_TEXTURE_SIZE = 512,
 }
 
