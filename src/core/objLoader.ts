@@ -46,7 +46,7 @@ export default class ObjLoader {
                 // Add new face
                 const vertices: Vertex[] = [];
 
-                // Create three vertices from the passed one-indexed indices
+                // conditionally detect and parse quads to triangle
                 for (let i = 1; i < size; i ++) {
                     if (lineItems.length>size && !shouldExit) {
                         size+=1
@@ -68,6 +68,7 @@ export default class ObjLoader {
                     vertices.push(VertexStruct(position, normal, uv))
                 }
                 
+                // split tesselated quads as individual surfaces
                 if (vertices.length>3) {
                     const triagle1 = vertices.slice(0,3)
                     const triangle2 = vertices.slice(3)
