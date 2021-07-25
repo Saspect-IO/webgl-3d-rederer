@@ -1,5 +1,5 @@
 import { Normal, Vector, Surface, UV, Vertex } from "@/entities";
-import { SurfaceStruct, Vec2Struct, Vec3Struct, VertexStruct } from "@/modules";
+import { NEW_LINE, ObjTypes, BACKSLASH, SPACE, SurfaceStruct, Vec2Struct, Vec3Struct, VertexStruct } from "@/modules";
 
 export default class ObjLoader {
 
@@ -9,53 +9,83 @@ export default class ObjLoader {
 
     surfaces: Surface[] = [];
 
-    static parseOBJ(src: string) {
+    static async parseOBJ(src: string) {
 
-        const POSITION = /^v\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)/
-        const NORMAL = /^vn\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)/
-        const UV = /^vt\s+([\d\.\+\-eE]+)\s+([\d\.\+\-eE]+)/
-        const SURFACE = /^f\s+(-?\d+)\/(-?\d+)\/(-?\d+)\s+(-?\d+)\/(-?\d+)\/(-?\d+)\s+(-?\d+)\/(-?\d+)\/(-?\d+)(?:\s+(-?\d+)\/(-?\d+)\/(-?\d+))?/
+        const POSITION = ObjTypes.V
+        const NORMAL = ObjTypes.VN
+        const UV = ObjTypes.VT
+        const SURFACE = ObjTypes.F
 
-        const lines = src.split('\n');
+        const lines = src.split(NEW_LINE);
         const positions: Vector[] = [];
         const uvs: UV[] = [];
         const normals: Normal[] = [];
         const surfaces: Surface[] = [];
-
-        lines.forEach(function (line: string) {
+       
+        for(let item of lines){
             // Match each line of the file against various RegEx-es
-            let result = null;
-            if ((result = POSITION.exec(line)) !== null) {
+            const lineItems = item.trim().split(SPACE)
+            const type = lineItems[0]
+
+            if ( POSITION === type) {
                 // Add new vertex position
-                positions.push(Vec3Struct(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3])))
-            } else if ((result = NORMAL.exec(line)) !== null) {
+                positions.push(Vec3Struct(parseFloat(lineItems[1]), parseFloat(lineItems[2]), parseFloat(lineItems[3])))
+            } else if (NORMAL  === type) {
                 // Add new vertex normal
-                normals.push(Vec3Struct(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3])))
-            } else if ((result = UV.exec(line)) !== null) {
+                normals.push(Vec3Struct(parseFloat(lineItems[1]), parseFloat(lineItems[2]), parseFloat(lineItems[3])))
+            } else if (UV === type) {
                 // Add new texture mapping point
-                uvs.push(Vec2Struct(parseFloat(result[1]), 1 - parseFloat(result[2])))
-            } else if ((result = SURFACE.exec(line)) !== null) {
+                uvs.push(Vec2Struct(parseFloat(lineItems[1]), 1 - parseFloat(lineItems[2])))
+            } else if (SURFACE === type) {
+                let isQuad = false
+                let shouldExit = false
+                let size = 4
                 // Add new face
                 const vertices: Vertex[] = [];
-                // Create three vertices from the passed one-indexed indices
-                for (let i = 1; i < 10; i += 3) {
-                    const part = result.slice(i, i + 3);
-                    const position = positions[parseInt(part[0]) - 1];
-                    const uv = uvs[parseInt(part[1]) - 1];
-                    const normal = normals[parseInt(part[2]) - 1];
-                    vertices.push(VertexStruct(position, normal, uv));
+
+                // conditionally detect and parse quads to triangle
+                for (let i = 1; i < size; i ++) {
+                    if (lineItems.length>size && !shouldExit) {
+                        size+=1
+                    }else if (i===4 && !isQuad) {
+                        i = 3
+                        size+=1
+                        isQuad = true
+                    }else if (i===5 && isQuad) {
+                        i=1
+                        isQuad = false
+                        shouldExit = true
+                    } else if(i===2 && shouldExit){
+                        break
+                    }
+                    const part = lineItems[i].split(BACKSLASH)
+                    const position = positions[parseInt(part[0]) - 1]
+                    const uv = uvs[parseInt(part[1]) - 1]
+                    const normal = normals[parseInt(part[2]) - 1]
+                    vertices.push(VertexStruct(position, normal, uv))
                 }
-                surfaces.push(SurfaceStruct(vertices));
+                
+                // split tesselated quads as individual surfaces
+                if (vertices.length > 3) {
+                    const triagle1 = vertices.slice(0, 3)
+                    const triangle2 = vertices.slice(3)
+                    surfaces.push(SurfaceStruct(triagle1))
+                    surfaces.push(SurfaceStruct(triangle2))
+                }else{
+                    surfaces.push(SurfaceStruct(vertices))
+                }
+                
             }
-        })
+        }
 
         return new ObjLoader(surfaces);
     }
 
     static async loadOBJ(url: string) {
         const response = await fetch(url);
-        const data = ObjLoader.parseOBJ(await response.text());
-        return data;
+        const data = await response.text()
+        const [surfaces] = await Promise.all([ObjLoader.parseOBJ(data)]);
+        return surfaces;
     }
 
     vertexCount() {
