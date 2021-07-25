@@ -52,33 +52,28 @@ class InfiniteGridShader{
 
 			// computes Z-buffer depth value, and converts the range.
 			float computeDepth(vec3 pos) {
+				// get the clip-space coordinates
 				vec4 clip_space_pos = fragProj * fragView * vec4(pos.xyz, 1.0);
+
+				// get the depth value in normalized device coordinates
 				float clip_space_depth = clip_space_pos.z / clip_space_pos.w;
 
+				// and compute the range based on gl_DepthRange settings (not necessary with default settings, but left for completeness)
 				float far = gl_DepthRange.far;
 				float near = gl_DepthRange.near;
 
 				float depth = (((far-near) * clip_space_depth) + near + far) / 2.0;
-				
+
+				// and return the result
 				return depth;
 			}
 
-			vec4 grid(vec3 fragPos3D, float scale) {
-                vec2 coord = fragPos3D.xz * scale;
-                vec2 derivative = fwidth(coord);
-                vec2 gridLines = abs(fract(coord - 0.5) - 0.5) / derivative;
-                float line = min(gridLines.x, gridLines.y);
-                float minimumz = min(derivative.y, 1.0);
-                float minimumx = min(derivative.x, 1.0);
-                vec4 color = vec4(0.2, 0.2, 0.2, 1.0 - min(line, 1.0));
-                // z axis
-                if(fragPos3D.x > -0.1 * minimumx && fragPos3D.x < 0.1 * minimumx)
-                    color.z = 1.0;
-                // x axis
-                if(fragPos3D.z > -0.1 * minimumz && fragPos3D.z < 0.1 * minimumz)
-                    color.x = 1.0;
-                return color;
-            }
+			float checkerboard(vec2 R, float scale) {
+				return float((
+					int(floor(R.x / scale)) +
+					int(floor(R.y / scale))
+				) % 2);
+			}
 
             out vec4 finalColor;
 
@@ -86,19 +81,19 @@ class InfiniteGridShader{
 
                 float t = -nearPoint.y / (farPoint.y - nearPoint.y);
                 vec3 fragPos3D = nearPoint + t * (farPoint - nearPoint);
-
-				gl_FragDepth = computeDepth(fragPos3D);
-
+	
 				float isIntersect = (t > 0.0) ? 1.0 : 0.0;
+				float gridPattern = (checkerboard(fragPos3D.xz, 1.0) * 0.3) + (checkerboard(fragPos3D.xz, 10.0) * 0.2) + (checkerboard(fragPos3D.xz, 100.0) * 0.1) + 0.1;
+
 				float linearFieldSection = 0.02 * length(fragPos3D.xz);
 				float fading = min(1.0, 1.5 - linearFieldSection);
 
-				vec4 outColor = grid(fragPos3D, 0.5); 
+				vec4 outColor = vec4(vec3((gridPattern/2.0) + 0.3), 1.0);
 
 				finalColor = outColor * isIntersect;
 				finalColor *= fading;
 
-			
+				gl_FragDepth = computeDepth(fragPos3D);
             }`;										
 
 		const shaderProgram = new ShaderProgram(gl, vertexShader, fragmentShader);
@@ -111,7 +106,7 @@ class InfiniteGridShader{
 		this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
 		this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
 		this.uColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
-
+		//Cleanup
 		shaderProgram.deactivateShader()
 
 		this.perspectiveProjectionMatrix = camera.perspectiveProjection

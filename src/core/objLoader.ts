@@ -9,7 +9,7 @@ export default class ObjLoader {
 
     surfaces: Surface[] = [];
 
-    static parseOBJ(src: string) {
+    static async parseOBJ(src: string) {
 
         const POSITION = ObjTypes.V
         const NORMAL = ObjTypes.VN
@@ -22,7 +22,7 @@ export default class ObjLoader {
         const normals: Normal[] = [];
         const surfaces: Surface[] = [];
        
-        lines.forEach(function (item: string) {
+        lines.map(function(item: string) {
             // Match each line of the file against various RegEx-es
             const lineStart = 0
             const lineEnd = item.indexOf(END_OF_LINE, 0)
@@ -86,8 +86,9 @@ export default class ObjLoader {
 
     static async loadOBJ(url: string) {
         const response = await fetch(url);
-        const data = ObjLoader.parseOBJ(await response.text());
-        return data;
+        const data = await response.text()
+        const [surfaces] = await Promise.all([ObjLoader.parseOBJ(data)]);
+        return surfaces;
     }
 
     vertexCount() {
