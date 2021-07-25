@@ -1,5 +1,5 @@
 import { Normal, Vector, Surface, UV, Vertex } from "@/entities";
-import { END_OF_LINE, NEW_LINE, ObjTypes, BACKSLASH, SPACE, SurfaceStruct, Vec2Struct, Vec3Struct, VertexStruct } from "@/modules";
+import { NEW_LINE, ObjTypes, BACKSLASH, SPACE, SurfaceStruct, Vec2Struct, Vec3Struct, VertexStruct } from "@/modules";
 
 export default class ObjLoader {
 
@@ -22,12 +22,9 @@ export default class ObjLoader {
         const normals: Normal[] = [];
         const surfaces: Surface[] = [];
        
-        lines.map(function(item: string) {
+        for(let item of lines){
             // Match each line of the file against various RegEx-es
-            const lineStart = 0
-            const lineEnd = item.indexOf(END_OF_LINE, 0)
-            const line = item.substring(lineStart, lineEnd).trim()
-            const lineItems = line.split(SPACE)
+            const lineItems = item.trim().split(SPACE)
             const type = lineItems[0]
 
             if ( POSITION === type) {
@@ -69,8 +66,8 @@ export default class ObjLoader {
                 }
                 
                 // split tesselated quads as individual surfaces
-                if (vertices.length>3) {
-                    const triagle1 = vertices.slice(0,3)
+                if (vertices.length > 3) {
+                    const triagle1 = vertices.slice(0, 3)
                     const triangle2 = vertices.slice(3)
                     surfaces.push(SurfaceStruct(triagle1))
                     surfaces.push(SurfaceStruct(triangle2))
@@ -79,7 +76,7 @@ export default class ObjLoader {
                 }
                 
             }
-        })
+        }
 
         return new ObjLoader(surfaces);
     }
