@@ -1,5 +1,5 @@
-import obj from '@/assets/resources/formula_1/source/formula_1.obj';
-import texture from '@/assets/resources/formula_1/textures/formula_1.png';
+import obj from 'assets/resources/formula_1/source/formula_1.obj';
+import texture from 'assets/resources/formula_1/textures/formula_1.png';
 
 export const TEXTURE = 'TEXTURE'
 
