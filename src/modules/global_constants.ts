@@ -2,9 +2,11 @@ import obj from 'assets/resources/formula_1/source/formula_1.obj';
 import texture from 'assets/resources/formula_1/textures/formula_1.png';
 
 export const TEXTURE = 'TEXTURE'
-
 export const PATH_ASSETS_OBJ = obj
 export const PATH_ASSETS_TEXTURE = texture
+export const NEW_LINE = '\n'
+export const BACKSLASH = '/'
+export const SPACE = /\s+/
 
 export enum ProgramEntrySettings {
     WEBGL_CANVAS_ID = 'qrius-glCanvas',
@@ -40,20 +42,17 @@ export enum CameraControlsSettings {
     ROTATION_RATE = -300,
     PAN_RATE = 5,
     ZOOM_RATE = 200,
-
 }
 
 export enum GLSetttings {
     DEFAULT_OFFSET = 0,
     DEFAULT_STRIDE = 0,
+    GRID_VECTOR_SIZE = 3,
+    GRID_VERTEX_LEN = 4,
     ATTR_POSITION_NAME = "a_position",
     ATTR_NORMAL_NAME = "a_norm",
     ATTR_UV_NAME = "a_texCoord",
     UNI_COLOR = 'u_color',
-    ATTR_UV_LOC = 2,
-    GRID_VECTOR_SIZE = 3,
-    GRID_COLOR_SIZE = 1,
-    GRID_VERTEX_LEN = 4,
     UNI_MODEL_MAT ='u_mVMatrix',
     UNI_PERSPECTIV_MAT = 'u_pMatrix',
     UNI_ORTHO_MAT = 'u_oMatrix',
@@ -73,14 +72,6 @@ export enum GLSetttings {
     UNI_SPECULAR_FACTOR = 'u_specularFactor',
     BUFFER_TYPE_INDICES = 'indices',
     BUFFER_TYPE_VERTICES = 'vertices',
-
-}
-
-export enum ShaderProgramMatrixFields {
-    CAMERA_MATRIX = 'cameraMatrix',
-    MODEL_MATRIX = 'modelViewMatrix',
-    PERSPECTIVE_MATRIX = 'perspectiveMatrix',
-    ORTHO_MATRIX = 'orthoMatrix'
 }
 
 export enum ObjTypes {
@@ -89,8 +80,3 @@ export enum ObjTypes {
     VT = 'vt',
     F = 'f',
 }
-
-export const NEW_LINE = '\n'
-export const END_OF_LINE = '\r'
-export const BACKSLASH = '/'
-export const SPACE = /\s+/

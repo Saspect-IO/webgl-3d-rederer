@@ -1,12 +1,12 @@
-import { PATH_ASSETS_OBJ, PATH_ASSETS_TEXTURE, ProgramEntrySettings } from '@/modules'
-import GLContext from './core/glContext'
-import { Camera, CameraController }  from './core/camera'
-import { Model, ModelShader } from './core/model'
-import { DirectionalShadow, DirectionalShadowShader } from './core/shadows/directional'
-import Light from './core/light'
-import DepthTexture from './core/Textures/depthTexture'
-import { Vector3 } from './core/math'
-import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinite'
+import { PATH_ASSETS_OBJ, PATH_ASSETS_TEXTURE, ProgramEntrySettings } from "./modules"
+import { Camera, CameraController } from "./core/camera"
+import GLContext from "./core/glContext"
+import Light from "./core/light"
+import { Vector3 } from "./core/math"
+import { DirectionalShadow, DirectionalShadowShader } from "./core/shadows/directional"
+import { InfiniteGrid, InfiniteGridShader } from "./core/primitives/grid/infinite"
+import { Model, ModelShader } from "./core/model"
+import DepthTexture from "./core/Textures/depthTexture"
 
 
 (async()=>{
