@@ -236,9 +236,9 @@ class Model {
     const vertexCount = model.vertices.vertexCount();
 
     const mesh: MeshData = {
-      positions : new Vbuffer(gl, model.vertices.positions(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
-      normals: new Vbuffer(gl, model.vertices.normals(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
-      uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
+      positions : new Vbuffer(gl, model.vertices.positions(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
+      normals: new Vbuffer(gl, model.vertices.normals(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
+      uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
       texture: model.texture,
       drawMode : gl.TRIANGLES,
       vertexCount,
