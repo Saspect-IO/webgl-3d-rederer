@@ -1,4 +1,4 @@
-import { ProgramEntrySettings } from '@/modules'
+import { PATH_ASSETS_OBJ, PATH_ASSETS_TEXTURE, ProgramEntrySettings } from '@/modules'
 import GLContext from './core/glContext'
 import { Camera, CameraController }  from './core/camera'
 import { Model, ModelShader } from './core/model'
@@ -20,7 +20,7 @@ import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinit
     lightView.transform.position.set(lightPosition.x, lightPosition.y, lightPosition.z)
 
     const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightView)
-    const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, ProgramEntrySettings.PATH_ASSETS_OBJ)
+    const directionalShadow = await DirectionalShadow.createGeometry(gl, directionalShadowShader, PATH_ASSETS_OBJ)
     
     const camera = new Camera(gl as WebGLRenderingContext)
     camera.transform.position.set(0, 0.5, 1.5)
@@ -30,7 +30,7 @@ import { InfiniteGrid, InfiniteGridShader } from './core/primitives/grid/infinit
     const infiniteGrid = await InfiniteGrid.createGeometry(gl, infiniteGridShader)
 
     const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightView)
-    const model = await Model.createGeometry(gl, modelShader, ProgramEntrySettings.PATH_ASSETS_OBJ, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
+    const model = await Model.createGeometry(gl, modelShader, PATH_ASSETS_OBJ, PATH_ASSETS_TEXTURE)
     model.setScale(0.0035,0.0035,0.0035).setRotation(0,30,0)
 
     const loop = () => {

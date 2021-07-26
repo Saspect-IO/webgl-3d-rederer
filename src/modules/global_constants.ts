@@ -1,4 +1,10 @@
+import obj from '@/assets/resources/formula_1/source/formula_1.obj';
+import texture from '@/assets/resources/formula_1/textures/formula_1.png';
+
 export const TEXTURE = 'TEXTURE'
+
+export const PATH_ASSETS_OBJ = obj
+export const PATH_ASSETS_TEXTURE = texture
 
 export enum ProgramEntrySettings {
     WEBGL_CANVAS_ID = 'qrius-glCanvas',
@@ -9,8 +15,6 @@ export enum ProgramEntrySettings {
     WEBGL_DEPTH_TEXTURE = 'WEBGL_depth_texture',
     WEBGL_CONTEXT_ERROR_MESSAGE = 'Could not initialise WebGL',
     WEBGL_DEPTH_TEXTUR_ERROR_MESSAGE = 'need WEBGL_depth_texture',
-    PATH_ASSETS_OBJ = '/assets/resources/formula_1/source/formula_1.obj',
-    PATH_ASSETS_TEXTURE = '/assets/resources/formula_1/textures/formula_1.png',
     DEPTH_TEXTURE_SIZE = 512,
 }
 
