@@ -1,12 +1,12 @@
-import Geometry from './geometry';
-import Texture from './Textures/texture';
-import Vbuffer from './vbuffer';
-import ShaderProgram from './shaderProgram';
-import ObjLoader from './objLoader';
-import { MeshData } from '@/entities';
-import { GLSetttings } from '@/modules';
-import { Camera } from './camera';
-import { Matrix4 } from './math';
+import Geometry from './geometry'
+import Texture from './Textures/texture'
+import Vbuffer from './vbuffer'
+import ShaderProgram from './shaderProgram'
+import ObjLoader from './objLoader'
+import { MeshData } from '@/entities'
+import { GLSetttings } from '@/modules'
+import { Camera } from './camera'
+import { Matrix4 } from './math'
 
 class ModelShader{
 	constructor(gl: WebGLRenderingContext, camera:Camera, lightViewCamera:Camera){	
@@ -124,7 +124,7 @@ class ModelShader{
 				finalColor = outColor;
 			}`;											
 
-		const shaderProgram = new ShaderProgram(gl, vertexShader, fragmentShader);
+		const shaderProgram = new ShaderProgram(gl, vertexShader, fragmentShader)
 
 		shaderProgram.activateShader()
 
@@ -219,7 +219,6 @@ class ModelShader{
 			[0, 1, 0],// up
 		);
 	}
-
 }
 
 
@@ -245,9 +244,9 @@ class Model {
       vertexCount,
     }
 
-    mesh.positions?.bindToAttribute(shaderProgram.positionLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
-    mesh.normals?.bindToAttribute(shaderProgram.normalLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
-    mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET);
+    mesh.positions?.bindToAttribute(shaderProgram.positionLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET)
+    mesh.normals?.bindToAttribute(shaderProgram.normalLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET)
+    mesh.uvs?.bindToAttribute(shaderProgram.texCoordLoc as number, GLSetttings.DEFAULT_STRIDE, GLSetttings.DEFAULT_OFFSET)
 
     return mesh;
   }
@@ -255,9 +254,9 @@ class Model {
   static async loadModel(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
     const objVertices = await ObjLoader.loadOBJ(objSrc);
     const objTexture = await Texture.loadTexture(gl, textureSrc);
-    const [vertices, texture] = await Promise.all([objVertices, objTexture]);
+    const [vertices, texture] = await Promise.all([objVertices, objTexture])
     
-    return {vertices, texture};
+    return {vertices, texture}
   }
 
 }

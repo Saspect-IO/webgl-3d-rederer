@@ -108,9 +108,9 @@ class DirectionalShadow {
 	}
 
 	static async loadModel(gl: WebGLRenderingContext, objSrc: string) {
-		const objVertices = await ObjLoader.loadOBJ(objSrc);
+		const objVertices = await ObjLoader.loadOBJ(objSrc)
 		const objTexture = new DepthTexture(gl, ProgramEntrySettings.DEPTH_TEXTURE_SIZE)
-		const [vertices, texture] = await Promise.all([objVertices, objTexture]);
+		const [vertices, texture] = await Promise.all([objVertices, objTexture])
 		
 		return {vertices, texture};
 	}
