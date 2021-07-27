@@ -6,7 +6,9 @@ Utilizes Webpack for deployment builds.
 
 ## 🚀 Demo 
 - [WebGL 3D Renderer Demo](https://saspect-io.github.io/webgl-3d-renderer/)
-- ![image](https://user-images.githubusercontent.com/29488727/127239605-48559dc9-f9d8-4789-b6df-4961d7a66ce9.png)
+
+## Current Scene SnapShot
+- ![image](https://user-images.githubusercontent.com/29488727/127239719-09528c91-acb0-49b1-bf05-cd780b8f7743.png)
 
 
 
