@@ -25,7 +25,7 @@ import Texture from "./core/Textures/texture"
 
     const vertices = await ObjLoader.loadOBJ(PATH_ASSETS_OBJ)
     const texture = await Texture.loadTexture(gl, PATH_ASSETS_TEXTURE)
-    const depthTexture = new DepthTexture(gl, ProgramEntrySettings.DEPTH_TEXTURE_SIZE)
+    //const depthTexture = new DepthTexture(gl, ProgramEntrySettings.DEPTH_TEXTURE_SIZE)
 
     const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightCameraView)
     const directionalShadow = DirectionalShadow.createGeometry(gl, directionalShadowShader, vertices)
@@ -44,7 +44,7 @@ import Texture from "./core/Textures/texture"
     const loop = () => {
         lightCameraView.updateViewMatrix()
         // rendering scene depth
-        glContext.depthRender(depthTexture)
+        //glContext.depthRender(depthTexture)
         directionalShadowShader.setUniforms(gl, directionalShadow.preRender()).shaderProgram
             .renderModel(directionalShadow.preRender())
 
