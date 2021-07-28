@@ -63,7 +63,6 @@ class Camera {
   }
 
   //To have different modes of movements, this function handles the view matrix update for the transform object.
-  
   updateViewMatrix() {
     //Optimize camera transform update, no need for scale nor rotateZ
     if (this.mode == Camera.MODE_FREE) {
@@ -77,7 +76,6 @@ class Camera {
         .rotateX(degToRad(this.transform.rotation.x))
         .rotateY(degToRad(this.transform.rotation.y))
         .vtranslate(this.transform.position)
-
     }
 
     this.transform.updateDirection()
@@ -87,6 +85,7 @@ class Camera {
 
     return this.viewMatrix
   }
+
 }
 
 class CameraController {

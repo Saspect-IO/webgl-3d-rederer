@@ -156,11 +156,11 @@ class InfiniteGrid {
 
   	constructor() {}
 
-   	static async createGeometry(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader){ 
-    	return  new Geometry( await InfiniteGrid.createMesh(gl, shaderProgram)); 
+   	static createGeometry(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader){ 
+    	return  new Geometry( InfiniteGrid.createMesh(gl, shaderProgram)); 
   	}
 
-   static async createMesh(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader) {
+   static createMesh(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader) {
 
 		const verts = [
 			1,-1,0,
