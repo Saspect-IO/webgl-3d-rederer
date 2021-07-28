@@ -23,8 +23,8 @@ import Texture from "./core/Textures/texture"
     const lightCameraView = new Camera(gl as WebGLRenderingContext)
     lightCameraView.transform.position.set(lightViewPosition.x, lightViewPosition.y, lightViewPosition.z)
 
-    const vertices = await ObjLoader.loadOBJ(PATH_ASSETS_OBJ)
-    const texture = await Texture.loadTexture(gl, PATH_ASSETS_TEXTURE)
+    const vertices = await ObjLoader.loadOBJ(ProgramEntrySettings.PATH_ASSETS_OBJ)
+    const texture = await Texture.loadTexture(gl, ProgramEntrySettings.PATH_ASSETS_TEXTURE)
     //const depthTexture = new DepthTexture(gl, ProgramEntrySettings.DEPTH_TEXTURE_SIZE)
 
     const directionalShadowShader = new DirectionalShadowShader(gl as WebGLRenderingContext, lightCameraView)
