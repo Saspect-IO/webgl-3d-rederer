@@ -52,7 +52,7 @@ module.exports = {
           loader:'file-loader',
           options:{
             name:'[name].[ext]',
-            outputPath:'assets/resources/[name]/textures/'
+            outputPath:'assets/resources/formula_1/textures/'
           }
         }],
       },
@@ -62,7 +62,7 @@ module.exports = {
           loader:'file-loader',
           options:{
             name:'[name].[ext]',
-            outputPath:'assets/resources/[name]/sources/'
+            outputPath:'assets/resources/formula_1/sources/'
           }
         }],
       },
