@@ -74,7 +74,6 @@ export default class ObjLoader {
                 }else{
                     surfaces.push(SurfaceStruct(vertices))
                 }
-                
             }
         }
 
@@ -127,5 +126,4 @@ export default class ObjLoader {
 
         return result;
     }
-
 }

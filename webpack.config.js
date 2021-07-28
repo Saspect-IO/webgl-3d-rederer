@@ -43,12 +43,28 @@ module.exports = {
         exclude: /node_modules/,
       },
       {
+        test: /\.html$/,
+        use: ['html-loader'],
+      },
+      {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'assets/resources',
+        use: [{
+          loader:'file-loader',
+          options:{
+            name:'[name].[ext]',
+            outputPath:'assets/resources/[name]/textures/'
+          }
+        }],
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf|obj)$/i,
-        type: 'assets/resources',
+        use: [{
+          loader:'file-loader',
+          options:{
+            name:'[name].[ext]',
+            outputPath:'assets/resources/[name]/sources/'
+          }
+        }],
       },
     ]
   },

@@ -1,4 +1,3 @@
-import { ShaderProgramMatrixFields } from "@/modules"
 import Geometry from "./geometry"
 
 export default class ShaderProgram {
@@ -52,7 +51,6 @@ export default class ShaderProgram {
 
     this.vertexShader = vertexShader
     this.fragmentShader = fragmentShader
-
 
     gl.detachShader(program, vertexShader)
     gl.detachShader(program, fragmentShader)

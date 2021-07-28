@@ -156,11 +156,11 @@ class InfiniteGrid {
 
   	constructor() {}
 
-   	static async createGeometry(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader){ 
-    	return  new Geometry( await InfiniteGrid.createMesh(gl, shaderProgram)); 
+   	static createGeometry(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader){ 
+    	return  new Geometry( InfiniteGrid.createMesh(gl, shaderProgram)); 
   	}
 
-   static async createMesh(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader) {
+   static createMesh(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader) {
 
 		const verts = [
 			1,-1,0,
@@ -174,7 +174,7 @@ class InfiniteGrid {
 		const vertexCount = verts.length/3;
 		const strideLen = Float32Array.BYTES_PER_ELEMENT * 3; //Stride Length is the Vertex Size for the buffer in Bytes
 		const mesh: MeshData = {
-			positions : new Vbuffer(gl, verts, vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
+			positions : new Vbuffer(gl, verts, vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
 			drawMode : gl.TRIANGLES,
 			vertexCount,
 		}

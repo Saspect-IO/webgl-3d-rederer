@@ -14,14 +14,12 @@ export default class Texture {
     gl: WebGLRenderingContext;
 
     // Asynchronously load an image
-    static loadTexture(gl: WebGLRenderingContext, url: string): Promise < Texture > {
-        return new Promise(function (resolve) {
-            const image = new Image()
-            image.onload = function () {
-                resolve(new Texture(gl, image))
-            };
-            image.src = url
-        });
+    static async loadTexture(gl: WebGLRenderingContext, url: string): Promise < Texture > {
+        const image = new Image()
+        image.src = url
+        await image.decode()
+        const result = new Texture(gl, image)
+        return result
     }
 
 }
