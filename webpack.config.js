@@ -62,7 +62,7 @@ module.exports = {
           loader:'file-loader',
           options:{
             name:'[name].[ext]',
-            outputPath:'assets/resources/formula_1/sources/'
+            outputPath:'assets/resources/formula_1/source/'
           }
         }],
       },
