@@ -2,6 +2,7 @@ export default class AppLoader{
     constructor(){
         const loader = document.getElementById('shadow-app-loader')
         const shadowRoot = loader?.attachShadow({mode:'open'}) as ShadowRoot 
+        
         shadowRoot.innerHTML = `
         <style>
             .lds-ellipsis {
@@ -60,8 +61,8 @@ export default class AppLoader{
                 transform: translate(24px, 0);
               }
             }
-
         </style>
+
         <div id="app-loader"
             style="display: flex;
             visibility: visible;
@@ -70,11 +71,13 @@ export default class AppLoader{
             align-items: center;
             position: fixed; 
             left: 0; 
-            top: 0; right: 
-            0; bottom: 0; 
+            top: 0; 
+            right: 0; 
+            bottom: 0; 
             background: rgb(0, 0, 0, 0.4);">
             <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
         </div>`
+
         this.appLoaderElem = shadowRoot.children[1] as HTMLElement
     }
 
@@ -82,15 +85,9 @@ export default class AppLoader{
 
     setDisplayState (state:boolean){
       state ? 
-      (this.appLoaderElem  as HTMLElement ).style.display = 'flex' :
-      (this.appLoaderElem  as HTMLElement).style.visibility = 'visible',
-      (this.appLoaderElem  as HTMLElement).style.transition = 'visibility 0s, opacity 0.5s linear' ,
-      (this.appLoaderElem  as HTMLElement).style.opacity = '0',
-      (
-        setTimeout(() => {
-          (this.appLoaderElem  as HTMLElement).style.display = 'none'
-        }, 1000)
-      )
-      
+      (this.appLoaderElem as HTMLElement).style.display = 'flex' :
+      (this.appLoaderElem as HTMLElement).style.visibility = 'visible',
+      (this.appLoaderElem as HTMLElement).style.transition = 'visibility 0s, opacity 0.5s linear',
+      (this.appLoaderElem as HTMLElement).style.opacity = '0'
     }
 }
