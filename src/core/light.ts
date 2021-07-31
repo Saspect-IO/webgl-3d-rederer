@@ -5,11 +5,11 @@ import { ModelShader } from "./model"
 export default class Light {
     constructor(
         lightPosition: Vector3,
-        lightColor = normalizeColor({red:255, green:255, blue:255}),
-        ambientLightColor = normalizeColor({red:10, green:10, blue:10}),
-        specularColor = normalizeColor({red:195, green:210, blue:190}),
-        specularFactor = 5,
-        shininess = 500,
+        lightColor = normalizeColor({red:201, green:226, blue:255}),
+        ambientLightColor = normalizeColor({red:50, green:50, blue:50}),
+        specularColor = normalizeColor({red:255, green:255, blue:255}),
+        specularFactor = 1,
+        shininess = 1000,
     ) { 
         this.lightPosition = lightPosition
         this.lightColor = lightColor

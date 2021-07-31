@@ -52,7 +52,10 @@ module.exports = {
           loader:'file-loader',
           options:{
             name:'[name].[ext]',
-            outputPath:'assets/resources/formula_1/textures/'
+            outputPath:(url)=>{
+              const name = (String(url)).split('.')[0]
+              return `assets/resources/${name}/textures/${url}`
+            }
           }
         }],
       },
@@ -62,7 +65,10 @@ module.exports = {
           loader:'file-loader',
           options:{
             name:'[name].[ext]',
-            outputPath:'assets/resources/formula_1/source/'
+            outputPath:(url)=>{
+              const name = (String(url)).split('.')[0]
+              return `assets/resources/${name}/source/${url}`
+            }
           }
         }],
       },

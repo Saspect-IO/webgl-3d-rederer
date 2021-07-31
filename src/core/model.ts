@@ -32,7 +32,6 @@ class ModelShader{
 			out vec3 v_surfaceToCamera;
 
 			out vec2 v_texCoord;
-			out vec4 v_projectedTexcoord;
 
 			void main(void){
 
@@ -49,27 +48,23 @@ class ModelShader{
 				v_surfaceToCamera = u_cameraPosition - v_surfaceWorldPosition;
 
 				v_texCoord = a_texCoord;
-				v_projectedTexcoord = u_textureMatrix * vec4(v_surfaceWorldPosition, 1.0);
+
 			}`;
 
 		const fragmentShader = `#version 300 es
 			precision highp float;
 
 			in vec2 v_texCoord;
-			in vec4 v_projectedTexcoord;
 			in vec3 v_normal;
 			in vec3 v_surfaceToLight;
 			in vec3 v_surfaceToCamera;
-			
-			
+
+			uniform sampler2D sampler;
 			uniform vec4 u_lightColor;
 			uniform vec4 u_ambientLightColor;
-			uniform sampler2D u_diffuse;
-			uniform sampler2D u_projectedTexture;
 			uniform vec4 u_specularColor;
 			uniform float u_shininess;
 			uniform float u_specularFactor;
-			uniform float u_bias;
 			uniform vec3 u_reverseLightDirection;
 
 			vec4 lit(float l ,float h, float m) {
@@ -85,38 +80,21 @@ class ModelShader{
 
 			void main(void) {
 
+				vec4 texel = texture(sampler, v_texCoord);
 				vec3 normal = normalize(v_normal);
 
-				float light = dot(normal, u_reverseLightDirection);
-
-				vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
-				float currentDepth = projectedTexcoord.z + u_bias;
-
-				bool inRange =+
-					projectedTexcoord.x >= 0.0 &&+
-					projectedTexcoord.x <= 1.0 &&+
-					projectedTexcoord.y >= 0.0 &&+
-					projectedTexcoord.y <= 1.0;
-
-				float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
-				float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;
+				float lightIntensity = dot(normal, u_reverseLightDirection);
+				vec4 diffuse = u_ambientLightColor + u_lightColor * lightIntensity;
 
 				vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
 				vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);
 				vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);
 
-				vec4 diffuseColor = texture(u_diffuse, v_texCoord);
-				vec4 litR = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);
-				
-				vec4 mult1 = diffuseColor * litR.y;
-				vec4 mult2 = diffuseColor * u_ambientLightColor;
-				vec4 mult3 = u_specularColor * litR.z * u_specularFactor;
-				vec4 mult4 = u_lightColor * ( mult1 + mult2 + mult3);
+				vec4 specularIntensity = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);
+				vec4 specular = u_specularColor * specularIntensity.z * u_specularFactor;
+				vec4 light = diffuse + specular;
 
-				vec4 outColor = mult4 * vec4(
-					diffuseColor.rgb * light * shadowLight,
-					diffuseColor.a);
-
+				vec4 outColor = vec4(texel.rgb * light.xyz, texel.a);
 
 				finalColor = outColor;
 			}`;											
