@@ -38,7 +38,7 @@ export default class Scene {
             const model = Model.createGeometry(gl, modelShader, vertices, texture)
             model.setScale(0.0035,0.0035,0.0035).setRotation(0,30,0)
 
-            appLoader.setDisplayState(false)
+            appLoader.disable()
 
             const loop = () => {
 
