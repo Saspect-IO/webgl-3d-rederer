@@ -26,19 +26,19 @@ export default class AppLoader extends HTMLElement {
                 animation-timing-function: cubic-bezier(0, 1, 1, 0);
               }
               .lds-ellipsis div:nth-child(1) {
-                left: 16px;
+                left: 0px;
                 animation: lds-ellipsis1 0.6s infinite;
               }
               .lds-ellipsis div:nth-child(2) {
-                left: 16px;
+                left: 5px;
                 animation: lds-ellipsis2 0.6s infinite;
               }
               .lds-ellipsis div:nth-child(3) {
-                left: 40px;
+                left: 30px;
                 animation: lds-ellipsis2 0.6s infinite;
               }
               .lds-ellipsis div:nth-child(4) {
-                left: 64px;
+                left: 60px;
                 animation: lds-ellipsis3 0.6s infinite;
               }
               @keyframes lds-ellipsis1 {
