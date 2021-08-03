@@ -42,6 +42,10 @@ export enum CameraControlsSettings {
     ROTATION_RATE = -300,
     PAN_RATE = 5,
     ZOOM_RATE = 200,
+    TOUCH_START = 'touchstart',
+    TOUCH_MOVE = 'touchmove',
+    TOUCH_CANCEL = 'touchcancel',
+    TOUCH_END = 'touchend',
 }
 
 export enum GLSetttings {
