@@ -5,9 +5,9 @@ export default class AppLoader extends HTMLElement {
         shadowRoot.innerHTML = `
           <style>
               :host-context(.fade-app-loader) {
-                visibility: visible;
-                transition: visibility 0s, opacity 0.5s linear;
+                visibility: hidden;
                 opacity: 0;
+                transition: visibility 0.5s, opacity 0.5s linear;
               }
               .lds-ellipsis {
                 display: inline-block;
@@ -69,7 +69,6 @@ export default class AppLoader extends HTMLElement {
           </style>
           <div id="app-loader"
               style="display: flex;
-              visibility: visible;
               opacity: 1;
               justify-content: center;
               align-items: center;
