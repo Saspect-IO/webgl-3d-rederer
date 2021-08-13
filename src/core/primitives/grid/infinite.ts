@@ -76,9 +76,8 @@ class InfiniteGridShader{
                 float line = min(grid.x, grid.y);
                 float minimumz = min(derivative.y, 1.0);
                 float minimumx = min(derivative.x, 1.0);
-				vec3 refColor = vec3(47.0, 56.0, 70.0);
 				vec3 gridColor = vec3(1.0 - min(line, 1.0));
-                vec4 color = vec4(mix(refColor, gridColor, 1.0), 1.0);
+                vec4 color = vec4(gridColor, 1.0);
                 return color;
             }
 
@@ -90,7 +89,7 @@ class InfiniteGridShader{
                 vec3 fragPos3D = nearPoint + t * (farPoint - nearPoint);
 	
 				float isIntersect = (t > 0.0) ? 1.0 : 0.0;
-				float linearFieldSection = 0.02 * length(fragPos3D.xz);
+				float linearFieldSection = 0.09 * length(fragPos3D.xz);
 				float fading = min(1.0, 1.5 - linearFieldSection);
 
 				vec4 gridPattern = grid(fragPos3D, 0.5);
@@ -156,11 +155,11 @@ class InfiniteGrid {
 
   	constructor() {}
 
-   	static async createGeometry(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader){ 
-    	return  new Geometry( await InfiniteGrid.createMesh(gl, shaderProgram)); 
+   	static createGeometry(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader){ 
+    	return  new Geometry( InfiniteGrid.createMesh(gl, shaderProgram)); 
   	}
 
-   static async createMesh(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader) {
+   static createMesh(gl: WebGLRenderingContext, shaderProgram: InfiniteGridShader) {
 
 		const verts = [
 			1,-1,0,
@@ -174,7 +173,7 @@ class InfiniteGrid {
 		const vertexCount = verts.length/3;
 		const strideLen = Float32Array.BYTES_PER_ELEMENT * 3; //Stride Length is the Vertex Size for the buffer in Bytes
 		const mesh: MeshData = {
-			positions : new Vbuffer(gl, verts, vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
+			positions : new Vbuffer(gl, verts, vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
 			drawMode : gl.TRIANGLES,
 			vertexCount,
 		}

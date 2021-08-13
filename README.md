@@ -5,7 +5,12 @@ Utilizes Webpack for deployment builds.
 
 
 ## 🚀 Demo 
+- View on deskstop for interactive experience. Not yet optimized for mobile.
 - [WebGL 3D Renderer Demo](https://saspect-io.github.io/webgl-3d-renderer/)
+
+## Demo Scene SnapShot
+- ![image](https://user-images.githubusercontent.com/29488727/127239719-09528c91-acb0-49b1-bf05-cd780b8f7743.png)
+
 
 
 ## Dev Usage

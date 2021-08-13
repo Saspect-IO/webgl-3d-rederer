@@ -6,7 +6,7 @@ export default class DepthTexture {
         gl.texImage2D(
             gl.TEXTURE_2D,              // target
             0,                          // mip level
-            gl.DEPTH_COMPONENT16,       // internal format
+            gl.DEPTH_COMPONENT16,         // internal format
             depthTextureSize,           // width
             depthTextureSize,           // height
             0,                          // border

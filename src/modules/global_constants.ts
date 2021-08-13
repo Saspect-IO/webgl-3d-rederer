@@ -42,6 +42,10 @@ export enum CameraControlsSettings {
     ROTATION_RATE = -300,
     PAN_RATE = 5,
     ZOOM_RATE = 200,
+    TOUCH_START = 'touchstart',
+    TOUCH_MOVE = 'touchmove',
+    TOUCH_CANCEL = 'touchcancel',
+    TOUCH_END = 'touchend',
 }
 
 export enum GLSetttings {
@@ -70,8 +74,8 @@ export enum GLSetttings {
     UNI_LIGHT_COLOR = 'u_lightColor',
     UNI_SPECULAR_COLOR = 'u_specularColor',
     UNI_SPECULAR_FACTOR = 'u_specularFactor',
-    BUFFER_TYPE_INDICES = 'indices',
-    BUFFER_TYPE_VERTICES = 'vertices',
+    BUFFER_TYPE_ELEMENT_ARRAY = 'array_elements',
+    BUFFER_TYPE_ARRAY = 'arrays',
 }
 
 export enum ObjTypes {

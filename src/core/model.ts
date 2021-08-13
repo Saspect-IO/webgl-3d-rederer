@@ -9,7 +9,7 @@ import { Camera } from './camera'
 import { Matrix4 } from './math'
 
 class ModelShader{
-	constructor(gl: WebGLRenderingContext, camera:Camera, lightViewCamera:Camera){	
+	constructor(gl: WebGLRenderingContext, sceneViewCamera:Camera, lightViewCamera:Camera){	
 		const vertexShader = `#version 300 es
 			in vec3 a_position;
 			in vec3 a_norm;
@@ -26,21 +26,18 @@ class ModelShader{
 			mat4 m_worldMatrix;
 			mat4 m_viewProjectionMatrix;
 			mat4 m_worldViewProjectionMatrix;
-			mat4 m_textureMatrix;
 			
 			out vec3 v_normal;
 			out vec3 v_surfaceToLight;
 			out vec3 v_surfaceToCamera;
 
 			out vec2 v_texCoord;
-			out vec4 v_projectedTexcoord;
 
 			void main(void){
 
 				m_worldMatrix = u_mVMatrix;
 				m_viewProjectionMatrix = u_pMatrix * u_cameraViewMatrix;
 				m_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;
-				m_textureMatrix = u_textureMatrix;
 
 				gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);
 				
@@ -51,27 +48,23 @@ class ModelShader{
 				v_surfaceToCamera = u_cameraPosition - v_surfaceWorldPosition;
 
 				v_texCoord = a_texCoord;
-				v_projectedTexcoord = m_textureMatrix * vec4(v_surfaceWorldPosition, 1.0);
+
 			}`;
 
 		const fragmentShader = `#version 300 es
 			precision highp float;
 
 			in vec2 v_texCoord;
-			in vec4 v_projectedTexcoord;
 			in vec3 v_normal;
 			in vec3 v_surfaceToLight;
 			in vec3 v_surfaceToCamera;
-			
-			
+
+			uniform sampler2D sampler;
 			uniform vec4 u_lightColor;
 			uniform vec4 u_ambientLightColor;
-			uniform sampler2D u_diffuse;
-			uniform sampler2D u_projectedTexture;
 			uniform vec4 u_specularColor;
 			uniform float u_shininess;
 			uniform float u_specularFactor;
-			uniform float u_bias;
 			uniform vec3 u_reverseLightDirection;
 
 			vec4 lit(float l ,float h, float m) {
@@ -87,39 +80,21 @@ class ModelShader{
 
 			void main(void) {
 
+				vec4 texel = texture(sampler, v_texCoord);
 				vec3 normal = normalize(v_normal);
 
-				float light = dot(normal, u_reverseLightDirection);
-
-				vec3 projectedTexcoord = v_projectedTexcoord.xyz / v_projectedTexcoord.w;
-				float currentDepth = projectedTexcoord.z + u_bias;
-
-				bool inRange =+
-					projectedTexcoord.x >= 0.0 &&+
-					projectedTexcoord.x <= 1.0 &&+
-					projectedTexcoord.y >= 0.0 &&+
-					projectedTexcoord.y <= 1.0;
-
-				float projectedDepth = texture(u_projectedTexture, projectedTexcoord.xy).r;
-				float shadowLight = (inRange && projectedDepth <= currentDepth) ? 0.0 : 1.0;
+				float lightIntensity = dot(normal, u_reverseLightDirection);
+				vec4 diffuse = u_ambientLightColor + u_lightColor * lightIntensity;
 
 				vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
 				vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);
 				vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);
 
+				vec4 specularIntensity = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);
+				vec4 specular = u_specularColor * specularIntensity.z * u_specularFactor;
+				vec4 light = diffuse + specular;
 
-				vec4 diffuseColor = texture(u_diffuse, v_texCoord);
-				vec4 litR = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);
-				
-				vec4 mult1 = diffuseColor * litR.y;
-				vec4 mult2 = diffuseColor * u_ambientLightColor;
-				vec4 mult3 = u_specularColor * litR.z * u_specularFactor;
-				vec4 mult4 = u_lightColor * ( mult1 + mult2 + mult3);
-
-				vec4 outColor = mult4 * vec4(
-					diffuseColor.rgb * light * shadowLight,
-					diffuseColor.a);
-
+				vec4 outColor = vec4(texel.rgb * light.xyz, texel.a);
 
 				finalColor = outColor;
 			}`;											
@@ -150,10 +125,11 @@ class ModelShader{
 		//Cleanup
 		shaderProgram.deactivateShader()
 
-		this.perspectiveProjectionMatrix = camera.perspectiveProjection
-		this.orthoProjectionMatrix = camera.orthoProjection
-		this.viewModelMatrix = camera.viewMatrix
-		this.lightViewModelMatrix = lightViewCamera
+		this.perspectiveProjectionMatrix = sceneViewCamera.perspectiveProjection
+		this.orthoProjectionMatrix = sceneViewCamera.orthoProjection
+		this.viewModelMatrix = sceneViewCamera.viewMatrix
+		this.lightViewCamera = lightViewCamera
+		this.sceneViewCamera = sceneViewCamera
 		this.shaderProgram = shaderProgram
 	}
 
@@ -165,6 +141,7 @@ class ModelShader{
 	perspectiveMatrixLoc: WebGLUniformLocation
 	cameraMatrixLoc: WebGLUniformLocation
 	textureMatrixLoc: WebGLUniformLocation
+	
 
 	diffuseLoc: WebGLUniformLocation
 	projectedTextureLoc: WebGLUniformLocation
@@ -178,10 +155,12 @@ class ModelShader{
 	reverseLightDirectionLoc: WebGLUniformLocation
 
 	perspectiveProjectionMatrix: Float32Array
-	orthoProjectionMatrix:Float32Array
-	viewModelMatrix:Float32Array
+	orthoProjectionMatrix: Float32Array
+	viewModelMatrix: Float32Array
+	lightViewMatrix: Float32Array|null = null
 
-	lightViewModelMatrix:Camera
+	lightViewCamera: Camera
+	sceneViewCamera: Camera
 
 	shaderProgram: ShaderProgram
 
@@ -189,14 +168,14 @@ class ModelShader{
 	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
 		this.shaderProgram.activateShader()
 
-		const lightWorldMatrix = this.getLightWorldMatrix(this.lightViewModelMatrix, model) as Float32Array
+		const lightViewMatrix = this.getLightWorldMatrix(this.lightViewCamera, model) as Float32Array
 
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
 		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
-		gl.uniform3fv(this.reverseLightDirectionLoc , lightWorldMatrix.slice(8, 11))
-		gl.uniformMatrix4fv(this.textureMatrixLoc , false, this.getTextureMatrix(lightWorldMatrix))
+		gl.uniformMatrix4fv(this.textureMatrixLoc , false, this.getTextureMatrix(lightViewMatrix))
 		gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())	//Set the transform, so the shader knows where the model exists in 3d space
-
+		gl.uniform3fv(this.cameraPositionLoc, this.sceneViewCamera.transform.position.getFloatArray())
+		gl.uniform3fv(this.reverseLightDirectionLoc, lightViewMatrix.slice(8, 11))
 		return this
     }
 
@@ -226,20 +205,19 @@ class Model {
 
   constructor() {}
 
-  static async createGeometry(gl: WebGLRenderingContext, shaderProgram: ModelShader, objSrc: string, textureSrc: string){ 
-    return  new Geometry(await Model.createMesh(gl, shaderProgram, objSrc, textureSrc)); 
+  static  createGeometry(gl: WebGLRenderingContext, shaderProgram: ModelShader, vertices: ObjLoader, texture: Texture){ 
+    return  new Geometry(Model.createMesh(gl, shaderProgram, vertices, texture)); 
   }
 
-  static async createMesh(gl: WebGLRenderingContext, shaderProgram: ModelShader, objSrc: string, textureSrc: string) {
-    
-    const model = await Model.loadModel(gl, objSrc, textureSrc);
-    const vertexCount = model.vertices.vertexCount();
+  static createMesh(gl: WebGLRenderingContext, shaderProgram: ModelShader, vertices: ObjLoader, texture: Texture) {
 
+    const vertexCount = vertices.vertexCount();
+	
     const mesh: MeshData = {
-      positions : new Vbuffer(gl, model.vertices.positions(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
-      normals: new Vbuffer(gl, model.vertices.normals(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
-      uvs: new Vbuffer(gl, model.vertices.uvs(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
-      texture: model.texture,
+      positions : new Vbuffer(gl, vertices.positions(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
+      normals: new Vbuffer(gl, vertices.normals(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
+      uvs: new Vbuffer(gl, vertices.uvs(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
+      texture,
       drawMode : gl.TRIANGLES,
       vertexCount,
     }
@@ -250,15 +228,6 @@ class Model {
 
     return mesh;
   }
-  
-  static async loadModel(gl: WebGLRenderingContext, objSrc: string, textureSrc: string) {
-    const objVertices = await ObjLoader.loadOBJ(objSrc);
-    const objTexture = await Texture.loadTexture(gl, textureSrc);
-    const [vertices, texture] = await Promise.all([objVertices, objTexture])
-    
-    return {vertices, texture}
-  }
-
 }
 
 export {

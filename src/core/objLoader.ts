@@ -9,7 +9,7 @@ export default class ObjLoader {
 
     surfaces: Surface[] = [];
 
-    static async parseOBJ(src: string) {
+    static parseOBJ(src: string) {
 
         const POSITION = ObjTypes.V
         const NORMAL = ObjTypes.VN
@@ -23,7 +23,7 @@ export default class ObjLoader {
         const surfaces: Surface[] = [];
        
         for(let item of lines){
-            // Match each line of the file against various RegEx-es
+
             const lineItems = item.trim().split(SPACE)
             const type = lineItems[0]
 
@@ -83,7 +83,7 @@ export default class ObjLoader {
     static async loadOBJ(url: string) {
         const response = await fetch(url);
         const data = await response.text()
-        const [surfaces] = await Promise.all([ObjLoader.parseOBJ(data)]);
+        const surfaces = ObjLoader.parseOBJ(data);
         return surfaces;
     }
 

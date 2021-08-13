@@ -38,6 +38,7 @@ export default class GLContext {
     depthRender(depthTexture:DepthTexture){
         this.gl?.bindFramebuffer(this.gl?.FRAMEBUFFER, depthTexture.depthFramebuffer)
         this.gl?.viewport(0, 0, depthTexture.depthTextureSize, depthTexture.depthTextureSize)
+        this.gl?.clear(this.gl?.COLOR_BUFFER_BIT | this.gl?.DEPTH_BUFFER_BIT);
         return this
     }
 

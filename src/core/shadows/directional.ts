@@ -1,5 +1,5 @@
 import ShaderProgram from '../shaderProgram';
-import { GLSetttings, ProgramEntrySettings } from "@/modules";
+import { GLSetttings } from "@/modules";
 import Geometry from '../geometry';
 import DepthTexture from '../Textures/depthTexture';
 import ObjLoader from '../objLoader';
@@ -86,18 +86,16 @@ class DirectionalShadow {
 
 	constructor() {}
 
-	static async createGeometry(gl: WebGLRenderingContext, shaderProgram: DirectionalShadowShader, objSrc: string) {
-		return new Geometry(await DirectionalShadow.createMesh(gl, shaderProgram, objSrc));
+	static createGeometry(gl: WebGLRenderingContext, shaderProgram: DirectionalShadowShader, vertices: ObjLoader) {
+		return new Geometry(DirectionalShadow.createMesh(gl, shaderProgram, vertices));
 	}
 
-	static async createMesh(gl: WebGLRenderingContext, shaderProgram: DirectionalShadowShader, objSrc: string,) {
+	static createMesh(gl: WebGLRenderingContext, shaderProgram: DirectionalShadowShader, vertices: ObjLoader) {
 
-		const model = await DirectionalShadow.loadModel(gl, objSrc);
-		const vertexCount = model.vertices.vertexCount();
+		const vertexCount = vertices.vertexCount();
 
 		const mesh: MeshData = {
-			positions: new Vbuffer(gl, model.vertices.positions(), vertexCount, GLSetttings.BUFFER_TYPE_VERTICES),
-			depth: model.texture as DepthTexture,
+			positions: new Vbuffer(gl, vertices.positions(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
 			drawMode: gl.TRIANGLES,
 			vertexCount,
 		}
@@ -106,15 +104,6 @@ class DirectionalShadow {
 
 		return mesh;
 	}
-
-	static async loadModel(gl: WebGLRenderingContext, objSrc: string) {
-		const objVertices = await ObjLoader.loadOBJ(objSrc)
-		const objTexture = new DepthTexture(gl, ProgramEntrySettings.DEPTH_TEXTURE_SIZE)
-		const [vertices, texture] = await Promise.all([objVertices, objTexture])
-		
-		return {vertices, texture};
-	}
-
 }
 
 
