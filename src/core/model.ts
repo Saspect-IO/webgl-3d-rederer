@@ -114,7 +114,6 @@ class ModelShader{
 		this.textureMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation
 		this.reverseLightDirectionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_REVERSE_LIGHT_DIRECTION_MAT) as WebGLUniformLocation
 
-		this.diffuseLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_DIFFUSE) as WebGLUniformLocation
 		this.ambientLightColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
 		this.lightPositionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
 		this.cameraPositionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
@@ -142,8 +141,6 @@ class ModelShader{
 	cameraMatrixLoc: WebGLUniformLocation
 	textureMatrixLoc: WebGLUniformLocation
 	
-
-	diffuseLoc: WebGLUniformLocation
 	projectedTextureLoc: WebGLUniformLocation
 	ambientLightColorLoc: WebGLUniformLocation
 	lightPositionLoc: WebGLUniformLocation
