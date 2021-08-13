@@ -16,5 +16,3 @@ jobs:
     # Execute unit tests    
     - name: Unit Test
       run: npm run test
-      
-regardless
