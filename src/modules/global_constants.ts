@@ -1,5 +1,5 @@
-import obj from 'assets/resources/formula_1/source/formula_1.obj';
-import texture from 'assets/resources/formula_1/textures/formula_1.png';
+import obj from '@/assets/resources/formula_1/source/formula_1.obj';
+import texture from '@/assets/resources/formula_1/textures/formula_1.png';
 
 export const TEXTURE = 'TEXTURE'
 export const PATH_ASSETS_OBJ = obj
@@ -42,6 +42,10 @@ export enum CameraControlsSettings {
     ROTATION_RATE = -300,
     PAN_RATE = 5,
     ZOOM_RATE = 200,
+    TOUCH_START = 'touchstart',
+    TOUCH_MOVE = 'touchmove',
+    TOUCH_CANCEL = 'touchcancel',
+    TOUCH_END = 'touchend',
 }
 
 export enum GLSetttings {
@@ -60,7 +64,6 @@ export enum GLSetttings {
     UNI_LIGHT_VIEW_CAMERA_MAT = 'u_lightViewCameraMatrix',
     UNI_REVERSE_LIGHT_DIRECTION_MAT = 'u_reverseLightDirection',
     UNI_TEXTURE_MAT = 'u_textureMatrix',
-    UNI_DIFFUSE = 'u_diffuse',
     UNI_PROJECTED_TEXTURE = 'u_projectedTexture',
     UNI_LIGHT_AMBIENT = 'u_ambientLightColor',
     UNI_LIGHT_DIRECTION = 'u_lightDirection',
