@@ -6,7 +6,7 @@ import { GLSetttings } from '@/modules';
 import { Camera } from '../../camera';
 
 class InfiniteGridShader{
-	constructor(gl: WebGLRenderingContext, camera:Camera, lightViewCamera:Camera){	
+	constructor(gl: WebGLRenderingContext, camera:Camera){	
 		const vertexShader = `#version 300 es
             layout(location=5) in vec3 a_position;
 
@@ -115,7 +115,6 @@ class InfiniteGridShader{
 
 		this.perspectiveProjectionMatrix = camera.perspectiveProjection
 		this.viewModelMatrix = camera.viewMatrix
-		this.lightViewModelMatrix = lightViewCamera
 		this.shaderProgram = shaderProgram
 	}
 
@@ -128,8 +127,6 @@ class InfiniteGridShader{
 
 	perspectiveProjectionMatrix: Float32Array
 	viewModelMatrix:Float32Array
-
-	lightViewModelMatrix:Camera
 
 	shaderProgram: ShaderProgram
 

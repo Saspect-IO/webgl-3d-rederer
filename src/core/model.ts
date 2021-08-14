@@ -144,7 +144,6 @@ class ModelShader{
 	perspectiveProjectionMatrix: Float32Array
 	orthoProjectionMatrix: Float32Array
 	viewModelMatrix: Float32Array
-	lightViewMatrix: Float32Array|null = null
 
 	lightViewCamera: Camera
 	sceneViewCamera: Camera
@@ -159,12 +158,20 @@ class ModelShader{
 
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
 		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
-		gl.uniformMatrix4fv(this.textureMatrixLoc , false, this.getTextureMatrix(lightViewMatrix))
 		gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())	//Set the transform, so the shader knows where the model exists in 3d space
 		gl.uniform3fv(this.cameraPositionLoc, this.sceneViewCamera.transform.position.getFloatArray())
 		gl.uniform3fv(this.reverseLightDirectionLoc, lightViewMatrix.slice(8, 11))
 		return this
     }
+
+	getLightWorldMatrix(lightViewCamera:Camera, model:Geometry){
+		// first draw from the POV of the light
+		return Matrix4.lookAt(
+			[lightViewCamera.transform.position.x, lightViewCamera.transform.position.y, lightViewCamera.transform.position.z], // position
+			[model.transform.position.x, model.transform.position.y, model.transform.position.z], // target
+			[0, 1, 0],// up
+		);
+	}
 
 	getTextureMatrix(lightWorldMatrix:Float32Array){
 		let textureMatrix = Matrix4.identity();
@@ -175,15 +182,6 @@ class ModelShader{
 		Matrix4.invert(inverted, lightWorldMatrix)
 		Matrix4.mult(textureMatrix, textureMatrix, inverted)
 		return textureMatrix
-	}
-
-	getLightWorldMatrix(lightViewCamera:Camera, model:Geometry){
-		// first draw from the POV of the light
-		return Matrix4.lookAt(
-			[lightViewCamera.transform.position.x, lightViewCamera.transform.position.y, lightViewCamera.transform.position.z], // position
-			[model.transform.position.x, model.transform.position.y, model.transform.position.z], // target
-			[0, 1, 0],// up
-		);
 	}
 }
 
