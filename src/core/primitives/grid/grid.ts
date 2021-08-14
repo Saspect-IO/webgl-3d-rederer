@@ -41,9 +41,9 @@ class GridAxisShader{
 
     this.positionLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
 
-    this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_VIEW_MODEL_MAT) as WebGLUniformLocation
+    this.modelMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
     this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTION_MAT) as WebGLUniformLocation
-    this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
+    this.cameraViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
     this.uColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
     //Cleanup
     shaderProgram.deactivateShader()
@@ -56,9 +56,9 @@ class GridAxisShader{
 
   positionLoc: number
 
-  modelViewMatrixLoc: WebGLUniformLocation
+  modelMatrixLoc: WebGLUniformLocation
 	perspectiveMatrixLoc: WebGLUniformLocation
-	cameraMatrixLoc: WebGLUniformLocation
+	cameraViewMatrixLoc: WebGLUniformLocation
   uColorLoc: WebGLUniformLocation
 
   perspectiveProjectionMatrix: Float32Array
@@ -70,9 +70,9 @@ class GridAxisShader{
   setUniforms(gl:WebGLRenderingContext, model: Geometry) {
 		this.shaderProgram.activateShader()
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
-		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix )
+		gl.uniformMatrix4fv(this.cameraViewMatrixLoc , false, this.viewModelMatrix )
     gl.uniform3fv(this.uColorLoc, new Float32Array([ 0.8,0.8,0.8,  1,0,0,  0,1,0,  0,0,1 ]))
-    gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())
+    gl.uniformMatrix4fv(this.modelMatrixLoc, false, model.transform.getModelMatrix())
 		
     return this
   }

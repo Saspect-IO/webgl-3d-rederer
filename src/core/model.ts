@@ -18,7 +18,7 @@ class ModelShader{
 			uniform vec3 u_lightPosition;
 			uniform vec3 u_cameraPosition;
 
-			uniform mat4 u_modelViewMatrix;
+			uniform mat4 u_modelMatrix;
 			uniform mat4 u_cameraViewMatrix;
 			uniform mat4 u_projectionMatrix;
 
@@ -30,10 +30,10 @@ class ModelShader{
 
 			void main(void){
 
-				gl_Position = u_projectionMatrix * u_cameraViewMatrix * u_modelViewMatrix * vec4(a_position, 1.0);
+				gl_Position = u_projectionMatrix * u_cameraViewMatrix * u_modelMatrix * vec4(a_position, 1.0);
 				v_normal = (u_cameraViewMatrix * vec4(a_norm, 0.0)).xyz;
 
-				vec3 v_surfaceWorldPosition = (u_modelViewMatrix * vec4(a_position, 1.0)).xyz;
+				vec3 v_surfaceWorldPosition = (u_modelMatrix * vec4(a_position, 1.0)).xyz;
 				v_surfaceToLight = u_lightPosition - v_surfaceWorldPosition;
 				v_surfaceToCamera = u_cameraPosition - v_surfaceWorldPosition;
 
@@ -97,9 +97,9 @@ class ModelShader{
 		this.texCoordLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_UV_NAME)
 		this.normalLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_NORMAL_NAME)
 
-		this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_VIEW_MODEL_MAT) as WebGLUniformLocation
+		this.modelMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
 		this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTION_MAT) as WebGLUniformLocation
-		this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
+		this.cameraViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
 		this.projectedTextureLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
 		this.textureMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation
 		this.reverseLightDirectionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_REVERSE_LIGHT_DIRECTION_MAT) as WebGLUniformLocation
@@ -116,7 +116,7 @@ class ModelShader{
 
 		this.perspectiveProjectionMatrix = sceneViewCamera.perspectiveProjection
 		this.orthoProjectionMatrix = sceneViewCamera.orthoProjection
-		this.viewModelMatrix = sceneViewCamera.viewMatrix
+		this.viewMatrix = sceneViewCamera.viewMatrix
 		this.lightViewCamera = lightViewCamera
 		this.sceneViewCamera = sceneViewCamera
 		this.shaderProgram = shaderProgram
@@ -126,9 +126,9 @@ class ModelShader{
 	normalLoc: number
 	texCoordLoc: number
   
-	modelViewMatrixLoc: WebGLUniformLocation
+	modelMatrixLoc: WebGLUniformLocation
 	perspectiveMatrixLoc: WebGLUniformLocation
-	cameraMatrixLoc: WebGLUniformLocation
+	cameraViewMatrixLoc: WebGLUniformLocation
 	textureMatrixLoc: WebGLUniformLocation
 	
 	projectedTextureLoc: WebGLUniformLocation
@@ -143,7 +143,7 @@ class ModelShader{
 
 	perspectiveProjectionMatrix: Float32Array
 	orthoProjectionMatrix: Float32Array
-	viewModelMatrix: Float32Array
+	viewMatrix: Float32Array
 
 	lightViewCamera: Camera
 	sceneViewCamera: Camera
@@ -157,8 +157,8 @@ class ModelShader{
 		const lightViewMatrix = this.getLightWorldMatrix(this.lightViewCamera, model) as Float32Array
 
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
-		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
-		gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())	//Set the transform, so the shader knows where the model exists in 3d space
+		gl.uniformMatrix4fv(this.cameraViewMatrixLoc , false, this.viewMatrix)
+		gl.uniformMatrix4fv(this.modelMatrixLoc, false, model.transform.getModelMatrix())
 		gl.uniform3fv(this.cameraPositionLoc, this.sceneViewCamera.transform.position.getFloatArray())
 		gl.uniform3fv(this.reverseLightDirectionLoc, lightViewMatrix.slice(8, 11))
 		return this

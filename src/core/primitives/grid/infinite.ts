@@ -108,7 +108,7 @@ class InfiniteGridShader{
 		this.positionLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
 
 		this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTION_MAT) as WebGLUniformLocation
-		this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
+		this.cameraViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
 		this.uColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
 		//Cleanup
 		shaderProgram.deactivateShader()
@@ -121,7 +121,7 @@ class InfiniteGridShader{
 	positionLoc: number
   
 	perspectiveMatrixLoc: WebGLUniformLocation
-	cameraMatrixLoc: WebGLUniformLocation
+	cameraViewMatrixLoc: WebGLUniformLocation
 
 	uColorLoc: WebGLUniformLocation
 
@@ -135,7 +135,7 @@ class InfiniteGridShader{
 		this.shaderProgram.activateShader()
 
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
-		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
+		gl.uniformMatrix4fv(this.cameraViewMatrixLoc , false, this.viewModelMatrix)
 
 		return this
     }
