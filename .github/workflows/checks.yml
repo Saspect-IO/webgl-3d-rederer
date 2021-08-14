@@ -11,6 +11,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
         
+    # Install modules    
+    - name: Unit Test
+      run: npm install
+      
     # Execute unit tests    
     - name: Unit Test
       run: npm run test
