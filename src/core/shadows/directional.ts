@@ -104,9 +104,6 @@ class DirectionalShadow {
 
 		return mesh;
 	}
-
-
-
 }
 
 

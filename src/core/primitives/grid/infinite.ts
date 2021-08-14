@@ -6,13 +6,12 @@ import { GLSetttings } from '@/modules';
 import { Camera } from '../../camera';
 
 class InfiniteGridShader{
-	constructor(gl: WebGLRenderingContext, camera:Camera, lightViewCamera:Camera){	
+	constructor(gl: WebGLRenderingContext, camera:Camera){	
 		const vertexShader = `#version 300 es
             layout(location=5) in vec3 a_position;
 
-			uniform mat4 u_mVMatrix;
 			uniform mat4 u_cameraViewMatrix;
-			uniform mat4 u_pMatrix;
+			uniform mat4 u_projectionMatrix;
 
 			vec3 unprojectPoint(float x, float y, float z, mat4 view, mat4 projection) {
                 mat4 viewInv = inverse(view);
@@ -32,9 +31,9 @@ class InfiniteGridShader{
 				vec3 p = a_position;
 
 				fragView = u_cameraViewMatrix;
-                fragProj = u_pMatrix;
-				nearPoint = unprojectPoint(p.x, p.y, 0.0, u_cameraViewMatrix, u_pMatrix).xyz;
-				farPoint = unprojectPoint(p.x, p.y, 1.0, u_cameraViewMatrix, u_pMatrix).xyz;
+                fragProj = u_projectionMatrix;
+				nearPoint = unprojectPoint(p.x, p.y, 0.0, u_cameraViewMatrix, u_projectionMatrix).xyz;
+				farPoint = unprojectPoint(p.x, p.y, 1.0, u_cameraViewMatrix, u_projectionMatrix).xyz;
 
 				vertexPosition = p.xyz;
 				gl_Position = vec4(p, 1.0);
@@ -108,43 +107,35 @@ class InfiniteGridShader{
 
 		this.positionLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
 
-		this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-		this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
-		this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+		this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTION_MAT) as WebGLUniformLocation
+		this.cameraViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
 		this.uColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
 		//Cleanup
 		shaderProgram.deactivateShader()
 
 		this.perspectiveProjectionMatrix = camera.perspectiveProjection
-		this.orthoProjectionMatrix = camera.orthoProjection
 		this.viewModelMatrix = camera.viewMatrix
-		this.lightViewModelMatrix = lightViewCamera
 		this.shaderProgram = shaderProgram
 	}
 
 	positionLoc: number
   
-	modelViewMatrixLoc: WebGLUniformLocation
 	perspectiveMatrixLoc: WebGLUniformLocation
-	cameraMatrixLoc: WebGLUniformLocation
+	cameraViewMatrixLoc: WebGLUniformLocation
 
 	uColorLoc: WebGLUniformLocation
 
 	perspectiveProjectionMatrix: Float32Array
-	orthoProjectionMatrix:Float32Array
 	viewModelMatrix:Float32Array
-
-	lightViewModelMatrix:Camera
 
 	shaderProgram: ShaderProgram
 
 	
-	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
+	setUniforms(gl:WebGLRenderingContext) {
 		this.shaderProgram.activateShader()
 
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
-		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
-		gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())
+		gl.uniformMatrix4fv(this.cameraViewMatrixLoc , false, this.viewModelMatrix)
 
 		return this
     }
