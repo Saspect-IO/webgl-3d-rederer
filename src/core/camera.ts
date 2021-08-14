@@ -66,13 +66,13 @@ class Camera {
   updateViewMatrix() {
     //Optimize camera transform update, no need for scale nor rotateZ
     if (this.mode == Camera.MODE_FREE) {
-      this.transform.matView.resetMat()
+      this.transform.modelMatrix.resetMat()
         .vtranslate(this.transform.position)
         .rotateX(degToRad(this.transform.rotation.x))
         .rotateY(degToRad(this.transform.rotation.y))
 
     } else {
-      this.transform.matView.resetMat()
+      this.transform.modelMatrix.resetMat()
         .rotateX(degToRad(this.transform.rotation.x))
         .rotateY(degToRad(this.transform.rotation.y))
         .vtranslate(this.transform.position)
@@ -81,7 +81,7 @@ class Camera {
     this.transform.updateDirection()
 
     //Cameras work by doing the inverse transformation on all meshes, the camera itself is a lie :)
-    Matrix4.invert(this.viewMatrix, this.transform.matView.matrix)
+    Matrix4.invert(this.viewMatrix, this.transform.modelMatrix.matrix)
 
     return this.viewMatrix
   }
@@ -106,13 +106,13 @@ class CameraController {
     this.prevX = 0 //Previous X,Y position on mouse move
     this.prevY = 0
 
-		this.onUpHandler = (e: MouseEvent) => this.onMouseUp(e)//Cache func reference that gets bound and unbound a lot
+		this.onUpHandler = (e: MouseEvent) => this.onMouseUp()
 		this.onMoveHandler = (e: MouseEvent) => this.onMouseMove(e)
     this.onTouchEndHandler = (e: TouchEvent) => this.onTouchEnd(e)
     this.onTouchMoveHandler = (e: TouchEvent) => this.onTouchMove(e)
 
-		this.canvas.addEventListener(CameraControlsSettings.MOUSE_DOWN, (e: MouseEvent) => this.onMouseDown(e))	//Initializes the up and move events
-		this.canvas.addEventListener(CameraControlsSettings.MOUSE_WHEEL, (e: Event ) => this.onMouseWheel(e))	  //Handles zoom/forward movement
+		this.canvas.addEventListener(CameraControlsSettings.MOUSE_DOWN, (e: MouseEvent) => this.onMouseDown(e))
+		this.canvas.addEventListener(CameraControlsSettings.MOUSE_WHEEL, (e: Event ) => this.onMouseWheel(e))
     this.canvas.addEventListener(CameraControlsSettings.TOUCH_START, (e: TouchEvent ) => this.onTouchStart(e))	 
     this.canvas.addEventListener(CameraControlsSettings.TOUCH_MOVE, (e: TouchEvent ) => this.onTouchMove(e))
   }
@@ -152,15 +152,13 @@ class CameraController {
   }
 
   onTouchStart(e: TouchEvent){
-    this.initX = e.touches[0].pageX - this.canvas.offsetLeft
-    this.initY = e.touches[0].pageY - this.canvas.offsetTop
+    this.initX = this.prevX = e.touches[0].clientX - this.offsetX
+    this.initY = this.prevY = e.touches[0].clientY - this.offsetY
     this.canvas.addEventListener(CameraControlsSettings.TOUCH_END, this.onTouchEndHandler)
     this.canvas.addEventListener(CameraControlsSettings.TOUCH_MOVE, this.onTouchMoveHandler)
   }
 
-
-  //End listening for dragging movement
-  onMouseUp(e: MouseEvent) {
+  onMouseUp() {
     this.canvas.removeEventListener(CameraControlsSettings.MOUSE_UP, this.onUpHandler)
     this.canvas.removeEventListener(CameraControlsSettings.MOUSE_MOVE, this.onMoveHandler)
   }
@@ -195,8 +193,8 @@ class CameraController {
   }
 
   onTouchMove(e: TouchEvent){
-    let x = e.touches[0].pageX  - this.offsetX,
-        y = e.touches[0].pageY  - this.offsetY,
+    let x = e.touches[0].clientX- this.offsetX,
+        y = e.touches[0].clientY - this.offsetY,
         dx = x - this.prevX,         
         dy = y - this.prevY
 

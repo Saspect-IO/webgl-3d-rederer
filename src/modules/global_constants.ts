@@ -57,7 +57,7 @@ export enum GLSetttings {
     ATTR_NORMAL_NAME = "a_norm",
     ATTR_UV_NAME = "a_texCoord",
     UNI_COLOR = 'u_color',
-    UNI_VIEW_MODEL_MAT ='u_modelViewMatrix',
+    UNI_MODEL_MAT ='u_modelMatrix',
     UNI_PROJECTION_MAT = 'u_projectionMatrix',
     UNI_CAMERA_VIEW_MAT = 'u_cameraViewMatrix',
     UNI_LIGHT_VIEW_CAMERA_MAT = 'u_lightViewCameraMatrix',
