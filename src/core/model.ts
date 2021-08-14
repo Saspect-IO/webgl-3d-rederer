@@ -18,15 +18,10 @@ class ModelShader{
 			uniform vec3 u_lightPosition;
 			uniform vec3 u_cameraPosition;
 
-			uniform mat4 u_mVMatrix;
+			uniform mat4 u_modelViewMatrix;
 			uniform mat4 u_cameraViewMatrix;
-			uniform mat4 u_pMatrix;
-			uniform mat4 u_textureMatrix;
+			uniform mat4 u_projectionMatrix;
 
-			mat4 m_worldMatrix;
-			mat4 m_viewProjectionMatrix;
-			mat4 m_worldViewProjectionMatrix;
-			
 			out vec3 v_normal;
 			out vec3 v_surfaceToLight;
 			out vec3 v_surfaceToCamera;
@@ -35,15 +30,10 @@ class ModelShader{
 
 			void main(void){
 
-				m_worldMatrix = u_mVMatrix;
-				m_viewProjectionMatrix = u_pMatrix * u_cameraViewMatrix;
-				m_worldViewProjectionMatrix = m_viewProjectionMatrix * m_worldMatrix;
-
-				gl_Position = m_worldViewProjectionMatrix * vec4(a_position, 1.0);
-				
+				gl_Position = u_projectionMatrix * u_cameraViewMatrix * u_modelViewMatrix * vec4(a_position, 1.0);
 				v_normal = (u_cameraViewMatrix * vec4(a_norm, 0.0)).xyz;
 
-				vec3 v_surfaceWorldPosition = (m_worldMatrix * vec4(a_position, 1.0)).xyz;
+				vec3 v_surfaceWorldPosition = (u_modelViewMatrix * vec4(a_position, 1.0)).xyz;
 				v_surfaceToLight = u_lightPosition - v_surfaceWorldPosition;
 				v_surfaceToCamera = u_cameraPosition - v_surfaceWorldPosition;
 
@@ -107,9 +97,9 @@ class ModelShader{
 		this.texCoordLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_UV_NAME)
 		this.normalLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_NORMAL_NAME)
 
-		this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-		this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
-		this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+		this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_VIEW_MODEL_MAT) as WebGLUniformLocation
+		this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTION_MAT) as WebGLUniformLocation
+		this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
 		this.projectedTextureLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
 		this.textureMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation
 		this.reverseLightDirectionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_REVERSE_LIGHT_DIRECTION_MAT) as WebGLUniformLocation
