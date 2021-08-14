@@ -13,16 +13,16 @@ class GridAxisShader{
 			layout(location=3) in vec3 a_position;
 			layout(location=4) in float a_color;
 
-			uniform mat4 u_mVMatrix;
+			uniform mat4 u_modelViewMatrix;
+      uniform mat4 u_projectionMatrix;
 			uniform mat4 u_cameraViewMatrix;
-			uniform mat4 u_pMatrix;
 			uniform vec3 u_color[4];
 
 			out lowp vec4 color;
 
 			void main(void){
 				color = vec4(u_color[ int(a_color) ],1.0);
-				gl_Position = u_pMatrix * u_cameraViewMatrix * u_mVMatrix * vec4(a_position, 1.0);
+				gl_Position = u_projectionMatrix * u_cameraViewMatrix * u_modelViewMatrix * vec4(a_position, 1.0);
 			}`;
 
 		const fragmentShader = `#version 300 es
@@ -41,9 +41,9 @@ class GridAxisShader{
 
     this.positionLoc = gl.getAttribLocation(shaderProgram.program as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
 
-    this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-    this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PERSPECTIV_MAT) as WebGLUniformLocation
-    this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+    this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_VIEW_MODEL_MAT) as WebGLUniformLocation
+    this.perspectiveMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTION_MAT) as WebGLUniformLocation
+    this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
     this.uColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
     //Cleanup
     shaderProgram.deactivateShader()
