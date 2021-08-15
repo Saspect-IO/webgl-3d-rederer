@@ -6,7 +6,7 @@ import Light from "./light"
 import { Vector3 } from "./math"
 import { Model, ModelShader } from "./model"
 import ObjLoader from "./objLoader"
-import { InfiniteGrid, InfiniteGridShader } from "./primitives/grid/infinite"
+import { InfiniteGrid, InfiniteGridShader } from "./primitives/grid/infiniteGrid"
 import Texture from "./Textures/texture"
 
 export default class Scene {
