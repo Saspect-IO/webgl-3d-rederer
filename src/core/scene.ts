@@ -19,10 +19,10 @@ export default class Scene {
             glContext.fitScreen(wp, wh).setClearColor(13, 17, 23, 1.0).clear()
             const gl = glContext.getContext() as WebGLRenderingContext
 
-            const lightViewPosition = new Vector3(0, 2.5, 3)
-            const lightView = new Light(lightViewPosition)
-            const lightCameraView = new Camera(gl as WebGLRenderingContext)
-            lightCameraView.transform.position.set(lightViewPosition.x, lightViewPosition.y, lightViewPosition.z)
+            const lightPosition = new Vector3(0, 2.5, 3)
+            const light1 = new Light(lightPosition)
+            const lightViewCamera = new Camera(gl as WebGLRenderingContext)
+            lightViewCamera.transform.position.set(lightPosition.x, lightPosition.y, lightPosition.z)
 
             const vertices = await ObjLoader.loadOBJ(PATH_ASSETS_OBJ)
             const texture = await Texture.loadTexture(gl, PATH_ASSETS_TEXTURE)
@@ -31,10 +31,10 @@ export default class Scene {
             camera.transform.position.set(0, 0.5, 1.5)
             new CameraController(gl as WebGLRenderingContext, camera)
 
-            const infiniteGridShader = new InfiniteGridShader(gl as WebGLRenderingContext, camera, lightCameraView)
+            const infiniteGridShader = new InfiniteGridShader(gl as WebGLRenderingContext, camera)
             const infiniteGrid = InfiniteGrid.createGeometry(gl, infiniteGridShader)
 
-            const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightCameraView)
+            const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightViewCamera)
             const model = Model.createGeometry(gl, modelShader, vertices, texture)
             model.setScale(0.0035,0.0035,0.0035).setRotation(0,30,0)
 
@@ -44,13 +44,13 @@ export default class Scene {
 
                 camera.updateViewMatrix()
 
-                infiniteGridShader.setUniforms(gl, infiniteGrid.preRender()).shaderProgram
+                infiniteGridShader.setUniforms(gl).shaderProgram
                     .renderModel(infiniteGrid.preRender())
 
                 modelShader.setUniforms(gl, model.preRender())
                     .shaderProgram.renderModel(model.preRender())
 
-                lightView.setUniforms(gl, modelShader)
+                light1.setUniforms(gl, modelShader)
 
                 requestAnimationFrame(loop)
             }
