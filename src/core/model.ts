@@ -57,15 +57,6 @@ class ModelShader{
 			uniform float u_specularFactor;
 			uniform vec3 u_reverseLightDirection;
 
-			vec4 lit(float l ,float h, float m) {
-				return vec4(
-					1.0,
-					abs(l),
-					(l > 0.0) ? pow(max(0.0, h), m) : 0.0,
-					1.0
-				);
-			}
-
 			out vec4 finalColor;
 
 			void main(void) {
@@ -73,18 +64,19 @@ class ModelShader{
 				vec4 texel = texture(sampler, v_texCoord);
 				vec3 normal = normalize(v_normal);
 
-				float lightIntensity = dot(normal, u_reverseLightDirection);
-				vec4 diffuse = u_ambientLightColor + u_lightColor * lightIntensity;
-
 				vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
 				vec3 surfaceToCameraDirection = normalize(v_surfaceToCamera);
 				vec3 halfVector = normalize(surfaceToLightDirection + surfaceToCameraDirection);
 
-				vec4 specularIntensity = lit(dot(normal, surfaceToLightDirection), dot(normal, halfVector), u_shininess);
-				vec4 specular = u_specularColor * specularIntensity.z * u_specularFactor;
-				vec4 light = diffuse + specular;
+				float lightIntensity = dot(normal, surfaceToLightDirection);
+				float specular = 0.0;
+				if (lightIntensity > 0.0) {
+				  specular = pow(dot(normal, halfVector), u_shininess);
+				}
 
-				vec4 outColor = vec4(texel.rgb * light.xyz, texel.a);
+				vec4 diffuse = (u_ambientLightColor + u_lightColor) * lightIntensity;
+				vec4 outColor = vec4(texel.rgb * diffuse.xyz, texel.a);
+				outColor.rgb += specular;
 
 				finalColor = outColor;
 			}`;											

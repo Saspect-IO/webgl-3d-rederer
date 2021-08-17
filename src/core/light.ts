@@ -9,7 +9,7 @@ export default class Light {
         ambientLightColor = normalizeRGB({red:50, green:50, blue:50}),
         specularColor = normalizeRGB({red:255, green:255, blue:255}),
         specularFactor = 1,
-        shininess = 1000,
+        shininess = 500,
     ) { 
         this.lightPosition = lightPosition
         this.lightColor = lightColor
