@@ -55,7 +55,6 @@ class ModelShader{
 			uniform vec4 u_specularColor;
 			uniform float u_shininess;
 			uniform float u_specularFactor;
-			uniform vec3 u_reverseLightDirection;
 
 			out vec4 finalColor;
 
@@ -94,8 +93,7 @@ class ModelShader{
 		this.cameraViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
 		this.projectedTextureLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_PROJECTED_TEXTURE) as WebGLUniformLocation
 		this.textureMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_TEXTURE_MAT) as WebGLUniformLocation
-		this.reverseLightDirectionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_REVERSE_LIGHT_DIRECTION_MAT) as WebGLUniformLocation
-
+		
 		this.ambientLightColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_AMBIENT) as WebGLUniformLocation
 		this.lightPositionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_POSITION) as WebGLUniformLocation
 		this.cameraPositionLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_POSITION) as WebGLUniformLocation
@@ -131,7 +129,6 @@ class ModelShader{
 	lightColorLoc: WebGLUniformLocation
 	specularColorLoc: WebGLUniformLocation
 	specularFactorLoc: WebGLUniformLocation
-	reverseLightDirectionLoc: WebGLUniformLocation
 
 	perspectiveProjectionMatrix: Float32Array
 	orthoProjectionMatrix: Float32Array
@@ -152,7 +149,6 @@ class ModelShader{
 		gl.uniformMatrix4fv(this.cameraViewMatrixLoc , false, this.viewMatrix)
 		gl.uniformMatrix4fv(this.modelMatrixLoc, false, model.transform.getModelMatrix())
 		gl.uniform3fv(this.cameraPositionLoc, this.sceneViewCamera.transform.position.getFloatArray())
-		gl.uniform3fv(this.reverseLightDirectionLoc, lightViewMatrix.slice(8, 11))
 		return this
     }
 
