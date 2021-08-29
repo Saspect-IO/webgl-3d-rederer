@@ -1,9 +1,13 @@
 import obj from '@/assets/resources/formula_1/source/formula_1.obj';
-import texture from '@/assets/resources/formula_1/textures/formula_1.png';
+import texture0 from '@/assets/resources/formula_1/textures/formula_1.png';
+import texture1 from '@/assets/resources/formula_1/textures/formula1_DefaultMaterial_Specular.png';
+import texture2 from '@/assets/resources/formula_1/textures/formula1_DefaultMaterial_Glossiness.png';
+import texture3 from '@/assets/resources/formula_1/textures/formula1_DefaultMaterial_Height.png';
 
 export const TEXTURE = 'TEXTURE'
 export const PATH_ASSETS_OBJ = obj
-export const PATH_ASSETS_TEXTURE = texture
+export const PATH_ASSETS_TEXTURE_ARRAY = [texture0, texture1, texture2, texture3]
+
 export const NEW_LINE = '\n'
 export const BACKSLASH = '/'
 export const SPACE = /\s+/
@@ -74,6 +78,11 @@ export enum GLSetttings {
     UNI_LIGHT_COLOR = 'u_lightColor',
     UNI_SPECULAR_COLOR = 'u_specularColor',
     UNI_SPECULAR_FACTOR = 'u_specularFactor',
+    UNI_SAMPLER_0 = 'u_smapler_0',
+    UNI_SAMPLER_1 = 'u_smapler_1',
+    UNI_SAMPLER_2 = 'u_smapler_2',
+    UNI_SAMPLER_3 = 'u_smapler_3',
+    UNI_SAMPLER_4 = 'u_smapler_4',
     BUFFER_TYPE_ELEMENT_ARRAY = 'array_elements',
     BUFFER_TYPE_ARRAY = 'arrays',
 }
