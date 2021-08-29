@@ -25,3 +25,6 @@ export const normalizeRGB = ({ red, green, blue }:{red: number, green: number, b
     const result=[normalize(red, rgb_8_bit, 0), normalize(blue, rgb_8_bit, 0), normalize(green, rgb_8_bit, 0), alpha]
     return new Float32Array(result)
 }
+
+export const mapValues = (x: number, xMin: number, xMax: number, yMin: number, yMax: number) => ( ((x-xMin)/(xMax-xMin)) * ((yMax-yMin)+yMin) )
+export const getRandomNumberBetween = (min:number, max:number) => Math.random() * (max - min) + min
