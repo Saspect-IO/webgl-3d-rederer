@@ -1,5 +1,6 @@
 import AppLoader from "@/app/components/core/appLoader"
-import { PATH_ASSETS_OBJ, PATH_ASSETS_TEXTURE_ARRAY, ProgramEntrySettings } from "@/modules"
+import { ProgramEntrySettings } from "@/modules"
+import {config} from '@/config/env'
 import { Camera, CameraController } from "./camera"
 import GLContext from "./glContext"
 import Light from "./light"
@@ -22,9 +23,9 @@ export default class Scene {
             const lightPosition1 = new Vector3(0, 2.5, 3)
             const light1 = new Light(lightPosition1)
 
-            const vertices = await ObjLoader.loadOBJ(PATH_ASSETS_OBJ)
+            const vertices = await ObjLoader.loadOBJ(config?.MODELS.FORMULA_1.MODEL)
             const textures: Texture[] =  []
-            for (const t of PATH_ASSETS_TEXTURE_ARRAY) {
+            for (const t of config?.MODELS.FORMULA_1.TEXTURES as string[]) {
                 textures.push(await Texture.loadTexture(gl, t))
             }
             

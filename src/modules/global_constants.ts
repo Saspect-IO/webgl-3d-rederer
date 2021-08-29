@@ -1,13 +1,4 @@
-import obj from '@/assets/resources/formula_1/source/formula_1.obj';
-import texture0 from '@/assets/resources/formula_1/textures/formula_1.png';
-import texture1 from '@/assets/resources/formula_1/textures/formula1_DefaultMaterial_Specular.png';
-import texture2 from '@/assets/resources/formula_1/textures/formula1_DefaultMaterial_Glossiness.png';
-import texture3 from '@/assets/resources/formula_1/textures/formula1_DefaultMaterial_Height.png';
-
 export const TEXTURE = 'TEXTURE'
-export const PATH_ASSETS_OBJ = obj
-export const PATH_ASSETS_TEXTURE_ARRAY = [texture0, texture1, texture2, texture3]
-
 export const NEW_LINE = '\n'
 export const BACKSLASH = '/'
 export const SPACE = /\s+/
