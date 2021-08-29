@@ -1,5 +1,5 @@
 import AppLoader from "@/app/components/core/appLoader"
-import { PATH_ASSETS_OBJ, PATH_ASSETS_TEXTURE, ProgramEntrySettings } from "@/modules"
+import { PATH_ASSETS_OBJ, PATH_ASSETS_TEXTURE_ARRAY, ProgramEntrySettings } from "@/modules"
 import { Camera, CameraController } from "./camera"
 import GLContext from "./glContext"
 import Light from "./light"
@@ -19,14 +19,16 @@ export default class Scene {
             glContext.fitScreen(wp, wh).setClearColor(13, 17, 23, 1.0).clear()
             const gl = glContext.getContext() as WebGLRenderingContext
 
-            const lightPosition = new Vector3(0, 2.5, 3)
-            const light1 = new Light(lightPosition)
-            const lightViewCamera = new Camera(gl as WebGLRenderingContext)
-            lightViewCamera.transform.position.set(lightPosition.x, lightPosition.y, lightPosition.z)
+            const lightPosition1 = new Vector3(0, 2.5, 3)
+            const light1 = new Light(lightPosition1)
 
             const vertices = await ObjLoader.loadOBJ(PATH_ASSETS_OBJ)
-            const texture = await Texture.loadTexture(gl, PATH_ASSETS_TEXTURE)
+            const textures: Texture[] =  []
+            for (const t of PATH_ASSETS_TEXTURE_ARRAY) {
+                textures.push(await Texture.loadTexture(gl, t))
+            }
             
+
             const camera = new Camera(gl as WebGLRenderingContext)
             camera.transform.position.set(0, 0.5, 1.5)
             new CameraController(gl as WebGLRenderingContext, camera)
@@ -34,8 +36,8 @@ export default class Scene {
             const infiniteGridShader = new InfiniteGridShader(gl as WebGLRenderingContext, camera)
             const infiniteGrid = InfiniteGrid.createGeometry(gl, infiniteGridShader)
 
-            const modelShader = new ModelShader(gl as WebGLRenderingContext, camera, lightViewCamera)
-            const model = Model.createGeometry(gl, modelShader, vertices, texture)
+            const modelShader = new ModelShader(gl as WebGLRenderingContext, camera)
+            const model = Model.createGeometry(gl, modelShader, vertices)
             model.setScale(0.0035,0.0035,0.0035).setRotation(0,30,0)
 
             appLoader.disable()
@@ -49,6 +51,11 @@ export default class Scene {
 
                 modelShader.setUniforms(gl, model.preRender())
                     .shaderProgram.renderModel(model.preRender())
+
+                for (const i in textures) {
+                    const index = Number(i)
+                    textures[i].setUniform(modelShader, index).activate(index)
+                }
 
                 light1.setUniforms(gl, modelShader)
 
