@@ -53,7 +53,6 @@ class ModelShader{
 			uniform sampler2D u_smapler_1;
 			uniform sampler2D u_smapler_2;
 			uniform sampler2D u_smapler_3;
-			uniform sampler2D u_smapler_4;
 			uniform vec4 u_lightColor;
 			uniform vec4 u_ambientLightColor;
 			uniform vec4 u_specularColor;
@@ -147,7 +146,6 @@ class ModelShader{
 	sampler1Loc: WebGLUniformLocation
 	sampler2Loc: WebGLUniformLocation
 	sampler3Loc: WebGLUniformLocation
-	sampler4Loc: WebGLUniformLocation
 
 	perspectiveProjectionMatrix: Float32Array
 	orthoProjectionMatrix: Float32Array
