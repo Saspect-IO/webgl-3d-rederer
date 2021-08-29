@@ -9,7 +9,7 @@ import { Camera } from './camera'
 import { Matrix4 } from './math'
 
 class ModelShader{
-	constructor(gl: WebGLRenderingContext, sceneViewCamera:Camera, lightViewCamera:Camera){	
+	constructor(gl: WebGLRenderingContext, sceneViewCamera:Camera){	
 		const vertexShader = `#version 300 es
 			in vec3 a_position;
 			in vec3 a_norm;
@@ -49,7 +49,11 @@ class ModelShader{
 			in vec3 v_surfaceToLight;
 			in vec3 v_surfaceToCamera;
 
-			uniform sampler2D sampler;
+			uniform sampler2D u_smapler_0;
+			uniform sampler2D u_smapler_1;
+			uniform sampler2D u_smapler_2;
+			uniform sampler2D u_smapler_3;
+			uniform sampler2D u_smapler_4;
 			uniform vec4 u_lightColor;
 			uniform vec4 u_ambientLightColor;
 			uniform vec4 u_specularColor;
@@ -60,7 +64,11 @@ class ModelShader{
 
 			void main(void) {
 
-				vec4 texel = texture(sampler, v_texCoord);
+				vec4 texel0 = texture(u_smapler_0, v_texCoord);
+				vec4 texel1 = texture(u_smapler_1, v_texCoord);
+				vec4 texel2 = texture(u_smapler_2, v_texCoord);
+				vec4 texel3 = texture(u_smapler_3, v_texCoord);
+				vec4 c_texel =  (texel0 + texel1) * texel2 * texel3;
 				vec3 normal = normalize(v_normal);
 
 				vec3 surfaceToLightDirection = normalize(v_surfaceToLight);
@@ -74,7 +82,7 @@ class ModelShader{
 				}
 
 				vec4 diffuse = (u_ambientLightColor + u_lightColor) * lightIntensity;
-				vec4 outColor = vec4(texel.rgb * diffuse.xyz, texel.a);
+				vec4 outColor = vec4(c_texel.rgb * diffuse.xyz, c_texel.a);
 				outColor.rgb += specular;
 
 				finalColor = outColor;
@@ -101,13 +109,18 @@ class ModelShader{
 		this.lightColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_LIGHT_COLOR) as WebGLUniformLocation
 		this.specularColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_COLOR) as WebGLUniformLocation
 		this.specularFactorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SPECULAR_FACTOR) as WebGLUniformLocation
+
+		this.sampler0Loc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SAMPLER_0) as WebGLUniformLocation
+		this.sampler1Loc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SAMPLER_1) as WebGLUniformLocation
+		this.sampler2Loc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SAMPLER_2) as WebGLUniformLocation
+		this.sampler3Loc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_SAMPLER_3) as WebGLUniformLocation
+
 		//Cleanup
 		shaderProgram.deactivateShader()
 
 		this.perspectiveProjectionMatrix = sceneViewCamera.perspectiveProjection
 		this.orthoProjectionMatrix = sceneViewCamera.orthoProjection
 		this.viewMatrix = sceneViewCamera.viewMatrix
-		this.lightViewCamera = lightViewCamera
 		this.sceneViewCamera = sceneViewCamera
 		this.shaderProgram = shaderProgram
 	}
@@ -130,11 +143,16 @@ class ModelShader{
 	specularColorLoc: WebGLUniformLocation
 	specularFactorLoc: WebGLUniformLocation
 
+	sampler0Loc: WebGLUniformLocation
+	sampler1Loc: WebGLUniformLocation
+	sampler2Loc: WebGLUniformLocation
+	sampler3Loc: WebGLUniformLocation
+	sampler4Loc: WebGLUniformLocation
+
 	perspectiveProjectionMatrix: Float32Array
 	orthoProjectionMatrix: Float32Array
 	viewMatrix: Float32Array
 
-	lightViewCamera: Camera
 	sceneViewCamera: Camera
 
 	shaderProgram: ShaderProgram
@@ -142,9 +160,6 @@ class ModelShader{
 
 	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
 		this.shaderProgram.activateShader()
-
-		const lightViewMatrix = this.getLightWorldMatrix(this.lightViewCamera, model) as Float32Array
-
 		gl.uniformMatrix4fv(this.perspectiveMatrixLoc, false, this.perspectiveProjectionMatrix)
 		gl.uniformMatrix4fv(this.cameraViewMatrixLoc , false, this.viewMatrix)
 		gl.uniformMatrix4fv(this.modelMatrixLoc, false, model.transform.getModelMatrix())
@@ -178,11 +193,11 @@ class Model {
 
   constructor() {}
 
-  static  createGeometry(gl: WebGLRenderingContext, shaderProgram: ModelShader, vertices: ObjLoader, texture: Texture){ 
-    return  new Geometry(Model.createMesh(gl, shaderProgram, vertices, texture)); 
+  static  createGeometry(gl: WebGLRenderingContext, shaderProgram: ModelShader, vertices: ObjLoader){ 
+    return  new Geometry(Model.createMesh(gl, shaderProgram, vertices)); 
   }
 
-  static createMesh(gl: WebGLRenderingContext, shaderProgram: ModelShader, vertices: ObjLoader, texture: Texture) {
+  static createMesh(gl: WebGLRenderingContext, shaderProgram: ModelShader, vertices: ObjLoader) {
 
     const vertexCount = vertices.vertexCount();
 	
@@ -190,7 +205,6 @@ class Model {
       positions : new Vbuffer(gl, vertices.positions(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
       normals: new Vbuffer(gl, vertices.normals(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
       uvs: new Vbuffer(gl, vertices.uvs(), vertexCount, GLSetttings.BUFFER_TYPE_ARRAY),
-      texture,
       drawMode : gl.TRIANGLES,
       vertexCount,
     }
