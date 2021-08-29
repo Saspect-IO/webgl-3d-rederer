@@ -1,3 +1,5 @@
+import { ModelShader } from "../model"
+
 export default class Texture {
 
     constructor(gl: WebGLRenderingContext, image: HTMLImageElement) {
@@ -9,9 +11,11 @@ export default class Texture {
         gl.generateMipmap(gl.TEXTURE_2D)
 
         this.gl = gl
+        this.texture  = texture
     }
 
     gl: WebGLRenderingContext;
+    texture: WebGLTexture;
 
     // Asynchronously load an image
     static async loadTexture(gl: WebGLRenderingContext, url: string): Promise < Texture > {
@@ -20,6 +24,17 @@ export default class Texture {
         await image.decode()
         const result = new Texture(gl, image)
         return result
+    }
+
+    setUniform(program:ModelShader, index:number){
+        this.gl.uniform1i(program[`sampler${index}Loc`], index)
+        return this  
+    }
+
+    activate(index:number){
+        this.gl.activeTexture(this.gl[`TEXTURE${index}`]);
+        this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture)
+        return this 
     }
 
 }
