@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
-  "dependencies": {},
+  "dependencies": {
+    "dotenv-webpack": "^7.0.3"
+  },
   "devDependencies": {
     "@types/chai": "^4.2.21",
     "@types/mocha": "^9.0.0",
