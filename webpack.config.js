@@ -53,8 +53,9 @@ module.exports = {
           loader:'file-loader',
           options:{
             name:'[name].[ext]',
-            outputPath:(url)=>{
-              const name = (String(url)).split('.')[0]
+            outputPath:(url, resourcePath)=>{
+              const pathname = new URL(resourcePath).pathname.split('\\');
+              const name = pathname[pathname.length-3]
               return `assets/resources/${name}/textures/${url}`
             }
           }
@@ -66,8 +67,9 @@ module.exports = {
           loader:'file-loader',
           options:{
             name:'[name].[ext]',
-            outputPath:(url)=>{
-              const name = (String(url)).split('.')[0]
+            outputPath:(url, resourcePath)=>{
+              const pathname = new URL(resourcePath).pathname.split('\\');
+              const name = pathname[pathname.length-3]
               return `assets/resources/${name}/source/${url}`
             }
           }
