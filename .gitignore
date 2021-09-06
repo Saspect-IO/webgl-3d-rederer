@@ -5,3 +5,6 @@ node_modules
 # local env files
 .env.local
 .env.*.local
+
+# local debugging
+/.vscode

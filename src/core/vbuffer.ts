@@ -36,7 +36,7 @@ export default class Vbuffer {
     this.gl.deleteBuffer(this.buffer);
   }
 
-  bindToAttribute(data: number|number[], stride: number, offset: number, size: number = this.size, type:string = GLSetttings.BUFFER_TYPE_VERTICES) {
+  bindToAttribute(data: number|number[], stride: number, offset: number, size: number = this.size, type:string = GLSetttings.BUFFER_TYPE_ARRAY) {
     const gl = this.gl
     switch (type) {
       case GLSetttings.BUFFER_TYPE_ARRAY:

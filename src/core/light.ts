@@ -6,7 +6,7 @@ export default class Light {
     constructor(
         lightPosition: Vector3,
         lightColor = normalizeRGB({red:201, green:226, blue:255}),
-        ambientLightColor = normalizeRGB({red:255, green:255, blue:255}),
+        ambientLightColor = normalizeRGB({red:180, green:180, blue:180}),
         specularColor = normalizeRGB({red:255, green:255, blue:255}),
         specularFactor = 1,
         shininess = 500,

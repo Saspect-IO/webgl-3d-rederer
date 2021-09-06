@@ -48,8 +48,7 @@ class DirectionalShadowShader {
 		this.positionLoc = gl.getAttribLocation(shaderProgram.program  as WebGLProgram, GLSetttings.ATTR_POSITION_NAME)
 		
 		this.modelViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_MODEL_MAT) as WebGLUniformLocation
-		this.orthoMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_ORTHO_MAT) as WebGLUniformLocation
-        this.cameraMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_MAT) as WebGLUniformLocation
+		this.cameraViewMatrixLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_CAMERA_VIEW_MAT) as WebGLUniformLocation
 		this.uColorLoc = gl.getUniformLocation(shaderProgram.program as WebGLProgram, GLSetttings.UNI_COLOR) as WebGLUniformLocation
 
 		this.orthoProjectionMatrix = camera.orthoProjection
@@ -63,8 +62,7 @@ class DirectionalShadowShader {
 	shaderProgram: ShaderProgram
 
 	modelViewMatrixLoc: WebGLUniformLocation
-	orthoMatrixLoc: WebGLUniformLocation
-	cameraMatrixLoc: WebGLUniformLocation
+	cameraViewMatrixLoc: WebGLUniformLocation
 	uColorLoc: WebGLUniformLocation
 
 	orthoProjectionMatrix:Float32Array
@@ -72,8 +70,7 @@ class DirectionalShadowShader {
 
 	setUniforms(gl:WebGLRenderingContext, model: Geometry) {
 		this.shaderProgram.activateShader()
-        gl.uniformMatrix4fv(this.orthoMatrixLoc , false, this.orthoProjectionMatrix)
-		gl.uniformMatrix4fv(this.cameraMatrixLoc , false, this.viewModelMatrix)
+		gl.uniformMatrix4fv(this.cameraViewMatrixLoc , false, this.viewModelMatrix)
 		gl.uniformMatrix4fv(this.modelViewMatrixLoc, false, model.transform.getModelMatrix())
 		gl.uniform4fv(this.uColorLoc, new Float32Array([0.0, 0.0, 0.0, 1.0]))
 
